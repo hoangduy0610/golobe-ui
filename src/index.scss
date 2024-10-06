@@ -1,0 +1,27 @@
+// Override default variables before the import
+$primary: #8DD3BB;
+$secondary: #F3F3F3;
+
+// Import Bootstrap and its default variables
+@import '~bootstrap/scss/bootstrap.scss';
+@import url('https://fonts.cdnfonts.com/css/trade-gothic-lt-std?styles=16688,30109');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Montserrat, sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #FAFBFC;
+}
+
+.btn-white {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
