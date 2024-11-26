@@ -1,5 +1,7 @@
+// src/routes/routePath.tsx
 import { Home } from "@/pages/home/Home";
 import { Link } from "react-router-dom";
+import { Blog } from "@/pages/blog/Blog";
 
 export const routePath = [
     {
@@ -22,6 +24,13 @@ export const routePath = [
         icon: 'fas fa-tachometer-alt',
         title: 'Quản lí danh mục',
         component: <Dashboard />
+    },
+    {
+        index: false,
+        path: 'blog',
+        icon: 'fas fa-blog',
+        title: 'Blog',
+        component: <Blog />
     },
     {
         index: false,
