@@ -18,7 +18,9 @@ export function Home() {
             <div className="container-fluid">
                 <header className="app-header">
                     <div className="logo">
-                        <img src={logo} alt="Logo" />
+                        <Link to="/">
+                            <img src={logo} alt="Logo" />
+                        </Link>
                     </div>
                     <nav className="navbar">
                         <ul className="nav-links">

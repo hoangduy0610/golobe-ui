@@ -1,11 +1,17 @@
-import React from "react";
+import facebookIcon from "@/assets/facebook_icon.svg";
+import footerLogo from "@/assets/footer_logo.svg";
+import instagramIcon from "@/assets/instagram_icon.svg";
 import logo from "@/assets/logo.svg";
-import share from "@/assets/share.png";
 import maldives from "@/assets/maldives.jpg";
+import newsletter from "@/assets/newsletter.svg";
+import share from "@/assets/share.png";
+import twitterIcon from "@/assets/twitter_icon.svg";
+import youtubeIcon from "@/assets/youtube_icon.svg";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import Slider from "react-slick";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa"; 
-import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
 import "./Blog.css";
 
 export function Blog() {
@@ -70,92 +76,151 @@ export function Blog() {
     };
 
     return (
-        <div>
-            <header className="app-header">
-                <div className="logo">
-                    <img src={logo} alt="Logo" />
-                </div>
-                <nav className="navbar">
-                    <ul className="nav-links">
-                        <li>Hotels</li>
-                        <li>Restaurants</li>
-                        <li>Trips</li>
-                        <li>Thing to do</li>
-                        <li>Blog</li>
-                        <li>Forum</li>
-                    </ul>
-                    <ul className="btn-group">
-                        <li>Partner</li>
-                        <li>Login</li>
-                        <li className="btn btn-white">Sign Up</li>
-                    </ul>
-                </nav>
-                <div className="hero">
-                    <h2>Helping Others</h2>
-                    <h1>LIVE & TRAVEL</h1>
-                    <h4>Special offers to suit your plan</h4>
-                </div>
-            </header>
-            <div className="container">
-                <section className="card shadow my-4 px-4 border-0">
-                    <div className="card-body">
-                        <input type="text" className="form-control bg-secondary py-3" placeholder="Search" />
+        <div className="app">
+            <div className="container-fluid">
+                <header className="app-header">
+                    <div className="logo">
+                        <Link to="/">
+                            <img src={logo} alt="Logo" />
+                        </Link>
                     </div>
-                </section>
-
-                <div className="category-section">
-                    <div className="row justify-content-center">
-                        <div className="col-md-10 text-center">
-                            <h2 className="section-title">Choose a category</h2>
+                    <nav className="navbar">
+                        <ul className="nav-links">
+                            <li>Hotels</li>
+                            <li>Restaurants</li>
+                            <li>Trips</li>
+                            <li>Thing to do</li>
+                            <li>Blog</li>
+                            <li>Forum</li>
+                        </ul>
+                        <ul className="btn-group">
+                            <li>Partner</li>
+                            <li>Login</li>
+                            <li className="btn btn-white">Sign Up</li>
+                        </ul>
+                    </nav>
+                    <div className="hero">
+                        <h2>Helping Others</h2>
+                        <h1>LIVE & TRAVEL</h1>
+                        <h4>Special offers to suit your plan</h4>
+                    </div>
+                </header>
+                <div className="container">
+                    <section className="card shadow my-4 px-4 border-0">
+                        <div className="card-body">
+                            <input type="text" className="form-control bg-secondary py-3" placeholder="Search" />
                         </div>
-                    </div>
+                    </section>
 
-                    <Slider {...settings}>
-                        {categories.map((category) => (
-                            <div
-                                key={category.id}
-                                className="category-card-container"
-                                onClick={() => handleCategoryClick(category.name)}
-                            >
+                    <div className="category-section">
+                        <div className="row justify-content-center">
+                            <div className="col-md-10 text-center">
+                                <h2 className="section-title">Choose a category</h2>
+                            </div>
+                        </div>
+
+                        <Slider {...settings}>
+                            {categories.map((category) => (
                                 <div
-                                    className="category-card"
-                                    style={{
-                                        backgroundImage: `url(${category.image})`,
-                                    }}
+                                    key={category.id}
+                                    className="category-card-container"
+                                    onClick={() => handleCategoryClick(category.name)}
                                 >
-                                    <div className="category-overlay">
-                                        <h3>{category.name}</h3>
+                                    <div
+                                        className="category-card"
+                                        style={{
+                                            backgroundImage: `url(${category.image})`,
+                                        }}
+                                    >
+                                        <div className="category-overlay">
+                                            <h3>{category.name}</h3>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                    </Slider>
-                </div>
+                            ))}
+                        </Slider>
+                    </div>
 
-                <section className="my-4 featured-explore-section">
-                    <div className="row justify-content-center">
-                        <div className="col-md-10 text-center">
-                            <h2 className="section-title">Featured explore</h2>
+                    <section className="my-4 featured-explore-section">
+                        <div className="row justify-content-center">
+                            <div className="col-md-10 text-center">
+                                <h2 className="section-title">Featured explore</h2>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            {featuredExplores.map((explore) => (
+                                <div key={explore.id} className="col-md-3 mb-4">
+                                    <div className="featured-card">
+                                        <img src={explore.image} alt={explore.title} className="featured-image" />
+                                        <div className="featured-content">
+                                            <h4 className="featured-title">{explore.title}</h4>
+                                            <p className="featured-description">{explore.description}</p>
+                                            <p className="post-by">Post by <strong>{explore.author}</strong></p>
+                                            <img src={share} alt="Share" className="share-icon" />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <footer>
+                <div className="newsletter">
+                    <div className="row">
+                        <div className="col-8">
+                            <h1 style={{ margin: '15px 0px' }}>
+                                Subscribe <br /> Newsletter
+                            </h1>
+                            <strong>
+                                The Travel
+                            </strong>
+                            <p>Get inspired! Receive travel discounts, tips and behind the scenes stories.</p>
+                            <form className="d-flex w-75 flex-row align-items-center">
+                                <input type="text" className="form-control py-3 me-3" id="inlineFormInputGroupUsername" placeholder="Your email address" />
+                                <button type="submit" className="btn btn-dark py-3" style={{ background: '#112211' }}>Subscribe</button>
+                            </form>
+                        </div>
+                        <div className="col-4">
+                            <img src={newsletter} style={{ width: 'auto', height: '100%', maxWidth: '100%' }} />
+                        </div>
+                    </div>
+                </div>
+                <div className="row footer-content">
+                    <div className="col">
+                        <img src={footerLogo} />
+                        <div className="row mt-3">
+                            <div className="col">
+                                <img src={facebookIcon} />
+                                <img src={twitterIcon} className="ms-2" />
+                                <img src={instagramIcon} className="ms-2" />
+                                <img src={youtubeIcon} className="ms-2" />
+                            </div>
                         </div>
                     </div>
 
-                    <div className="row">
-                        {featuredExplores.map((explore) => (
-                            <div key={explore.id} className="col-md-3 mb-4">
-                                <div className="featured-card">
-                                    <img src={explore.image} alt={explore.title} className="featured-image" />
-                                    <div className="featured-content">
-                                        <h4 className="featured-title">{explore.title}</h4>
-                                        <p className="featured-description">{explore.description}</p>
-                                        <p className="post-by">Post by <strong>{explore.author}</strong></p>
-                                        <img src={share} alt="Share" className="share-icon" />
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                    <div className="col p-nm">
+                        <h5 className="fw-bold">Travel Blog</h5>
+                        <p>Bali Travel Guide</p>
+                        <p>Sri Lanka Travel Guide</p>
+                        <p>Maldives Travel Guide</p>
+                        <p>Thailand Travel Guide</p>
                     </div>
-                </section>
-            </div>
+
+                    <div className="col p-nm">
+                        <h5 className="fw-bold">About Us</h5>
+                        <p>Our Story</p>
+                        <p>Work With Us</p>
+                    </div>
+
+                    <div className="col p-nm">
+                        <h5 className="fw-bold">Contact Us</h5>
+                        <p>Our Story</p>
+                        <p>Work With Us</p>
+                    </div>
+                </div>
+            </footer>
         </div>
     );
 }
