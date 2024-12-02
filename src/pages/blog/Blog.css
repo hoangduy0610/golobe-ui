@@ -1,206 +1,355 @@
-
+/* Căn chỉnh và hiển thị mũi tên bên ngoài */
 .slick-prev, .slick-next {
     display: block !important;
-    background-color: rgba(255, 255, 255, 0.7); 
-    border-radius: 50%; 
-    padding: 12px; 
-    z-index: 10; 
+    background-color: rgba(255, 255, 255, 0.7); /* Nền mờ cho mũi tên */
+    border-radius: 50%; /* Viền bo tròn */
+    padding: 12px; /* Tăng kích thước mũi tên */
+    z-index: 10; /* Đảm bảo mũi tên hiển thị trên cùng */
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
-    font-size: 24px; 
-    transition: background-color 0.3s ease; 
+    transform: translateY(-50%); /* Căn chỉnh theo chiều dọc */
+    font-size: 24px; /* Kích thước mũi tên */
+    transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu nền mượt mà */
 }
 
-
+/* Mũi tên trái */
 .slick-prev {
-    left: -40px; 
+    left: -40px; /* Đưa mũi tên trái ra ngoài slider */
 }
 
+/* Mũi tên phải */
 .slick-next {
-    right: -20px; 
+    right: -20px; /* Điều chỉnh mũi tên phải gần hơn với category card */
 }
 
-
+/* Mũi tên trái khi đang hoạt động */
 .slick-prev.slick-active {
-    background-color: black; 
+    background-color: black; /* Màu nền mũi tên trái khi hoạt động */
 }
 
+/* Mũi tên phải khi đang hoạt động */
 .slick-next.slick-active {
-    background-color: transparent; 
+    background-color: transparent; /* Mũi tên phải không thay đổi màu */
 }
 
-
+/* Đảm bảo mũi tên không bị ẩn */
 .slick-prev:before, .slick-next:before {
-    color: #000; 
-    font-size: 24px; 
-    margin: 0; 
+    color: #000; /* Màu sắc của mũi tên */
+    font-size: 24px; /* Kích thước mũi tên */
 }
 
-
-.slick-slider {
-    padding-left: 40px;
-    padding-right: 40px; 
+/* Làm nổi bật mũi tên khi di chuột qua */
+.slick-prev:hover, .slick-next:hover {
+    background-color: rgba(255, 255, 255, 0.9); /* Tăng độ sáng nền khi di chuột qua */
+    color: black; /* Thay đổi màu mũi tên khi di chuột qua */
 }
 
 .app-header {
-    position: relative;
-    background-color: #f5f5f5;
-    padding: 40px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1rem 0;
+    text-align: center;
 }
 
 .app-header .logo img {
-    width: 150px;
+    max-width: 150px;
 }
 
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 2rem;
 }
 
-.navbar .nav-links {
+.nav-links, .btn-group {
     list-style: none;
     display: flex;
+    gap: 1rem;
 }
 
-.navbar .nav-links li {
-    margin: 0 15px;
+.nav-links li, .btn-group li {
+    cursor: pointer;
 }
 
-.navbar .btn-group {
-    list-style: none;
-    display: flex;
+.nav-links li:hover, .btn-group li:hover {
+    text-decoration: underline;
 }
 
-.navbar .btn-group li {
-    margin: 0 10px;
+.btn.btn-white {
+    background-color: #fff;
+    border: 1px solid #000;
+    padding: 0.5rem 1rem;
 }
 
 .hero {
-    text-align: center;
-    margin-top: 50px;
+    margin: 2rem 0;
 }
 
 .hero h1 {
-    font-size: 3em;
-    margin-bottom: 10px;
+    font-size: 3rem;
+    margin: 1rem 0;
 }
 
-.hero h2 {
-    font-size: 2em;
+.hero h2, .hero h4 {
+    margin: 0.5rem 0;
 }
 
-.hero h4 {
-    font-size: 1.2em;
-}
-
-.container {
-    padding: 20px;
-}
-
-/* Section Header */
-.section-title {
-    font-size: 2em;
-    margin-bottom: 20px;
-}
-
-/* Category Section */
 .category-section {
-    margin-top: 50px;
+    margin: 3rem 0;
+}
+
+.section-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
 }
 
 .category-card-container {
-    position: relative;
-    width: 100%;
-    padding: 10px;
+    padding: 0.5rem;
 }
 
 .category-card {
-    position: relative;
-    height: 200px;
     background-size: cover;
     background-position: center;
-    border-radius: 10px;
-    cursor: pointer;
+    height: 200px;
+    border-radius: 8px;
+    position: relative;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.category-card:hover {
+    transform: scale(1.05);
 }
 
 .category-overlay {
     background-color: rgba(0, 0, 0, 0.5);
-    width: 100%;
+    border-radius: 8px;
+    padding: 1rem;
     text-align: center;
-    padding: 10px;
 }
 
-.category-overlay h3 {
-    color: white;
-    font-size: 1.2em;
-}
-
-/* Featured Explore Section */
 .featured-explore-section {
-    margin-top: 50px;
+    margin: 3rem 0;
 }
 
 .featured-card {
-    position: relative;
+    border-radius: 8px;
     overflow: hidden;
-    border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    height: 400px;
-    cursor: pointer; 
 }
 
 .featured-image {
     width: 100%;
-    height: 200px; 
-    object-fit: cover; 
-    cursor: pointer; 
+    height: 200px;
+    object-fit: cover;
 }
 
 .featured-content {
-    background-color: white;
-    padding: 15px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    flex-direction: column;
+    padding: 1rem;
 }
 
 .featured-title {
-    font-size: 1.5em;
-    margin-bottom: 10px;
-    height: 60px; 
-    overflow: hidden; 
-    font-weight: bold;
-    cursor: pointer; 
+    font-size: 1.25rem;
+    margin: 0.5rem 0;
+    cursor: pointer;
+}
+
+.featured-title:hover {
+    color: #8DD3BB;
 }
 
 .featured-description {
-    font-size: 1em;
+    font-size: 0.875rem;
     color: #555;
-    flex-grow: 1;
-    margin-bottom: 15px;
-    overflow: hidden; 
-    height: 80px; 
 }
 
 .post-by {
-    font-size: 0.9em;
-    margin-top: auto; 
-    margin-bottom: 10px; 
+    font-size: 0.875rem;
+    color: #777;
+}
+
+.share-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.page-button {
+    background-color: transparent;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    margin: 0 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.875rem; /* Giảm kích thước font chữ */
+}
+
+.page-button:hover {
+    background-color: transparent;
+}
+
+.page-button.active {
+    color: #8DD3BB;
+    font-weight: bold;
+}
+
+/* Latest Blog Section */
+.latest-blog-section {
+    margin: 3rem 0;
+}
+
+.latest-blog-card {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.latest-blog-image {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 15px;
+}
+
+.latest-blog-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.latest-blog-title {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.latest-blog-title:hover {
+    color: #8DD3BB;
+}
+
+.latest-blog-author {
+    font-size: 0.875rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.latest-blog-excerpt {
+    font-size: 1rem;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .latest-blog-card {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .latest-blog-image {
+        width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+    }
+
+    .latest-blog-content {
+        text-align: center;
+    }
+}
+
+/* Slick Carousel */
+.arrow-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.next-arrow {
+    right: 10px;
+}
+
+.prev-arrow {
+    left: 10px;
+}
+
+.slick-dots {
+    bottom: -30px;
+}
+
+.slick-dots li button:before {
+    font-size: 12px;
+    color: #8DD3BB;
+}
+
+.slick-dots li.slick-active button:before {
+    color: #8DD3BB;
+}
+
+.latest-blog-card {
+    position: relative; /* Đảm bảo nút share được căn chỉnh chính xác */
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+/* Đảm bảo nút share xuất hiện ở góc trên bên phải */
+.latest-blog-card .share-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    z-index: 1; /* Đảm bảo nó không bị che khuất bởi các phần tử khác */
+}
+
+/* Cải thiện hiệu ứng hover cho nút share */
+.latest-blog-card .share-icon:hover {
+    opacity: 0.7; /* Làm mờ nút khi hover */
+}
+
+/* Cải thiện vị trí và sự đồng đều của các phần tử trong blog */
+.latest-blog-image {
+    width: 250px; /* Tăng chiều rộng của hình ảnh */
+    height: 150px; /* Tăng chiều cao của hình ảnh */
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 15px; 
 }
 
 
-.share-icon {
-    position: absolute;
-    bottom: 15px; 
-    right: 15px; 
-    width: 20px;
-    height: 20px;
-    cursor: pointer; 
+@media (max-width: 768px) {
+    .latest-blog-image {
+        width: 100%; 
+        height: auto; 
+    }
+}
+
+.latest-blog-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Điều chỉnh tiêu đề khi hover */
+.latest-blog-title:hover {
+    color: #8DD3BB;
 }

@@ -1,17 +1,11 @@
-import facebookIcon from "@/assets/facebook_icon.svg";
-import footerLogo from "@/assets/footer_logo.svg";
-import instagramIcon from "@/assets/instagram_icon.svg";
+import React, { useState } from "react";
 import logo from "@/assets/logo.svg";
-import maldives from "@/assets/maldives.jpg";
-import newsletter from "@/assets/newsletter.svg";
 import share from "@/assets/share.png";
-import twitterIcon from "@/assets/twitter_icon.svg";
-import youtubeIcon from "@/assets/youtube_icon.svg";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import maldives from "@/assets/maldives.jpg";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick-theme.css";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import "./Blog.css";
 
 export function Blog() {
@@ -35,9 +29,29 @@ export function Blog() {
         { id: 8, title: "Cultural Heritage", image: maldives, description: "Explore cultural heritage sites around the world.", author: "James Black" }
     ];
 
+    const latestBlogs = [
+        { id: 1, title: "A Journey Through the Mountains", image: maldives, author: "Laura Martin", date: "Nov 24, 2024", excerpt: "Explore the breathtaking views and challenging trails of the mountains..." },
+        { id: 2, title: "City Adventures for the Urban Explorer", image: maldives, author: "Mark Twain", date: "Nov 22, 2024", excerpt: "Discover the hidden gems and vibrant culture of the world's greatest cities..." },
+        { id: 3, title: "Beachside Bliss: Top Destinations", image: maldives, author: "Emma Watson", date: "Nov 20, 2024", excerpt: "Find your perfect beach getaway with our top picks for sun, sand, and surf..." },
+        { id: 4, title: "Desert Safaris: An Experience Like No Other", image: maldives, author: "Luke Skywalker", date: "Nov 18, 2024", excerpt: "Experience the thrill of a desert safari and uncover the secrets of the sands..." },
+    ];
+
     const handleCategoryClick = (category: string) => {
         alert(`You selected ${category}`);
     };
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 4;
+    const totalPages = Math.ceil(featuredExplores.length / itemsPerPage);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
+    const displayExplores = featuredExplores.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
     const settings = {
         dots: true,
@@ -76,151 +90,129 @@ export function Blog() {
     };
 
     return (
-        <div className="app">
-            <div className="container-fluid">
-                <header className="app-header">
-                    <div className="logo">
-                        <Link to="/">
-                            <img src={logo} alt="Logo" />
-                        </Link>
+        <div>
+            <header className="app-header">
+                <div className="logo">
+                    <img src={logo} alt="Logo" />
+                </div>
+                <nav className="navbar">
+                    <ul className="nav-links">
+                        <li>Hotels</li>
+                        <li>Restaurants</li>
+                        <li>Trips</li>
+                        <li>Thing to do</li>
+                        <li>Blog</li>
+                        <li>Forum</li>
+                    </ul>
+                    <ul className="btn-group">
+                        <li>Partner</li>
+                        <li>Login</li>
+                        <li className="btn btn-white">Sign Up</li>
+                    </ul>
+                </nav>
+                <div className="hero">
+                    <h2>Helping Others</h2>
+                    <h1>LIVE & TRAVEL</h1>
+                    <h4>Special offers to suit your plan</h4>
+                </div>
+            </header>
+            <div className="container">
+                <section className="card shadow my-4 px-4 border-0">
+                    <div className="card-body">
+                        <input type="text" className="form-control bg-secondary py-3" placeholder="Search" />
                     </div>
-                    <nav className="navbar">
-                        <ul className="nav-links">
-                            <li>Hotels</li>
-                            <li>Restaurants</li>
-                            <li>Trips</li>
-                            <li>Thing to do</li>
-                            <li>Blog</li>
-                            <li>Forum</li>
-                        </ul>
-                        <ul className="btn-group">
-                            <li>Partner</li>
-                            <li>Login</li>
-                            <li className="btn btn-white">Sign Up</li>
-                        </ul>
-                    </nav>
-                    <div className="hero">
-                        <h2>Helping Others</h2>
-                        <h1>LIVE & TRAVEL</h1>
-                        <h4>Special offers to suit your plan</h4>
+                </section>
+
+                <div className="category-section">
+                    <div className="row justify-content-center">
+                        <div className="col-md-10 text-center">
+                            <h2 className="section-title">Choose a category</h2>
+                        </div>
                     </div>
-                </header>
-                <div className="container">
-                    <section className="card shadow my-4 px-4 border-0">
-                        <div className="card-body">
-                            <input type="text" className="form-control bg-secondary py-3" placeholder="Search" />
-                        </div>
-                    </section>
 
-                    <div className="category-section">
-                        <div className="row justify-content-center">
-                            <div className="col-md-10 text-center">
-                                <h2 className="section-title">Choose a category</h2>
-                            </div>
-                        </div>
-
-                        <Slider {...settings}>
-                            {categories.map((category) => (
+                    <Slider {...settings}>
+                        {categories.map((category) => (
+                            <div
+                                key={category.id}
+                                className="category-card-container"
+                                onClick={() => handleCategoryClick(category.name)}
+                            >
                                 <div
-                                    key={category.id}
-                                    className="category-card-container"
-                                    onClick={() => handleCategoryClick(category.name)}
+                                    className="category-card"
+                                    style={{
+                                        backgroundImage: `url(${category.image})`,
+                                    }}
                                 >
-                                    <div
-                                        className="category-card"
-                                        style={{
-                                            backgroundImage: `url(${category.image})`,
-                                        }}
-                                    >
-                                        <div className="category-overlay">
-                                            <h3>{category.name}</h3>
-                                        </div>
+                                    <div className="category-overlay">
+                                        <h3>{category.name}</h3>
                                     </div>
                                 </div>
-                            ))}
-                        </Slider>
+                            </div>
+                        ))}
+                    </Slider>
+                </div>
+
+                <section className="my-4 featured-explore-section">
+                    <div className="row justify-content-center">
+                        <div className="col-md-10 text-center">
+                            <h2 className="section-title">Featured explore</h2>
+                        </div>
                     </div>
 
-                    <section className="my-4 featured-explore-section">
-                        <div className="row justify-content-center">
-                            <div className="col-md-10 text-center">
-                                <h2 className="section-title">Featured explore</h2>
-                            </div>
-                        </div>
-
-                        <div className="row">
-                            {featuredExplores.map((explore) => (
-                                <div key={explore.id} className="col-md-3 mb-4">
-                                    <div className="featured-card">
-                                        <img src={explore.image} alt={explore.title} className="featured-image" />
-                                        <div className="featured-content">
-                                            <h4 className="featured-title">{explore.title}</h4>
-                                            <p className="featured-description">{explore.description}</p>
-                                            <p className="post-by">Post by <strong>{explore.author}</strong></p>
-                                            <img src={share} alt="Share" className="share-icon" />
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                </div>
-            </div>
-            <footer>
-                <div className="newsletter">
                     <div className="row">
-                        <div className="col-8">
-                            <h1 style={{ margin: '15px 0px' }}>
-                                Subscribe <br /> Newsletter
-                            </h1>
-                            <strong>
-                                The Travel
-                            </strong>
-                            <p>Get inspired! Receive travel discounts, tips and behind the scenes stories.</p>
-                            <form className="d-flex w-75 flex-row align-items-center">
-                                <input type="text" className="form-control py-3 me-3" id="inlineFormInputGroupUsername" placeholder="Your email address" />
-                                <button type="submit" className="btn btn-dark py-3" style={{ background: '#112211' }}>Subscribe</button>
-                            </form>
-                        </div>
-                        <div className="col-4">
-                            <img src={newsletter} style={{ width: 'auto', height: '100%', maxWidth: '100%' }} />
-                        </div>
-                    </div>
-                </div>
-                <div className="row footer-content">
-                    <div className="col">
-                        <img src={footerLogo} />
-                        <div className="row mt-3">
-                            <div className="col">
-                                <img src={facebookIcon} />
-                                <img src={twitterIcon} className="ms-2" />
-                                <img src={instagramIcon} className="ms-2" />
-                                <img src={youtubeIcon} className="ms-2" />
+                        {displayExplores.map((explore) => (
+                            <div key={explore.id} className="col-md-3 mb-4">
+                                <div className="featured-card">
+                                    <img src={explore.image} alt={explore.title} className="featured-image" />
+                                    <div className="featured-content">
+                                        <h4 className="featured-title">{explore.title}</h4>
+                                        <p className="featured-description">{explore.description}</p>
+                                        <p className="post-by">Post by <strong>{explore.author}</strong></p>
+                                        <img src={share} alt="Share" className="share-icon" />
+                                    </div>
+                                </div>
                             </div>
+                        ))}
+                    </div>
+
+                    <div className="pagination">
+                        {Array.from({ length: totalPages }, (_, index) => (
+                            <button
+                                key={index + 1}
+                                className={`page-button ${currentPage === index + 1 ? "active" : ""}`}
+                                onClick={() => handlePageChange(index + 1)}
+                            >
+                                {index + 1}
+                            </button>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="latest-blog-section my-4">
+                    <div className="row justify-content-center">
+                        <div className="col-md-10 text-center">
+                            <h2 className="section-title">Latest Blog</h2>
                         </div>
                     </div>
 
-                    <div className="col p-nm">
-                        <h5 className="fw-bold">Travel Blog</h5>
-                        <p>Bali Travel Guide</p>
-                        <p>Sri Lanka Travel Guide</p>
-                        <p>Maldives Travel Guide</p>
-                        <p>Thailand Travel Guide</p>
+                    <div className="row">
+                        {latestBlogs.map((blog) => (
+                            <div key={blog.id} className="col-md-10 mb-4 latest-blog-card">
+                                <div className="d-flex align-items-center">
+                                    <img src={blog.image} alt={blog.title} className="latest-blog-image mr-3" />
+                                    <div className="latest-blog-content">
+                                        <h4 className="latest-blog-title">{blog.title}</h4>
+                                        <p className="latest-blog-author">By {blog.author}</p>
+                                        <p className="latest-blog-date">{blog.date}</p>
+                                        <p className="latest-blog-excerpt">{blog.excerpt}</p>
+                                    </div>
+                                    <img src={share} alt="Share" className="share-icon" />
+                                </div>
+                            </div>
+                        ))}
                     </div>
-
-                    <div className="col p-nm">
-                        <h5 className="fw-bold">About Us</h5>
-                        <p>Our Story</p>
-                        <p>Work With Us</p>
-                    </div>
-
-                    <div className="col p-nm">
-                        <h5 className="fw-bold">Contact Us</h5>
-                        <p>Our Story</p>
-                        <p>Work With Us</p>
-                    </div>
-                </div>
-            </footer>
+                </section>
+            </div>
         </div>
     );
 }
