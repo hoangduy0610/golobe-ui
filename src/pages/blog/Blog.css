@@ -1,47 +1,40 @@
-/* Căn chỉnh và hiển thị mũi tên bên ngoài */
 .slick-prev, .slick-next {
     display: block !important;
-    background-color: rgba(255, 255, 255, 0.7); /* Nền mờ cho mũi tên */
-    border-radius: 50%; /* Viền bo tròn */
-    padding: 12px; /* Tăng kích thước mũi tên */
-    z-index: 10; /* Đảm bảo mũi tên hiển thị trên cùng */
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%; 
+    padding: 12px; 
+    z-index: 10; 
     position: absolute;
     top: 50%;
-    transform: translateY(-50%); /* Căn chỉnh theo chiều dọc */
-    font-size: 24px; /* Kích thước mũi tên */
-    transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu nền mượt mà */
+    transform: translateY(-50%); 
+    font-size: 24px; 
+    transition: background-color 0.3s ease; 
 }
 
-/* Mũi tên trái */
 .slick-prev {
-    left: -40px; /* Đưa mũi tên trái ra ngoài slider */
+    left: -40px; 
 }
 
-/* Mũi tên phải */
 .slick-next {
-    right: -20px; /* Điều chỉnh mũi tên phải gần hơn với category card */
+    right: -20px; 
 }
 
-/* Mũi tên trái khi đang hoạt động */
 .slick-prev.slick-active {
-    background-color: black; /* Màu nền mũi tên trái khi hoạt động */
+    background-color: black;
 }
 
-/* Mũi tên phải khi đang hoạt động */
 .slick-next.slick-active {
-    background-color: transparent; /* Mũi tên phải không thay đổi màu */
+    background-color: transparent; 
 }
 
-/* Đảm bảo mũi tên không bị ẩn */
 .slick-prev:before, .slick-next:before {
-    color: #000; /* Màu sắc của mũi tên */
-    font-size: 24px; /* Kích thước mũi tên */
+    color: #000; 
+    font-size: 24px; 
 }
 
-/* Làm nổi bật mũi tên khi di chuột qua */
 .slick-prev:hover, .slick-next:hover {
-    background-color: rgba(255, 255, 255, 0.9); /* Tăng độ sáng nền khi di chuột qua */
-    color: black; /* Thay đổi màu mũi tên khi di chuột qua */
+    background-color: rgba(255, 255, 255, 0.9); 
+    color: black; 
 }
 
 .app-header {
@@ -192,7 +185,7 @@
     margin: 0 0.25rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    font-size: 0.875rem; /* Giảm kích thước font chữ */
+    font-size: 0.875rem;
 }
 
 .page-button:hover {
@@ -204,7 +197,6 @@
     font-weight: bold;
 }
 
-/* Latest Blog Section */
 .latest-blog-section {
     margin: 3rem 0;
 }
@@ -269,7 +261,7 @@
     }
 }
 
-/* Slick Carousel */
+
 .arrow-icon {
     position: absolute;
     top: 50%;
@@ -302,7 +294,7 @@
 }
 
 .latest-blog-card {
-    position: relative; /* Đảm bảo nút share được căn chỉnh chính xác */
+    position: relative; 
     display: flex;
     flex-direction: row;
     border-bottom: 1px solid #ddd;
@@ -310,7 +302,6 @@
     margin-bottom: 20px;
 }
 
-/* Đảm bảo nút share xuất hiện ở góc trên bên phải */
 .latest-blog-card .share-icon {
     position: absolute;
     top: 10px;
@@ -318,18 +309,17 @@
     width: 24px;
     height: 24px;
     cursor: pointer;
-    z-index: 1; /* Đảm bảo nó không bị che khuất bởi các phần tử khác */
+    z-index: 1;
 }
 
-/* Cải thiện hiệu ứng hover cho nút share */
+
 .latest-blog-card .share-icon:hover {
-    opacity: 0.7; /* Làm mờ nút khi hover */
+    opacity: 0.7;
 }
 
-/* Cải thiện vị trí và sự đồng đều của các phần tử trong blog */
 .latest-blog-image {
-    width: 250px; /* Tăng chiều rộng của hình ảnh */
-    height: 150px; /* Tăng chiều cao của hình ảnh */
+    width: 250px;
+    height: 150px;
     object-fit: cover;
     border-radius: 8px;
     margin-right: 15px; 
@@ -349,7 +339,6 @@
     justify-content: center;
 }
 
-/* Điều chỉnh tiêu đề khi hover */
 .latest-blog-title:hover {
     color: #8DD3BB;
 }

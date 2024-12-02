@@ -1,5 +1,6 @@
 import Layout from "@/components/layout/Layout";
 import Login from "@/pages/Login/Login";
+import Admin from "@/pages/Admin/Admin";
 import { RootState } from "@/redux/store";
 import { routePath } from "@/routes/routePath";
 import { useEffect } from "react";
@@ -26,14 +27,20 @@ export default function AppRoute() {
         />
       );
     });
-  }
+  };
 
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        {routePathRender()}
+        {routePath.map((route, index) => (
+          <Route key={index} index={route.index} path={route.path} element={route.component} />
+        ))}
       </Route>
+
       <Route path="/login" element={<Login />} />
+
+      <Route path="/admin/*" element={<Admin />} />
+
     </Routes>
   );
 }

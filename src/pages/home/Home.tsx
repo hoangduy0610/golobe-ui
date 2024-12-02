@@ -30,6 +30,7 @@ export function Home() {
                             <li>Thing to do</li>
                             <li><Link to="/blog">Blog</Link></li>
                             <li>Forum</li>
+                            <li><Link to="/admin">Admin</Link></li> {/* Thêm link tới trang Admin */}
                         </ul>
                         <ul className="btn-group">
                             <li>Partner</li>

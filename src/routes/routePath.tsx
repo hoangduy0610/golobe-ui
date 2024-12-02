@@ -1,7 +1,8 @@
-// src/routes/routePath.tsx
+
 import { Home } from "@/pages/home/Home";
 import { Link } from "react-router-dom";
 import { Blog } from "@/pages/blog/Blog";
+import Admin from "@/pages/Admin/Admin";
 
 export const routePath = [
     {
@@ -31,6 +32,13 @@ export const routePath = [
         icon: 'fas fa-blog',
         title: 'Blog',
         component: <Blog />
+    },
+    {
+        index: false,
+        path: 'admin', 
+        icon: 'fas fa-user-shield',
+        title: 'Admin',
+        component: <Admin />
     },
     {
         index: false,
