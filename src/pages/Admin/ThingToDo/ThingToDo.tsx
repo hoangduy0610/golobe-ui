@@ -1,4 +1,5 @@
 import React from "react";
+import ThingToDoTable from "@/components/ThingToDoTable/ThingToDoTable";
 
 const ThingToDo = () => {
   const places = [
@@ -29,36 +30,9 @@ const ThingToDo = () => {
   ];
 
   return (
-    <div className="thing-to-do-container">
+    <div>
       <h2>Thing to Do Management</h2>
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Location</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Address</th>
-            <th>Description</th>
-            <th>Website</th>
-          </tr>
-        </thead>
-        <tbody>
-          {places.map((place, index) => (
-            <tr key={index}>
-              <td>{place.location}</td>
-              <td>{place.name}</td>
-              <td>{place.type}</td>
-              <td>{place.address}</td>
-              <td>{place.description}</td>
-              <td>
-                <a href={place.website} target="_blank" rel="noopener noreferrer">
-                  {place.website}
-                </a>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <ThingToDoTable places={places} />
     </div>
   );
 };

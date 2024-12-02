@@ -1,4 +1,5 @@
 import React from "react";
+import RestaurantTable from "@/components/RestaurantTable/RestaurantTable"; // Import component mới
 
 const Restaurant = () => {
   const restaurants = [
@@ -26,40 +27,12 @@ const Restaurant = () => {
       description: "A French bistro offering authentic French cuisine with a charming ambiance.",
       website: "https://www.lebistro-paris.com"
     }
-
   ];
 
   return (
-    <div className="restaurant-container">
+    <div>
       <h2>Restaurant Management</h2>
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Location</th>
-            <th>Name</th>
-            <th>Type (Food or Drink)</th>
-            <th>Address</th>
-            <th>Description</th>
-            <th>Website</th>
-          </tr>
-        </thead>
-        <tbody>
-          {restaurants.map((restaurant, index) => (
-            <tr key={index}>
-              <td>{restaurant.location}</td>
-              <td>{restaurant.name}</td>
-              <td>{restaurant.type}</td>
-              <td>{restaurant.address}</td>
-              <td>{restaurant.description}</td>
-              <td>
-                <a href={restaurant.website} target="_blank" rel="noopener noreferrer">
-                  {restaurant.website}
-                </a>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <RestaurantTable restaurants={restaurants} />
     </div>
   );
 };
