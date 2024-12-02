@@ -9,6 +9,7 @@ import twitterIcon from "@/assets/twitter_icon.svg";
 import youtubeIcon from "@/assets/youtube_icon.svg";
 import { faCalendarDays, faLocationDot, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from 'react-router-dom';
 import "./Home.css";
 
 export function Home() {
@@ -17,7 +18,9 @@ export function Home() {
             <div className="container-fluid">
                 <header className="app-header">
                     <div className="logo">
-                        <img src={logo} />
+                        <Link to="/">
+                            <img src={logo} alt="Logo" />
+                        </Link>
                     </div>
                     <nav className="navbar">
                         <ul className="nav-links">
@@ -25,7 +28,7 @@ export function Home() {
                             <li>Restaurants</li>
                             <li>Trips</li>
                             <li>Thing to do</li>
-                            <li>Blog</li>
+                            <li><Link to="/blog">Blog</Link></li>
                             <li>Forum</li>
                         </ul>
                         <ul className="btn-group">
