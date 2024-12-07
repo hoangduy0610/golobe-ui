@@ -14,7 +14,7 @@ body {
 .frame {
     position: relative;
     width: 100%;
-    height: 400px; /* Đặt chiều cao cho khung hình */
+    height: 400px; 
     background-image: url(@/assets/maldives.jpg);
     background-size: cover;
     background-position: center;
@@ -25,22 +25,58 @@ body {
 .frame-header {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 5px; 
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 10px; 
+    right: 10px; 
     z-index: 10;
 }
 
 .button {
-    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px; 
     border: none;
     border-radius: 4px;
     cursor: pointer;
     background-color: white;
     color: black;
     font-weight: bold;
+    font-size: 14px; 
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
+
+.button-icon {
+    width: 20px; 
+    height: 20px; 
+}
+
+.button-invite {
+    border-radius: 15px; 
+    padding: 5px 10px; 
+}
+
+.button-share, .button-edit {
+    border-radius: 50%;
+    width: 40px; 
+    height: 40px; 
+    padding: 0;
+}
+
+.button-share .button-icon, .button-edit .button-icon {
+    margin: 0; 
+}
+
+.button:hover {
+    background-color: #ddd;
+    transform: scale(1.05);
+}
+
+.button-invite:hover {
+    background-color: #ccc;
+}
+
 
 .frame-footer {
     position: absolute;
@@ -74,7 +110,7 @@ footer {
     margin-top: 400px;
     padding-top: 200px;
     position: relative;
-    z-index: 5; /* Giảm z-index để footer nằm dưới add-tab */
+    z-index: 5; 
 }
 
 .newsletter {
@@ -82,7 +118,7 @@ footer {
     position: absolute;
     top: -175px;
     left: 100px;
-    z-index: 5; /* Đảm bảo newsletter cũng nằm dưới add-tab */
+    z-index: 5; 
     background: #CDEAE1;
     padding: 30px;
     width: calc(100% - 200px);
@@ -489,7 +525,7 @@ footer .footer-content .col img {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 10; /* Đảm bảo overlay phủ hết */
+    z-index: 10; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -502,7 +538,7 @@ footer .footer-content .col img {
     width: 30%; 
     height: 100vh; 
     background: white;
-    z-index: 15; /* Đảm bảo add tab nằm trên footer */
+    z-index: 15; 
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -562,6 +598,13 @@ footer .footer-content .col img {
     border-radius: 5px;
 }
 
+.accordion-icon {
+    width: 2rem;  
+    height: 2rem;
+    margin-right: 0.5rem; 
+    object-fit: contain; 
+}
+
 .item-image {
     width: 90px;
     height: 70px;
@@ -590,16 +633,16 @@ footer .footer-content .col img {
 }
 
 .item.selected {
-    background-color: #8DD3BB; /* Màu nền khi được chọn */
-    border-color: #75bca3; /* Đổi màu border khi được chọn */
+    background-color: #8DD3BB; 
+    border-color: #75bca3; 
 }
 
 .item:hover {
-    background-color: rgba(0, 0, 0, 0.1); /* Màu nền khi hover */
-    transform: scale(1.05); /* Hiệu ứng phóng to */
+    background-color: rgba(0, 0, 0, 0.1); 
+    transform: scale(1.05); 
 }
 
 .item.selected:hover {
-    background-color: #75bca3; /* Màu nền hover khi đã chọn */
-    transform: scale(1.05); /* Giữ hiệu ứng phóng to */
+    background-color: #75bca3; 
+    transform: scale(1.05);
 }

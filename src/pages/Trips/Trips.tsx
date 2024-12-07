@@ -6,6 +6,12 @@ import maldives from "@/assets/maldives.jpg";
 import facebookIcon from "@/assets/facebook_icon.svg";
 import footerLogo from "@/assets/footer_logo.svg";
 import instagramIcon from "@/assets/instagram_icon.svg";
+import sharePlan from "@/assets/share_plan.png";
+import setting from "@/assets/setting.png";
+import invite from "@/assets/invite.png";
+import thingtodo from "@/assets/thingtodo.png";
+import bed from "@/assets/bed.png";
+import food from "@/assets/food.png";
 import logo from "@/assets/logo.svg";
 import newsletter from "@/assets/newsletter.svg";
 import reviewImg from "@/assets/review_img.jpg";
@@ -13,6 +19,7 @@ import twitterIcon from "@/assets/twitter_icon.svg";
 import youtubeIcon from "@/assets/youtube_icon.svg";
 import { faCalendarDays, faLocationDot, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Dropdown } from 'react-bootstrap';
 
 export function Trips() {
     const [selectedItem, setSelectedItem] = useState<any>(null);
@@ -56,7 +63,7 @@ export function Trips() {
         setSelectedItem(item);
         setIsDetailTabOpen(true);
     };
-    
+
     const closeDetailTab = () => {
         setIsDetailTabOpen(false);
         setSelectedItem(null);
@@ -83,11 +90,22 @@ export function Trips() {
             <div className="container-fluid">
                 <Header />
                 <div className="container">
+                    <section className="card shadow my-4 px-4 border-0">
+                        <div className="card-body">
+                            <input type="text" className="form-control bg-secondary py-3" placeholder="Search" />
+                        </div>
+                    </section>
                     <div className="frame" style={{ backgroundImage: `url(${maldives})` }}>
                         <div className="frame-header">
-                            <button className="button button-invite">Invite</button>
-                            <button className="button button-share">Share</button>
-                            <button className="button button-edit" onClick={toggleEditModal}>Edit</button>
+                            <button className="button button-invite">
+                                <img src={invite} alt="Invite" className="button-icon" /> Invite
+                            </button>
+                            <button className="button button-share">
+                                <img src={sharePlan} alt="Share" className="button-icon" />
+                            </button>
+                            <button className="button button-edit" onClick={toggleEditModal}>
+                                <img src={setting} alt="Edit" className="button-icon" />
+                            </button>
                         </div>
                         <div className="frame-body"></div>
                         <div className="frame-footer">
@@ -123,61 +141,73 @@ export function Trips() {
                                     <Accordion.Body>
                                         <Accordion>
                                             <Accordion.Item eventKey="0">
-                                                <Accordion.Header><strong>Things to Do</strong></Accordion.Header>
+                                                <Accordion.Header>
+                                                    <strong>
+                                                        <img src={thingtodo} alt="Things to Do" className="accordion-icon" />
+                                                        Things to Do
+                                                    </strong></Accordion.Header>
                                                 <Accordion.Body>
-                                                <div className="item" onClick={() => handleItemClick({ name: "Visit the local beach", image: reviewImg, website: "https://example.com", description: "A beautiful beach to visit." })}>
-                                                    <img src={reviewImg} alt="Things to Do" className="item-image" />
-                                                    <span className="item-name">Visit the local beach</span>
-                                                </div>
-                                                <div className="item" onClick={() => handleItemClick({ name: "Explore the city center", image: reviewImg, website: "https://example.com", description: "Explore the heart of the city." })}>
-                                                    <img src={reviewImg} alt="Things to Do" className="item-image" />
-                                                    <span className="item-name">Explore the city center</span>
-                                                </div>
-                                                <div className="item" onClick={() => handleItemClick({ name: "Go for a guided tour", image: reviewImg, website: "https://example.com", description: "Join a guided tour to learn more about the place." })}>
-                                                    <img src={reviewImg} alt="Things to Do" className="item-image" />
-                                                    <span className="item-name">Go for a guided tour</span>
-                                                </div>
-                                                <button className="btn-add" onClick={() => toggleAddTab('things_to do')}>+ Add</button>
+                                                    <div className="item" onClick={() => handleItemClick({ name: "Visit the local beach", image: reviewImg, website: "https://example.com", description: "A beautiful beach to visit." })}>
+                                                        <img src={reviewImg} alt="Things to Do" className="item-image" />
+                                                        <span className="item-name">Visit the local beach</span>
+                                                    </div>
+                                                    <div className="item" onClick={() => handleItemClick({ name: "Explore the city center", image: reviewImg, website: "https://example.com", description: "Explore the heart of the city." })}>
+                                                        <img src={reviewImg} alt="Things to Do" className="item-image" />
+                                                        <span className="item-name">Explore the city center</span>
+                                                    </div>
+                                                    <div className="item" onClick={() => handleItemClick({ name: "Go for a guided tour", image: reviewImg, website: "https://example.com", description: "Join a guided tour to learn more about the place." })}>
+                                                        <img src={reviewImg} alt="Things to Do" className="item-image" />
+                                                        <span className="item-name">Go for a guided tour</span>
+                                                    </div>
+                                                    <button className="btn-add" onClick={() => toggleAddTab('things_to do')}>+ Add</button>
                                                 </Accordion.Body>
                                             </Accordion.Item>
                                             <Accordion.Item eventKey="1">
-                                                <Accordion.Header><strong>Place to Stay</strong></Accordion.Header>
+                                                <Accordion.Header>
+                                                    <strong>
+                                                        <img src={bed} alt="Place to Stay" className="accordion-icon" />
+                                                        Place to Stay
+                                                    </strong></Accordion.Header>
                                                 <Accordion.Body>
-                                                <div className="place-to-stay">
-                                                <div className="item" onClick={() => handleItemClick({ name: "Luxury Resort", image: reviewImg, website: "https://example.com", description: "A luxurious resort by the beach." })}>
-                                                    <img src={reviewImg} alt="Place to Stay" className="item-image" />
-                                                    <span className="item-name">Luxury Resort</span>
-                                                </div>
-                                                <div className="item" onClick={() => handleItemClick({ name: "Budget Hotel", image: reviewImg, website: "https://example.com", description: "Affordable hotel with great amenities." })}>
-                                                    <img src={reviewImg} alt="Place to Stay" className="item-image" />
-                                                    <span className="item-name">Budget Hotel</span>
-                                                </div>
-                                                <div className="item" onClick={() => handleItemClick({ name: "Beachside Cabins", image: reviewImg, website: "https://example.com", description: "Cozy cabins near the beach." })}>
-                                                    <img src={reviewImg} alt="Place to Stay" className="item-image" />
-                                                    <span className="item-name">Beachside Cabins</span>
-                                                </div>
-                                                </div>
-                                                <button className="btn-add" onClick={() => toggleAddTab('place_to stay')}>+ Add</button>
+                                                    <div className="place-to-stay">
+                                                        <div className="item" onClick={() => handleItemClick({ name: "Luxury Resort", image: reviewImg, website: "https://example.com", description: "A luxurious resort by the beach." })}>
+                                                            <img src={reviewImg} alt="Place to Stay" className="item-image" />
+                                                            <span className="item-name">Luxury Resort</span>
+                                                        </div>
+                                                        <div className="item" onClick={() => handleItemClick({ name: "Budget Hotel", image: reviewImg, website: "https://example.com", description: "Affordable hotel with great amenities." })}>
+                                                            <img src={reviewImg} alt="Place to Stay" className="item-image" />
+                                                            <span className="item-name">Budget Hotel</span>
+                                                        </div>
+                                                        <div className="item" onClick={() => handleItemClick({ name: "Beachside Cabins", image: reviewImg, website: "https://example.com", description: "Cozy cabins near the beach." })}>
+                                                            <img src={reviewImg} alt="Place to Stay" className="item-image" />
+                                                            <span className="item-name">Beachside Cabins</span>
+                                                        </div>
+                                                    </div>
+                                                    <button className="btn-add" onClick={() => toggleAddTab('place_to stay')}>+ Add</button>
                                                 </Accordion.Body>
                                             </Accordion.Item>
                                             <Accordion.Item eventKey="2">
-                                                <Accordion.Header><strong>Food & Drink</strong></Accordion.Header>
+                                                <Accordion.Header>
+                                                    <strong>
+                                                        <img src={food} alt="Food & Drink" className="accordion-icon" />
+                                                        Food & Drink
+                                                    </strong></Accordion.Header>
                                                 <Accordion.Body>
-                                                <div className="food-drink">
-                                                <div className="item" onClick={() => handleItemClick({ name: "Try local seafood", image: reviewImg, website: "https://example.com", description: "Taste the fresh seafood from the local market." })}>
-                                                    <img src={reviewImg} alt="Food & Drink" className="item-image" />
-                                                    <span className="item-name">Try local seafood</span>
-                                                </div>
-                                                <div className="item" onClick={() => handleItemClick({ name: "Visit a rooftop restaurant", image: reviewImg, website: "https://example.com", description: "Dine with a view at a rooftop restaurant." })}>
-                                                    <img src={reviewImg} alt="Food & Drink" className="item-image" />
-                                                    <span className="item-name">Visit a rooftop restaurant</span>
-                                                </div>
-                                                <div className="item" onClick={() => handleItemClick({ name: "Enjoy fresh tropical fruits", image: reviewImg, website: "https://example.com", description: "Indulge in tropical fruits at a local market." })}>
-                                                    <img src={reviewImg} alt="Food & Drink" className="item-image" />
-                                                    <span className="item-name">Enjoy fresh tropical fruits</span>
-                                                </div>
-                                                </div>
-                                                <button className="btn-add" onClick={() => toggleAddTab('food_& drink')}>+ Add</button>
+                                                    <div className="food-drink">
+                                                        <div className="item" onClick={() => handleItemClick({ name: "Try local seafood", image: reviewImg, website: "https://example.com", description: "Taste the fresh seafood from the local market." })}>
+                                                            <img src={reviewImg} alt="Food & Drink" className="item-image" />
+                                                            <span className="item-name">Try local seafood</span>
+                                                        </div>
+                                                        <div className="item" onClick={() => handleItemClick({ name: "Visit a rooftop restaurant", image: reviewImg, website: "https://example.com", description: "Dine with a view at a rooftop restaurant." })}>
+                                                            <img src={reviewImg} alt="Food & Drink" className="item-image" />
+                                                            <span className="item-name">Visit a rooftop restaurant</span>
+                                                        </div>
+                                                        <div className="item" onClick={() => handleItemClick({ name: "Enjoy fresh tropical fruits", image: reviewImg, website: "https://example.com", description: "Indulge in tropical fruits at a local market." })}>
+                                                            <img src={reviewImg} alt="Food & Drink" className="item-image" />
+                                                            <span className="item-name">Enjoy fresh tropical fruits</span>
+                                                        </div>
+                                                    </div>
+                                                    <button className="btn-add" onClick={() => toggleAddTab('food_& drink')}>+ Add</button>
                                                 </Accordion.Body>
                                             </Accordion.Item>
                                         </Accordion>
@@ -185,7 +215,89 @@ export function Trips() {
                                 </Accordion.Item>
                             </Accordion>
                         )}
-                        {activeTab === 'favourite' && <div>Favourite content goes here</div>}
+                        <div className="tab-content">
+                            {activeTab === 'favourite' && (
+                                 <Accordion defaultActiveKey="0">
+                                 <Accordion.Item eventKey="0">
+                                     <Accordion.Header><strong style={{ fontSize: '1.25rem' }}>Your Saves</strong></Accordion.Header>
+                                     <Accordion.Body>
+                                         <Accordion>
+                                             <Accordion.Item eventKey="0">
+                                                 <Accordion.Header>
+                                                     <strong>
+                                                         <img src={thingtodo} alt="Things to Do" className="accordion-icon" />
+                                                         Things to Do
+                                                     </strong></Accordion.Header>
+                                                 <Accordion.Body>
+                                                     <div className="item" onClick={() => handleItemClick({ name: "Visit the local beach", image: reviewImg, website: "https://example.com", description: "A beautiful beach to visit." })}>
+                                                         <img src={reviewImg} alt="Things to Do" className="item-image" />
+                                                         <span className="item-name">Visit the local beach</span>
+                                                     </div>
+                                                     <div className="item" onClick={() => handleItemClick({ name: "Explore the city center", image: reviewImg, website: "https://example.com", description: "Explore the heart of the city." })}>
+                                                         <img src={reviewImg} alt="Things to Do" className="item-image" />
+                                                         <span className="item-name">Explore the city center</span>
+                                                     </div>
+                                                     <div className="item" onClick={() => handleItemClick({ name: "Go for a guided tour", image: reviewImg, website: "https://example.com", description: "Join a guided tour to learn more about the place." })}>
+                                                         <img src={reviewImg} alt="Things to Do" className="item-image" />
+                                                         <span className="item-name">Go for a guided tour</span>
+                                                     </div>
+                                                     {/* <button className="btn-add" onClick={() => toggleAddTab('things_to do')}>+ Add</button> */}
+                                                 </Accordion.Body>
+                                             </Accordion.Item>
+                                             <Accordion.Item eventKey="1">
+                                                 <Accordion.Header>
+                                                     <strong>
+                                                         <img src={bed} alt="Place to Stay" className="accordion-icon" />
+                                                         Place to Stay
+                                                     </strong></Accordion.Header>
+                                                 <Accordion.Body>
+                                                     <div className="place-to-stay">
+                                                         <div className="item" onClick={() => handleItemClick({ name: "Luxury Resort", image: reviewImg, website: "https://example.com", description: "A luxurious resort by the beach." })}>
+                                                             <img src={reviewImg} alt="Place to Stay" className="item-image" />
+                                                             <span className="item-name">Luxury Resort</span>
+                                                         </div>
+                                                         <div className="item" onClick={() => handleItemClick({ name: "Budget Hotel", image: reviewImg, website: "https://example.com", description: "Affordable hotel with great amenities." })}>
+                                                             <img src={reviewImg} alt="Place to Stay" className="item-image" />
+                                                             <span className="item-name">Budget Hotel</span>
+                                                         </div>
+                                                         <div className="item" onClick={() => handleItemClick({ name: "Beachside Cabins", image: reviewImg, website: "https://example.com", description: "Cozy cabins near the beach." })}>
+                                                             <img src={reviewImg} alt="Place to Stay" className="item-image" />
+                                                             <span className="item-name">Beachside Cabins</span>
+                                                         </div>
+                                                     </div>
+                                                     {/* <button className="btn-add" onClick={() => toggleAddTab('place_to stay')}>+ Add</button> */}
+                                                 </Accordion.Body>
+                                             </Accordion.Item>
+                                             <Accordion.Item eventKey="2">
+                                                 <Accordion.Header>
+                                                     <strong>
+                                                         <img src={food} alt="Food & Drink" className="accordion-icon" />
+                                                         Food & Drink
+                                                     </strong></Accordion.Header>
+                                                 <Accordion.Body>
+                                                     <div className="food-drink">
+                                                         <div className="item" onClick={() => handleItemClick({ name: "Try local seafood", image: reviewImg, website: "https://example.com", description: "Taste the fresh seafood from the local market." })}>
+                                                             <img src={reviewImg} alt="Food & Drink" className="item-image" />
+                                                             <span className="item-name">Try local seafood</span>
+                                                         </div>
+                                                         <div className="item" onClick={() => handleItemClick({ name: "Visit a rooftop restaurant", image: reviewImg, website: "https://example.com", description: "Dine with a view at a rooftop restaurant." })}>
+                                                             <img src={reviewImg} alt="Food & Drink" className="item-image" />
+                                                             <span className="item-name">Visit a rooftop restaurant</span>
+                                                         </div>
+                                                         <div className="item" onClick={() => handleItemClick({ name: "Enjoy fresh tropical fruits", image: reviewImg, website: "https://example.com", description: "Indulge in tropical fruits at a local market." })}>
+                                                             <img src={reviewImg} alt="Food & Drink" className="item-image" />
+                                                             <span className="item-name">Enjoy fresh tropical fruits</span>
+                                                         </div>
+                                                     </div>
+                                                     {/* <button className="btn-add" onClick={() => toggleAddTab('food_& drink')}>+ Add</button> */}
+                                                 </Accordion.Body>
+                                             </Accordion.Item>
+                                         </Accordion>
+                                     </Accordion.Body>
+                                 </Accordion.Item>
+                             </Accordion>
+                            )}
+                        </div>
                         {activeTab === 'foryou' && <div>For You content goes here</div>}
                     </div>
                 </div>
@@ -194,10 +306,10 @@ export function Trips() {
             {/* Add Tab for Things to Do, Place to Stay, etc. */}
             {isAddTabOpen && (
                 <div>
-                <div className="overlay active" onClick={() => setIsAddTabOpen(false)}></div>
+                    <div className="overlay active" onClick={() => setIsAddTabOpen(false)}></div>
                     <div className="add-tab">
                         <div className="add-tab-header">
-                            <h2>Add {selectedItem?.type.replace('_', ' ' )}</h2>
+                            <h2>Add {selectedItem?.type.replace('_', ' ')}</h2>
                             <button className="btn-close" onClick={() => setIsAddTabOpen(false)}>&times;</button>
                         </div>
                         <div className="add-tab-body">
@@ -332,28 +444,28 @@ export function Trips() {
                     </div>
                 </div>
             )}
-      
-                {isDetailTabOpen && selectedItem && (
-                    <div className="detail-overlay" onClick={closeDetailTab}></div>
-                )}
 
-             {/* Detail Tab */}
-             {isDetailTabOpen && selectedItem && (
+            {isDetailTabOpen && selectedItem && (
+                <div className="detail-overlay" onClick={closeDetailTab}></div>
+            )}
+
+            {/* Detail Tab */}
+            {isDetailTabOpen && selectedItem && (
                 <div className="detail-tab">
-                <div className="detail-tab-header">
-                    <button className="btn-close" onClick={closeDetailTab}>×</button>
-                </div>
-                <div className="detail-tab-content">
-                    <div className="detail-tab-image">
-                        <img src={selectedItem.image} alt="Item" />
+                    <div className="detail-tab-header">
+                        <button className="btn-close" onClick={closeDetailTab}>×</button>
                     </div>
-                    <div className="detail-tab-info">
-                        <h3>{selectedItem.name}</h3>
-                        <p><strong>Website: </strong><a href={selectedItem.website} target="_blank" rel="noopener noreferrer">{selectedItem.website}</a></p>
-                        <p>{selectedItem.description}</p>
+                    <div className="detail-tab-content">
+                        <div className="detail-tab-image">
+                            <img src={selectedItem.image} alt="Item" />
+                        </div>
+                        <div className="detail-tab-info">
+                            <h3>{selectedItem.name}</h3>
+                            <p><strong>Website: </strong><a href={selectedItem.website} target="_blank" rel="noopener noreferrer">{selectedItem.website}</a></p>
+                            <p>{selectedItem.description}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
             )}
 
             <footer>
