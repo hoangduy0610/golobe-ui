@@ -1,37 +1,46 @@
 import React from 'react';
-import { LocationType } from '@/types/types';  // Import kiểu LocationType
+import { LocationType } from '@/types/types';
 
 interface LocationTableProps {
   locations: LocationType[];
   onEdit: (location: LocationType) => void;
+  onDelete: (id: number) => void;
+  onCreate: () => void;
 }
 
-const LocationTable: React.FC<LocationTableProps> = ({ locations, onEdit }) => {
+const LocationTable: React.FC<LocationTableProps> = ({ locations, onEdit, onDelete, onCreate }) => {
   return (
-    <table className="table table-bordered">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Address</th>
-          <th>Description</th>
-          <th>Feature Image</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {locations.map((location, index) => (
-          <tr key={index}>
-            <td>{location.name}</td>
-            <td>{location.address}</td>
-            <td>{location.description}</td>
-            <td>{location.featureImage}</td>
-            <td>
-              <button onClick={() => onEdit(location)}>Edit</button>
-            </td>
+    <div>
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Description</th>
+            <th>Feature Image</th>
+            <th>Actions</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {locations.map((location) => (
+            <tr key={location.id}>
+              <td>{location.name}</td>
+              <td>{location.address}</td>
+              <td>{location.description}</td>
+              <td>{location.featureImage}</td>
+              <td>
+                <button onClick={() => onEdit(location)} className="btn btn-warning">
+                  Edit
+                </button>
+                <button onClick={() => onDelete(location.id)} className="btn btn-danger ms-2">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

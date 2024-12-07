@@ -1,41 +1,40 @@
-// src/apis/locationApis.ts
 import { AxiosRequestConfig } from "axios";
 import MainApiRequest from "./MainApiRequest";
 
 export const locationApis = {
-  getList: function* (): any {
+  getList: function (): Promise<any> {
     const config: AxiosRequestConfig = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
-    return yield MainApiRequest.get(`/location/list`, config);
+    return MainApiRequest.get(`/location/list`, config);
   },
 
-  create: function* (locationData: { name: string, address: string, description: string, featureImage: string }): any {
+  create: function (locationData: { name: string, address: string, description: string, featureImage: string }): Promise<any> {
     const config: AxiosRequestConfig = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
-    return yield MainApiRequest.post(`/location`, locationData, config);
+    return MainApiRequest.post(`/location`, locationData, config);
   },
 
-  edit: function* (id: string, locationData: { name: string, address: string, description: string, featureImage: string }): any {
+  edit: function (id: number, locationData: { name: string, address: string, description: string, featureImage: string }): Promise<any> {
     const config: AxiosRequestConfig = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
-    return yield MainApiRequest.put(`/location/${id}`, locationData, config);
+    return MainApiRequest.put(`/location/${id}`, locationData, config);
   },
 
-  delete: function* (id: string): any {
+  delete: function (id: number): Promise<any> {
     const config: AxiosRequestConfig = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
-    return yield MainApiRequest.delete(`/location/${id}`, config);
+    return MainApiRequest.delete(`/location/${id}`, config);
   }
 };

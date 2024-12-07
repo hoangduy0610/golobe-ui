@@ -38,14 +38,13 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* src/pages/Admin/Admin.css */
 .admin-container {
     display: flex;
 }
 
 .admin-content {
-    margin-left: 200px; /* Đảm bảo content không bị che bởi sidebar */
+    margin-left: 200px; 
     padding: 20px;
-    width: calc(100% - 200px); /* Điều chỉnh theo chiều rộng của sidebar */
-    overflow-y: auto; /* Đảm bảo nội dung có thể cuộn nếu quá dài */
+    width: calc(100% - 200px); 
+    overflow-y: auto; 
 }
