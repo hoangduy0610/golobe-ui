@@ -1,25 +1,33 @@
-import { Tuple, configureStore } from '@reduxjs/toolkit';
-import logger from 'redux-logger';
+// src/redux/store.ts
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
-import allReducer from './reducers/allReducers';
-import rootSagas from './sagas/rootSagas';
-import localStorage from 'redux-persist/es/storage';
 import { persistReducer, persistStore } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import userReducer from '@/redux/reducers/userReducers';
+import locationReducer from '@/redux/reducers/locationReducer';
+import rootSagas from './sagas/rootSagas';
 
 const persistConfig = {
-    key: 'root',
-    storage: localStorage,
-    safelist: ['users']
-}
+  key: 'root',
+  storage,
+  whitelist: ['user', 'location'],
+};
+
+const rootReducer = combineReducers({
+  user: userReducer,
+  location: locationReducer,
+});
 
 const sagaMiddleware = createSagaMiddleware();
-const persistedReducer = persistReducer(persistConfig, allReducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-    reducer: persistedReducer,
-    middleware: () => new Tuple(sagaMiddleware, logger),
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }).concat(sagaMiddleware),
 });
+
 sagaMiddleware.run(rootSagas);
 
-export const persistor = persistStore(store)
-export type RootState = ReturnType<typeof store.getState>
+export const persistor = persistStore(store);
+
+export type RootState = ReturnType<typeof rootReducer>;

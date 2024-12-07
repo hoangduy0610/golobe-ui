@@ -1,23 +1,26 @@
-// src/components/Header.js
+// src/components/Header/Header.jsx
 import React from 'react';
-import logo from "@/assets/logo.svg";
 import { Link } from 'react-router-dom';
+import logo from "@/assets/logo.svg";
 import "./Header.css";
 
-export function Header() {
+export default function Header() {
     return (
         <header className="app-header">
             <div className="logo">
-                <img src={logo} alt="Logo" />
+                <Link to="/">
+                    <img src={logo} alt="Logo" />
+                </Link>
             </div>
             <nav className="navbar">
                 <ul className="nav-links">
-                    <li>Hotels</li>
+                    <li><Link to="/">Home</Link></li>
                     <li>Restaurants</li>
-                    <li>Trips</li>
+                    <li><Link to="/trips">Trips</Link></li>
                     <li>Thing to do</li>
                     <li><Link to="/blog">Blog</Link></li>
                     <li>Forum</li>
+                    <li><Link to="/admin">Admin</Link></li>
                 </ul>
                 <ul className="btn-group">
                     <li>Partner</li>

@@ -1,7 +1,7 @@
-
 import { Home } from "@/pages/home/Home";
 import { Link } from "react-router-dom";
 import { Blog } from "@/pages/blog/Blog";
+import { Trips } from "@/pages/Trips/Trips";
 import Admin from "@/pages/Admin/Admin";
 
 export const routePath = [
@@ -32,6 +32,13 @@ export const routePath = [
         icon: 'fas fa-blog',
         title: 'Blog',
         component: <Blog />
+    },
+    {
+        index: false,
+        path: 'trips', 
+        icon: 'fas fa-plane',
+        title: 'Trips',
+        component: <Trips />
     },
     {
         index: false,

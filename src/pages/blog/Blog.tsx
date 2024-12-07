@@ -3,10 +3,12 @@ import logo from "@/assets/logo.svg";
 import share from "@/assets/share.png";
 import maldives from "@/assets/maldives.jpg";
 import Slider from "react-slick";
+import { Link } from "react-router-dom";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./Blog.css";
+import Header from "@/components/Header/Header";
 
 export function Blog() {
     const categories = [
@@ -91,31 +93,7 @@ export function Blog() {
 
     return (
         <div>
-            <header className="app-header">
-                <div className="logo">
-                    <img src={logo} alt="Logo" />
-                </div>
-                <nav className="navbar">
-                    <ul className="nav-links">
-                        <li>Hotels</li>
-                        <li>Restaurants</li>
-                        <li>Trips</li>
-                        <li>Thing to do</li>
-                        <li>Blog</li>
-                        <li>Forum</li>
-                    </ul>
-                    <ul className="btn-group">
-                        <li>Partner</li>
-                        <li>Login</li>
-                        <li className="btn btn-white">Sign Up</li>
-                    </ul>
-                </nav>
-                <div className="hero">
-                    <h2>Helping Others</h2>
-                    <h1>LIVE & TRAVEL</h1>
-                    <h4>Special offers to suit your plan</h4>
-                </div>
-            </header>
+            <Header />
             <div className="container">
                 <section className="card shadow my-4 px-4 border-0">
                     <div className="card-body">

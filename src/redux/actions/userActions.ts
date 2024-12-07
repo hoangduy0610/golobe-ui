@@ -6,3 +6,4 @@ export const userActionNames = {
     SET_TOKEN: `${userSliceNamespace}/setToken`,
     REMOVE_TOKEN: `${userSliceNamespace}/removeToken`,
 };
+

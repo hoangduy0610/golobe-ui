@@ -1,7 +1,8 @@
+// src/routes/AppRoute.tsx
 import Layout from "@/components/layout/Layout";
 import Login from "@/pages/Login/Login";
 import Admin from "@/pages/Admin/Admin";
-import { RootState } from "@/redux/store";
+import { RootState } from "@/redux/store";  // Đã được định nghĩa
 import { routePath } from "@/routes/routePath";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";

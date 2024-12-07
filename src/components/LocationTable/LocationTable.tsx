@@ -1,34 +1,33 @@
-import React from "react";
-
-interface Location {
-  continent: string;
-  country: string;
-  province: string;
-  district: string;
-}
+import React from 'react';
+import { LocationType } from '@/types/types';  // Import kiểu LocationType
 
 interface LocationTableProps {
-  locations: Location[]; 
+  locations: LocationType[];
+  onEdit: (location: LocationType) => void;
 }
 
-const LocationTable: React.FC<LocationTableProps> = ({ locations }) => {
+const LocationTable: React.FC<LocationTableProps> = ({ locations, onEdit }) => {
   return (
     <table className="table table-bordered">
       <thead>
         <tr>
-          <th>Continent</th>
-          <th>Country</th>
-          <th>Province</th>
-          <th>District</th>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Description</th>
+          <th>Feature Image</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {locations.map((location, index) => (
           <tr key={index}>
-            <td>{location.continent}</td>
-            <td>{location.country}</td>
-            <td>{location.province}</td>
-            <td>{location.district}</td>
+            <td>{location.name}</td>
+            <td>{location.address}</td>
+            <td>{location.description}</td>
+            <td>{location.featureImage}</td>
+            <td>
+              <button onClick={() => onEdit(location)}>Edit</button>
+            </td>
           </tr>
         ))}
       </tbody>
