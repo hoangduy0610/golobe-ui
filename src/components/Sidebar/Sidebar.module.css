@@ -1,0 +1,10 @@
+.huyHieu {
+    width: 45%;
+    height: auto;
+    align-self: center;
+    margin: 20px;
+}
+
+.menuList {
+    list-style: none;
+}
