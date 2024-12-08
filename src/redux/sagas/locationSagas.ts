@@ -51,10 +51,10 @@ function* updateLocationSaga(action: ReturnType<typeof updateLocation>): Generat
   }
 }
 
-function* deleteLocationSaga(action: PayloadAction<{id:number}>): Generator<any, void, any> {
+function* deleteLocationSaga(action: PayloadAction<number>): Generator<any, void, any> {
   try {
-    yield call(locationApis.delete, action.payload.id);
-    yield put(deleteLocationSuccess(action.payload.id));
+    yield call(locationApis.delete, action.payload);
+    yield put(deleteLocationSuccess(action.payload));
   } catch (error: any) {
     console.log(error);
     yield put(deleteLocationFailure(error.message));
