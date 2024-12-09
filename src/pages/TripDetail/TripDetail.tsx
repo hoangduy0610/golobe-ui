@@ -1,46 +1,91 @@
-import React, { useState } from 'react';
-import Header from "@/components/Header/Header";
-import Accordion from 'react-bootstrap/Accordion';
-import "./TripDetail.css";
-import maldives from "@/assets/maldives.jpg";
 import facebookIcon from "@/assets/facebook_icon.svg";
 import footerLogo from "@/assets/footer_logo.svg";
 import instagramIcon from "@/assets/instagram_icon.svg";
-import sharePlan from "@/assets/share_plan.png";
-import setting from "@/assets/setting.png";
 import invite from "@/assets/invite.png";
-import thingtodo from "@/assets/thingtodo.png";
-import bed from "@/assets/bed.png";
-import food from "@/assets/food.png";
-import logo from "@/assets/logo.svg";
 import newsletter from "@/assets/newsletter.svg";
 import reviewImg from "@/assets/review_img.jpg";
+import setting from "@/assets/setting.png";
+import sharePlan from "@/assets/share_plan.png";
 import twitterIcon from "@/assets/twitter_icon.svg";
 import youtubeIcon from "@/assets/youtube_icon.svg";
-import { faCalendarDays, faLocationDot, faStar } from "@fortawesome/free-solid-svg-icons";
+import Header from "@/components/Header/Header";
+import MainApiRequest from "@/redux/apis/MainApiRequest";
+import moment from "moment";
+import React, { useEffect, useState } from 'react';
+import Accordion from 'react-bootstrap/Accordion';
+import { useParams } from "react-router-dom";
+import "./TripDetail.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Dropdown } from 'react-bootstrap';
+import { faLocationDot, faPhoneAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 function TripDetail() {
+
+    // Retrive id from route params
+    const { id } = useParams<{ id: string }>();
+    const [trip, setTrip] = useState<any>(null);
     const [selectedItem, setSelectedItem] = useState<any>(null);
     const [isAddTabOpen, setIsAddTabOpen] = useState(false);
     const [isDetailTabOpen, setIsDetailTabOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState('itinerary');
+    const [goingToAddItem, setGoingToAddItem] = useState<any>(null);
+    const [location, setListLocation] = useState<any[]>([]);
+    const [service, setListService] = useState<any[]>([]);
+    const [schedulingDay, setSchedulingDay] = useState(0);
+
+    const fetchLocation = async () => {
+        const response = await MainApiRequest.get('/location/list');
+        setListLocation(response.data);
+    }
+
+    const fetchService = async () => {
+        const response = await MainApiRequest.get('/service/list');
+        setListService(response.data);
+    }
+
+    useEffect(() => {
+        if (location.length === 0) {
+            fetchLocation();
+        }
+
+        if (service.length === 0) {
+            fetchService();
+        }
+    }, []);
+
     const [formData, setFormData] = useState({
-        tripName: '',
-        destination: '',
-        datesOrTripLength: ' days',
+        name: '',
+        locationId: '',
         description: '',
-        privacy: 'public',
+        startDate: moment().format('YYYY-MM-DD'),
+        endDate: moment().format('YYYY-MM-DD'),
     });
 
-    const toggleAddTab = (itemType: string) => {
-        setIsAddTabOpen(!isAddTabOpen);
-        setSelectedItem({ type: itemType });
+    const fetchTrip = async (id?: string) => {
+        if (!id) return;
+        // Call API to get trip detail by id
+        const response = await MainApiRequest.get(`/plan/${id}`);
+        setTrip(response.data);
+        setFormData({
+            name: response.data.name,
+            locationId: response.data?.location?.id?.toString(),
+            description: response.data.description,
+            startDate: moment(response.data.startDate).format('YYYY-MM-DD'),
+            endDate: moment(response.data.endDate).format('YYYY-MM-DD'),
+        });
+        console.log('Trip detail:', response.data);
     };
 
-    const [activeTab, setActiveTab] = useState('itinerary');
-    const [selectedItems, setSelectedItems] = useState<any[]>([]);
+    useEffect(() => {
+        if (!trip && id) {
+            fetchTrip(id);
+        }
+    }, [id]);
+
+    const toggleAddTab = (scheduleDay: number) => {
+        setIsAddTabOpen(!isAddTabOpen);
+        setSchedulingDay(scheduleDay);
+    };
 
     const toggleEditModal = () => {
         setIsEditModalOpen(!isEditModalOpen);
@@ -51,18 +96,48 @@ function TripDetail() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleAction = (action: 'duplicate' | 'delete') => {
-        if (action === 'duplicate') {
-            alert('Duplicate action triggered');
+    const handleAction = async (action: 'save' | 'delete') => {
+        if (action === 'save') {
+            // Call API to save changes
+            if (formData.locationId === '') {
+                alert('Please select a location');
+                return;
+            }
+
+            await MainApiRequest.put(`/plan/${id}`, {
+                ...formData,
+                startDate: moment(formData.startDate).format('YYYY-MM-DD'),
+                endDate: moment(formData.endDate).format('YYYY-MM-DD'),
+                locationId: parseInt(formData.locationId),
+            });
+            fetchTrip(id);
         } else if (action === 'delete') {
-            alert('Delete action triggered');
+            // Call API to delete trip
+            // await MainApiRequest.delete(`/plan/${id}`);
         }
+        setIsEditModalOpen(false);
     };
 
-    const handleItemClick = (item: any) => {
-        setSelectedItem(item);
+    const handleItemClick = (item: any, day: number) => {
+        setSelectedItem({
+            ...item,
+            selectedDay: day,
+        });
         setIsDetailTabOpen(true);
     };
+
+    const handleRemoveServiceFromDay = async () => {
+        if (!selectedItem) return;
+        await MainApiRequest.delete(`/plan/schedule/item`, {
+            data: {
+                planId: trip.id,
+                serviceId: selectedItem?.service?.id,
+                day: selectedItem.selectedDay,
+            }
+        });
+        fetchTrip(id);
+        closeDetailTab();
+    }
 
     const closeDetailTab = () => {
         setIsDetailTabOpen(false);
@@ -70,20 +145,58 @@ function TripDetail() {
     };
 
     const toggleItemSelected = (item: any) => {
-        if (selectedItems.includes(item)) {
-            setSelectedItems(selectedItems.filter(i => i !== item));
-        } else {
-            setSelectedItems([...selectedItems, item]);
-        }
+        setGoingToAddItem(item);
     };
 
 
-    const handleAddToItinerary = () => {
-        // Handle the logic to add selected items to the itinerary
-        console.log('Adding to itinerary:', selectedItems);
+    const handleAddToItinerary = async () => {
         setIsAddTabOpen(false);
-        setSelectedItems([]);
+        await MainApiRequest.post(`/plan/schedule/item`, {
+            planId: trip.id,
+            serviceId: goingToAddItem.id,
+            days: [
+                schedulingDay
+            ],
+            startTime: "08:00",
+            endTime: "22:00",
+            reservationCode: "SADAS",
+            note: "remark"
+        });
+        setGoingToAddItem(null);
+        setSchedulingDay(0);
+        fetchTrip(id);
     };
+
+    const renderItineraries = () => {
+        if (!trip || !trip?.schedule) return null;
+
+        return trip?.schedule.map((schedule: any) => {
+            // use momentjs to convert from day 1, day 2, ... to correct day since the trip started
+            const scheduleDay = moment(trip.startDate).add(schedule.day - 1, 'days').format('dddd, MMM DD');
+            return (
+                <Accordion defaultActiveKey="0" style={{ marginTop: 20 }}>
+                    <Accordion.Item eventKey="0">
+                        <Accordion.Header><strong style={{ fontSize: '1.25rem' }}>{scheduleDay} (Day {schedule.day}) - {schedule.location.name}</strong></Accordion.Header>
+                        <Accordion.Body>
+                            {
+                                schedule?.items && schedule.items.map((item: any) => (
+                                    <div className="item" onClick={() => handleItemClick(item, schedule.day)}>
+                                        <img src={item?.service?.images ? item?.service?.images[0] : ''} alt="Things to Do" className="item-image" />
+                                        <span className="item-name">
+                                            <h4>{item?.service?.name || ''}</h4>
+                                            <p> <FontAwesomeIcon icon={faLocationDot} /> {item?.service?.address}</p>
+                                            <p> <FontAwesomeIcon icon={faPhoneAlt} /> {item?.service?.phone}</p>
+                                        </span>
+                                    </div>
+                                ))
+                            }
+                            <button className="btn-add" onClick={() => toggleAddTab(schedule.day)}>+ Add</button>
+                        </Accordion.Body>
+                    </Accordion.Item>
+                </Accordion>
+            )
+        });
+    }
 
     return (
         <div className="app">
@@ -95,7 +208,7 @@ function TripDetail() {
                             <input type="text" className="form-control bg-secondary py-3" placeholder="Search" />
                         </div>
                     </section>
-                    <div className="frame" style={{ backgroundImage: `url(${maldives})` }}>
+                    <div className="frame" style={{ backgroundImage: `url(${trip?.location?.featureImage})` }}>
                         <div className="frame-header">
                             <button className="button button-invite">
                                 <img src={invite} alt="Invite" className="button-icon" /> Invite
@@ -106,11 +219,6 @@ function TripDetail() {
                             <button className="button button-edit" onClick={toggleEditModal}>
                                 <img src={setting} alt="Edit" className="button-icon" />
                             </button>
-                        </div>
-                        <div className="frame-body"></div>
-                        <div className="frame-footer">
-                            <div className="image-title">{formData.tripName}</div>
-                            <div className="days">{formData.datesOrTripLength || '5 days'}</div>
                         </div>
                     </div>
                     <div className="tabs-container">
@@ -134,168 +242,10 @@ function TripDetail() {
                         </button>
                     </div>
                     <div className="tab-content">
-                        {activeTab === 'itinerary' && (
-                            <Accordion defaultActiveKey="0">
-                                <Accordion.Item eventKey="0">
-                                    <Accordion.Header><strong style={{ fontSize: '1.25rem' }}>Day 1</strong></Accordion.Header>
-                                    <Accordion.Body>
-                                        <Accordion>
-                                            <Accordion.Item eventKey="0">
-                                                <Accordion.Header>
-                                                    <strong>
-                                                        <img src={thingtodo} alt="Things to Do" className="accordion-icon" />
-                                                        Things to Do
-                                                    </strong></Accordion.Header>
-                                                <Accordion.Body>
-                                                    <div className="item" onClick={() => handleItemClick({ name: "Visit the local beach", image: reviewImg, website: "https://example.com", description: "A beautiful beach to visit." })}>
-                                                        <img src={reviewImg} alt="Things to Do" className="item-image" />
-                                                        <span className="item-name">Visit the local beach</span>
-                                                    </div>
-                                                    <div className="item" onClick={() => handleItemClick({ name: "Explore the city center", image: reviewImg, website: "https://example.com", description: "Explore the heart of the city." })}>
-                                                        <img src={reviewImg} alt="Things to Do" className="item-image" />
-                                                        <span className="item-name">Explore the city center</span>
-                                                    </div>
-                                                    <div className="item" onClick={() => handleItemClick({ name: "Go for a guided tour", image: reviewImg, website: "https://example.com", description: "Join a guided tour to learn more about the place." })}>
-                                                        <img src={reviewImg} alt="Things to Do" className="item-image" />
-                                                        <span className="item-name">Go for a guided tour</span>
-                                                    </div>
-                                                    <button className="btn-add" onClick={() => toggleAddTab('things_to do')}>+ Add</button>
-                                                </Accordion.Body>
-                                            </Accordion.Item>
-                                            <Accordion.Item eventKey="1">
-                                                <Accordion.Header>
-                                                    <strong>
-                                                        <img src={bed} alt="Place to Stay" className="accordion-icon" />
-                                                        Place to Stay
-                                                    </strong></Accordion.Header>
-                                                <Accordion.Body>
-                                                    <div className="place-to-stay">
-                                                        <div className="item" onClick={() => handleItemClick({ name: "Luxury Resort", image: reviewImg, website: "https://example.com", description: "A luxurious resort by the beach." })}>
-                                                            <img src={reviewImg} alt="Place to Stay" className="item-image" />
-                                                            <span className="item-name">Luxury Resort</span>
-                                                        </div>
-                                                        <div className="item" onClick={() => handleItemClick({ name: "Budget Hotel", image: reviewImg, website: "https://example.com", description: "Affordable hotel with great amenities." })}>
-                                                            <img src={reviewImg} alt="Place to Stay" className="item-image" />
-                                                            <span className="item-name">Budget Hotel</span>
-                                                        </div>
-                                                        <div className="item" onClick={() => handleItemClick({ name: "Beachside Cabins", image: reviewImg, website: "https://example.com", description: "Cozy cabins near the beach." })}>
-                                                            <img src={reviewImg} alt="Place to Stay" className="item-image" />
-                                                            <span className="item-name">Beachside Cabins</span>
-                                                        </div>
-                                                    </div>
-                                                    <button className="btn-add" onClick={() => toggleAddTab('place_to stay')}>+ Add</button>
-                                                </Accordion.Body>
-                                            </Accordion.Item>
-                                            <Accordion.Item eventKey="2">
-                                                <Accordion.Header>
-                                                    <strong>
-                                                        <img src={food} alt="Food & Drink" className="accordion-icon" />
-                                                        Food & Drink
-                                                    </strong></Accordion.Header>
-                                                <Accordion.Body>
-                                                    <div className="food-drink">
-                                                        <div className="item" onClick={() => handleItemClick({ name: "Try local seafood", image: reviewImg, website: "https://example.com", description: "Taste the fresh seafood from the local market." })}>
-                                                            <img src={reviewImg} alt="Food & Drink" className="item-image" />
-                                                            <span className="item-name">Try local seafood</span>
-                                                        </div>
-                                                        <div className="item" onClick={() => handleItemClick({ name: "Visit a rooftop restaurant", image: reviewImg, website: "https://example.com", description: "Dine with a view at a rooftop restaurant." })}>
-                                                            <img src={reviewImg} alt="Food & Drink" className="item-image" />
-                                                            <span className="item-name">Visit a rooftop restaurant</span>
-                                                        </div>
-                                                        <div className="item" onClick={() => handleItemClick({ name: "Enjoy fresh tropical fruits", image: reviewImg, website: "https://example.com", description: "Indulge in tropical fruits at a local market." })}>
-                                                            <img src={reviewImg} alt="Food & Drink" className="item-image" />
-                                                            <span className="item-name">Enjoy fresh tropical fruits</span>
-                                                        </div>
-                                                    </div>
-                                                    <button className="btn-add" onClick={() => toggleAddTab('food_& drink')}>+ Add</button>
-                                                </Accordion.Body>
-                                            </Accordion.Item>
-                                        </Accordion>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                            </Accordion>
-                        )}
+                        {activeTab === 'itinerary' && renderItineraries()}
                         <div className="tab-content">
                             {activeTab === 'favourite' && (
-                                 <Accordion defaultActiveKey="0">
-                                 <Accordion.Item eventKey="0">
-                                     <Accordion.Header><strong style={{ fontSize: '1.25rem' }}>Your Saves</strong></Accordion.Header>
-                                     <Accordion.Body>
-                                         <Accordion>
-                                             <Accordion.Item eventKey="0">
-                                                 <Accordion.Header>
-                                                     <strong>
-                                                         <img src={thingtodo} alt="Things to Do" className="accordion-icon" />
-                                                         Things to Do
-                                                     </strong></Accordion.Header>
-                                                 <Accordion.Body>
-                                                     <div className="item" onClick={() => handleItemClick({ name: "Visit the local beach", image: reviewImg, website: "https://example.com", description: "A beautiful beach to visit." })}>
-                                                         <img src={reviewImg} alt="Things to Do" className="item-image" />
-                                                         <span className="item-name">Visit the local beach</span>
-                                                     </div>
-                                                     <div className="item" onClick={() => handleItemClick({ name: "Explore the city center", image: reviewImg, website: "https://example.com", description: "Explore the heart of the city." })}>
-                                                         <img src={reviewImg} alt="Things to Do" className="item-image" />
-                                                         <span className="item-name">Explore the city center</span>
-                                                     </div>
-                                                     <div className="item" onClick={() => handleItemClick({ name: "Go for a guided tour", image: reviewImg, website: "https://example.com", description: "Join a guided tour to learn more about the place." })}>
-                                                         <img src={reviewImg} alt="Things to Do" className="item-image" />
-                                                         <span className="item-name">Go for a guided tour</span>
-                                                     </div>
-                                                     {/* <button className="btn-add" onClick={() => toggleAddTab('things_to do')}>+ Add</button> */}
-                                                 </Accordion.Body>
-                                             </Accordion.Item>
-                                             <Accordion.Item eventKey="1">
-                                                 <Accordion.Header>
-                                                     <strong>
-                                                         <img src={bed} alt="Place to Stay" className="accordion-icon" />
-                                                         Place to Stay
-                                                     </strong></Accordion.Header>
-                                                 <Accordion.Body>
-                                                     <div className="place-to-stay">
-                                                         <div className="item" onClick={() => handleItemClick({ name: "Luxury Resort", image: reviewImg, website: "https://example.com", description: "A luxurious resort by the beach." })}>
-                                                             <img src={reviewImg} alt="Place to Stay" className="item-image" />
-                                                             <span className="item-name">Luxury Resort</span>
-                                                         </div>
-                                                         <div className="item" onClick={() => handleItemClick({ name: "Budget Hotel", image: reviewImg, website: "https://example.com", description: "Affordable hotel with great amenities." })}>
-                                                             <img src={reviewImg} alt="Place to Stay" className="item-image" />
-                                                             <span className="item-name">Budget Hotel</span>
-                                                         </div>
-                                                         <div className="item" onClick={() => handleItemClick({ name: "Beachside Cabins", image: reviewImg, website: "https://example.com", description: "Cozy cabins near the beach." })}>
-                                                             <img src={reviewImg} alt="Place to Stay" className="item-image" />
-                                                             <span className="item-name">Beachside Cabins</span>
-                                                         </div>
-                                                     </div>
-                                                     {/* <button className="btn-add" onClick={() => toggleAddTab('place_to stay')}>+ Add</button> */}
-                                                 </Accordion.Body>
-                                             </Accordion.Item>
-                                             <Accordion.Item eventKey="2">
-                                                 <Accordion.Header>
-                                                     <strong>
-                                                         <img src={food} alt="Food & Drink" className="accordion-icon" />
-                                                         Food & Drink
-                                                     </strong></Accordion.Header>
-                                                 <Accordion.Body>
-                                                     <div className="food-drink">
-                                                         <div className="item" onClick={() => handleItemClick({ name: "Try local seafood", image: reviewImg, website: "https://example.com", description: "Taste the fresh seafood from the local market." })}>
-                                                             <img src={reviewImg} alt="Food & Drink" className="item-image" />
-                                                             <span className="item-name">Try local seafood</span>
-                                                         </div>
-                                                         <div className="item" onClick={() => handleItemClick({ name: "Visit a rooftop restaurant", image: reviewImg, website: "https://example.com", description: "Dine with a view at a rooftop restaurant." })}>
-                                                             <img src={reviewImg} alt="Food & Drink" className="item-image" />
-                                                             <span className="item-name">Visit a rooftop restaurant</span>
-                                                         </div>
-                                                         <div className="item" onClick={() => handleItemClick({ name: "Enjoy fresh tropical fruits", image: reviewImg, website: "https://example.com", description: "Indulge in tropical fruits at a local market." })}>
-                                                             <img src={reviewImg} alt="Food & Drink" className="item-image" />
-                                                             <span className="item-name">Enjoy fresh tropical fruits</span>
-                                                         </div>
-                                                     </div>
-                                                     {/* <button className="btn-add" onClick={() => toggleAddTab('food_& drink')}>+ Add</button> */}
-                                                 </Accordion.Body>
-                                             </Accordion.Item>
-                                         </Accordion>
-                                     </Accordion.Body>
-                                 </Accordion.Item>
-                             </Accordion>
+                                <div>For Favourite</div>
                             )}
                         </div>
                         {activeTab === 'foryou' && <div>For You content goes here</div>}
@@ -309,24 +259,24 @@ function TripDetail() {
                     <div className="overlay active" onClick={() => setIsAddTabOpen(false)}></div>
                     <div className="add-tab">
                         <div className="add-tab-header">
-                            <h2>Add {selectedItem?.type.replace('_', ' ')}</h2>
+                            <h2>Add Service for plan</h2>
                             <button className="btn-close" onClick={() => setIsAddTabOpen(false)}>&times;</button>
                         </div>
                         <div className="add-tab-body">
                             <input type="text" className="search-input" placeholder="Search..." />
                             <div className="add-items">
-                                {['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'].map(item => (
+                                {service.map(item => (
                                     <div
-                                        key={item}
-                                        className={`item ${selectedItems.includes(item) ? 'selected' : ''}`}
+                                        key={item.id}
+                                        className={`item ${goingToAddItem?.id === item?.id ? 'selected' : ''}`}
                                         onClick={() => toggleItemSelected(item)}
                                     >
-                                        <img src={reviewImg} alt={item} className="item-image" />
-                                        <span className="item-name">{item}</span>
+                                        <img src={item.images[0]} alt={item.name} className="item-image" />
+                                        <span className="item-name">{item.name}</span>
                                     </div>
                                 ))}
                             </div>
-                            <button className="btn-add-to-itinerary" onClick={handleAddToItinerary}>Add to Itinerary</button>
+                            <button className="btn-add-to-itinerary" onClick={handleAddToItinerary}>Add to Schedule</button>
                         </div>
                     </div>
                 </div>
@@ -343,8 +293,8 @@ function TripDetail() {
                                 <label>Trip Name</label>
                                 <input
                                     type="text"
-                                    name="tripName"
-                                    value={formData.tripName}
+                                    name="name"
+                                    value={formData.name}
                                     onChange={handleInputChange}
                                     className="form-control"
                                     placeholder="Enter trip name"
@@ -352,24 +302,37 @@ function TripDetail() {
                             </div>
                             <div className="form-group">
                                 <label>Destination</label>
-                                <input
-                                    type="text"
-                                    name="destination"
-                                    value={formData.destination}
+                                <select
+                                    name="locationId"
+                                    value={formData.locationId}
                                     onChange={handleInputChange}
                                     className="form-control"
-                                    placeholder="Enter destination"
+                                >
+                                    {
+                                        location.map((loc: any) => (
+                                            <option value={loc.id}>{loc.name}</option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label>Start Date</label>
+                                <input
+                                    type="date"
+                                    name="startDate"
+                                    value={formData.startDate}
+                                    onChange={handleInputChange}
+                                    className="form-control"
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Dates or Trip Length</label>
+                                <label>End Date</label>
                                 <input
-                                    type="text"
-                                    name="datesOrTripLength"
-                                    value={formData.datesOrTripLength}
+                                    type="date"
+                                    name="endDate"
+                                    value={formData.endDate}
                                     onChange={handleInputChange}
                                     className="form-control"
-                                    placeholder="Enter dates or trip length"
                                 />
                             </div>
                             <div className="form-group">
@@ -379,48 +342,12 @@ function TripDetail() {
                                     value={formData.description}
                                     onChange={handleInputChange}
                                     className="form-control"
-                                    placeholder="Enter description"
+                                    placeholder="Enter d</div>escription"
                                 />
-                            </div>
-
-                            {/* Privacy Section */}
-                            <div className="form-group">
-                                <label className="privacy-title">Privacy and who can view your trip</label>
-                                <div className="privacy-options">
-                                    <div className="privacy-option">
-                                        <input
-                                            type="radio"
-                                            id="public"
-                                            name="privacy"
-                                            value="public"
-                                            checked={formData.privacy === 'public'}
-                                            onChange={handleInputChange}
-                                        />
-                                        <label htmlFor="public">Public</label>
-                                    </div>
-                                    <div className="privacy-option">
-                                        <input
-                                            type="radio"
-                                            id="private"
-                                            name="privacy"
-                                            value="private"
-                                            checked={formData.privacy === 'private'}
-                                            onChange={handleInputChange}
-                                        />
-                                        <label htmlFor="private">Private</label>
-                                    </div>
-                                </div>
                             </div>
 
                             {/* Nút Duplicate, Delete và Save Changes */}
                             <div className="form-actions">
-                                <button
-                                    type="button"
-                                    className="btn btn-duplicate"
-                                    onClick={() => handleAction('duplicate')}
-                                >
-                                    Duplicate
-                                </button>
                                 <button
                                     type="button"
                                     className="btn btn-delete"
@@ -431,7 +358,7 @@ function TripDetail() {
                                 <button
                                     type="button"
                                     className="btn btn-save"
-                                    onClick={() => { /* Lưu thay đổi ở đây */ }}
+                                    onClick={() => { handleAction('save') }}
                                 >
                                     Save Changes
                                 </button>
@@ -446,23 +373,36 @@ function TripDetail() {
             )}
 
             {isDetailTabOpen && selectedItem && (
-                <div className="detail-overlay" onClick={closeDetailTab}></div>
-            )}
 
-            {/* Detail Tab */}
-            {isDetailTabOpen && selectedItem && (
-                <div className="detail-tab">
-                    <div className="detail-tab-header">
-                        <button className="btn-close" onClick={closeDetailTab}>×</button>
-                    </div>
-                    <div className="detail-tab-content">
-                        <div className="detail-tab-image">
-                            <img src={selectedItem.image} alt="Item" />
+                <div className="detail-overlay" onClick={(e) => {
+                    if (e.target !== e.currentTarget) {
+                        return;
+                    }
+                    closeDetailTab();
+                }}>
+                    <div className="detail-tab">
+                        <div className="detail-tab-header">
+                            <button className="btn-close" onClick={closeDetailTab}>×</button>
                         </div>
-                        <div className="detail-tab-info">
-                            <h3>{selectedItem.name}</h3>
-                            <p><strong>Website: </strong><a href={selectedItem.website} target="_blank" rel="noopener noreferrer">{selectedItem.website}</a></p>
-                            <p>{selectedItem.description}</p>
+                        <div className="detail-tab-content">
+                            <div className="detail-tab-image">
+                                <img src={selectedItem?.service?.images[0]} alt="Item" />
+                            </div>
+                            <div className="detail-tab-info">
+                                <h3>{selectedItem?.service?.name}</h3>
+                                <p>{selectedItem?.service?.description}</p>
+                                <p><strong>Phone: </strong><a href={'tel:' + selectedItem?.service?.phone} target="_blank" rel="noopener noreferrer">{selectedItem?.service?.phone}</a></p>
+                                <p><strong>Address: </strong>{selectedItem?.service?.address}</p>
+                                <p><strong>Opening Hours: </strong></p>
+                                <ul>
+                                    {selectedItem?.service?.openingHours.map((op: any) => (
+                                        <li><strong>{op?.day}</strong>: {op?.hours === "Custom" ? (op?.customHours?.open + ' -> ' + op?.customHours?.close) : op?.hours}</li>
+                                    ))}
+                                </ul>
+                                <button className="btn btn-outline-danger btn-block" onClick={handleRemoveServiceFromDay}>
+                                    <FontAwesomeIcon icon={faTrash} /> Remove
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
