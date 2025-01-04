@@ -1,4 +1,3 @@
-// import huyHieuCA from '@/assets/HuyHieuCA.png';
 import '@/pages/Login/Login.css';
 import { login } from '@/redux/reducers/userReducers';
 import { RootState } from '@/redux/store';
@@ -29,7 +28,7 @@ const Login: React.FC = () => {
         if (!isLoggingIn && token) {
             navigate('/');
         }
-    }, [isLoggingIn]);
+    }, [isLoggingIn, token, navigate]);
 
     return (
         <LoadingOverlay

@@ -11,39 +11,13 @@ import { faCalendarDays, faLocationDot, faStar } from "@fortawesome/free-solid-s
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from 'react-router-dom';
 import "./Home.css";
+import Header from "@/components/Header/Header";
 
 export function Home() {
     return (
         <div className="app">
             <div className="container-fluid">
-                <header className="app-header">
-                    <div className="logo">
-                        <Link to="/">
-                            <img src={logo} alt="Logo" />
-                        </Link>
-                    </div>
-                    <nav className="navbar">
-                        <ul className="nav-links">
-                            <li>Hotels</li>
-                            <li>Restaurants</li>
-                            <li>Trips</li>
-                            <li>Thing to do</li>
-                            <li><Link to="/blog">Blog</Link></li>
-                            <li>Forum</li>
-                        </ul>
-                        <ul className="btn-group">
-                            <li>Partner</li>
-                            <li>Login</li>
-                            <li className="btn btn-white">Sign Up</li>
-                        </ul>
-                    </nav>
-                    <div className="hero">
-                        <h2>Helping Others</h2>
-                        <h1>LIVE & TRAVEL</h1>
-                        <h4>Special offers to suit your plan</h4>
-                    </div>
-                </header>
-
+                <Header />
                 <div className="container">
                     <section className="card shadow my-4 px-4 border-0">
                         <div className="card-body">
