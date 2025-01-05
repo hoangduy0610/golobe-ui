@@ -8,7 +8,7 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./Blog.css";
-import Header from "@/components/Header/Header";
+import Header from "@/components/header/Header";
 
 export function Blog() {
     const categories = [

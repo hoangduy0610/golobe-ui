@@ -1,23 +1,24 @@
 import React from "react";
-import AdminSidebar from "@/components/Admin/AdminSidebar";
-import { Route, Routes } from "react-router-dom";
-import Location from "./Location/Location";
-import Accommodation from "./Accommodation/Accommodation";
-import Restaurant from "./Restaurant/Restaurant";
-import ThingToDo from "./ThingToDo/ThingToDo";
-import "./Admin.css";
+import { Outlet } from "react-router-dom";
+import Sidebar from "@/components/sidebar/Sidebar";
 
 const Admin = () => {
   return (
-    <div className="admin-container">
-      <AdminSidebar />
-      <div className="admin-content">
-        <Routes>
-          <Route path="location" element={<Location />} />
-          <Route path="accommodation" element={<Accommodation />} />
-          <Route path="restaurant" element={<Restaurant />} />
-          <Route path="thing-to-do" element={<ThingToDo />} />
-        </Routes>
+    <div style={{ display: "flex" }}>
+      {/* Sidebar */}
+      <div
+        style={{
+          width: 250,
+          boxShadow: "2px 0 5px rgba(0, 0, 0, 0.2)",
+          position: "relative",
+          zIndex: 10,
+        }}
+      >
+        <Sidebar />
+      </div>
+      {/* Content Area */}
+      <div style={{ flex: 1, backgroundColor: "#fdfdfd" }}>
+        <Outlet />
       </div>
     </div>
   );
