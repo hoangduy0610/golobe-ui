@@ -9,6 +9,40 @@ interface ServiceType {
   price: number;
 }
 
+// Dữ liệu mẫu
+const sampleServices = [
+  {
+    id: '1',
+    name: 'Room Cleaning',
+    description: 'Thorough cleaning of the room including floors, furniture, and bedding.',
+    price: 50,
+  },
+  {
+    id: '2',
+    name: 'Laundry Service',
+    description: 'Washing and ironing of clothes.',
+    price: 30,
+  },
+  {
+    id: '3',
+    name: 'Airport Transfer',
+    description: 'Pick-up and drop-off from the airport to the hotel.',
+    price: 100,
+  },
+  {
+    id: '4',
+    name: 'Spa Treatment',
+    description: 'Relaxing spa services including massage and aromatherapy.',
+    price: 150,
+  },
+  {
+    id: '5',
+    name: 'Breakfast Buffet',
+    description: 'Enjoy a wide variety of dishes for breakfast.',
+    price: 25,
+  },
+];
+
 const ServicePage: React.FC = () => {
   const [services, setServices] = useState<ServiceType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -23,9 +57,8 @@ const ServicePage: React.FC = () => {
     const fetchServices = async () => {
       setLoading(true);
       try {
-        // Fetch the services from an API or any other source
-        const response = await fetch('/api/services');
-        const data = await response.json();
+        // Thay thế phần fetch với dữ liệu mẫu
+        const data = sampleServices;
         setServices(data);
       } catch (err) {
         setError('Failed to fetch services');
@@ -52,8 +85,7 @@ const ServicePage: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      // Delete service by calling an API
-      await fetch(`/api/services/${id}`, { method: 'DELETE' });
+      // Xóa dịch vụ theo ID
       setServices(services.filter(service => service.id !== id));
       message.success('Service deleted successfully!');
     } catch (error) {
@@ -66,23 +98,13 @@ const ServicePage: React.FC = () => {
       const values = await form.validateFields();
 
       if (isEditing && editService) {
-        // Update service
+        // Cập nhật dịch vụ
         const updatedService = { ...editService, ...values };
-        await fetch(`/api/services/${editService.id}`, {
-          method: 'PUT',
-          body: JSON.stringify(updatedService),
-          headers: { 'Content-Type': 'application/json' },
-        });
         setServices(services.map(service => service.id === updatedService.id ? updatedService : service));
         message.success('Service updated successfully!');
       } else {
-        // Create new service
-        const newService = { ...values, id: Date.now().toString() }; // Use a unique ID generator or API to create service
-        await fetch('/api/services', {
-          method: 'POST',
-          body: JSON.stringify(newService),
-          headers: { 'Content-Type': 'application/json' },
-        });
+        // Tạo mới dịch vụ
+        const newService = { ...values, id: Date.now().toString() };
         setServices([...services, newService]);
         message.success('Service created successfully!');
       }

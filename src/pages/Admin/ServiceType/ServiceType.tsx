@@ -1,27 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Input, Form, message } from 'antd';
-
-import axios from 'axios'; // Đảm bảo đã cài axios
+import axios from 'axios';
 
 const ServiceTypePage: React.FC = () => {
-  const [serviceTypes, setServiceTypes] = useState<any[]>([]);  // Dữ liệu serviceTypes
-  const [loading, setLoading] = useState<boolean>(false); // Trạng thái loading
-  const [error, setError] = useState<string | null>(null); // Lỗi khi fetch dữ liệu
+  const [serviceTypes, setServiceTypes] = useState<any[]>([]);  
+  const [loading, setLoading] = useState<boolean>(false); 
+  const [error, setError] = useState<string | null>(null); 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [form] = Form.useForm();
   const [editServiceType, setEditServiceType] = useState<any>(null);
 
-  // API URL (Thay đổi URL phù hợp với hệ thống của bạn)
   const API_URL = 'http://api.example.com/serviceTypes';
 
+  // Sample data for service types
+  const sampleData = [
+    { id: 1, name: 'Room Service', description: 'Provides food and drinks delivered directly to the guest room.' },
+    { id: 2, name: 'Spa Service', description: 'A wellness service offering massages, facials, and other body treatments.' },
+    { id: 3, name: 'Housekeeping', description: 'Cleaning and maintenance service for guest rooms and public areas.' },
+    { id: 4, name: 'Laundry Service', description: 'Washing, ironing, and dry cleaning services for guests\' clothes.' },
+    { id: 5, name: 'Airport Shuttle', description: 'Transportation service to and from the airport for guests.' }
+  ];
+
   useEffect(() => {
-    // Fetch dữ liệu service types khi component mount
     const fetchServiceTypes = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(API_URL); // Gọi API để lấy dữ liệu
-        setServiceTypes(response.data);
+        // Simulate fetching data from API
+        // In a real-world scenario, use axios to fetch actual data from API
+        setServiceTypes(sampleData);
       } catch (err) {
         setError('Failed to load service types');
       } finally {
@@ -47,8 +54,8 @@ const ServiceTypePage: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`${API_URL}/${id}`); // Gọi API để xóa
-      setServiceTypes(serviceTypes.filter(serviceType => serviceType.id !== id)); // Cập nhật lại danh sách
+      // Simulate deletion by removing it from the list
+      setServiceTypes(serviceTypes.filter(serviceType => serviceType.id !== id)); 
       message.success('Service Type deleted successfully!');
     } catch (err) {
       message.error('Failed to delete service type');
@@ -61,13 +68,12 @@ const ServiceTypePage: React.FC = () => {
 
       if (isEditing && editServiceType) {
         // Cập nhật service type
-        await axios.put(`${API_URL}/${editServiceType.id}`, values);
         setServiceTypes(serviceTypes.map(serviceType => serviceType.id === editServiceType.id ? { ...serviceType, ...values } : serviceType));
         message.success('Service Type updated successfully!');
       } else {
         // Tạo mới service type
-        const response = await axios.post(API_URL, values);
-        setServiceTypes([...serviceTypes, response.data]); // Thêm vào danh sách
+        const newServiceType = { id: Date.now(), ...values };
+        setServiceTypes([...serviceTypes, newServiceType]); 
         message.success('Service Type created successfully!');
       }
 
@@ -135,15 +141,13 @@ const ServiceTypePage: React.FC = () => {
           <Form.Item
             name="name"
             label="Name"
-            rules={[{ required: true, message: 'Please input the service type name!' }]}
-          >
+            rules={[{ required: true, message: 'Please input the service type name!' }]}>
             <Input />
           </Form.Item>
           <Form.Item
             name="description"
             label="Description"
-            rules={[{ required: true, message: 'Please input the service type description!' }]}
-          >
+            rules={[{ required: true, message: 'Please input the service type description!' }]}>
             <Input />
           </Form.Item>
         </Form>
