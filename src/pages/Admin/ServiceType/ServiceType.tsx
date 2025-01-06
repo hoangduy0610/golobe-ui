@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Input, Form, message } from 'antd';
-import MainApiRequest from '@/redux/apis/MainApiRequest'; 
+import AdminApiRequest from '@/redux/apis/AdminApiRequest'; 
 
 const ServiceTypePage: React.FC = () => {
   const [serviceTypes, setServiceTypes] = useState<any[]>([]);
@@ -15,7 +15,7 @@ const ServiceTypePage: React.FC = () => {
     const fetchServiceTypes = async () => {
       setLoading(true);
       try {
-        const response = await MainApiRequest.get('/service-type/list'); 
+        const response = await AdminApiRequest.get('/service-type/list'); 
         setServiceTypes(response.data);
       } catch (err) {
         setError('Failed to fetch service types');
@@ -42,7 +42,7 @@ const ServiceTypePage: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await MainApiRequest.delete(`/service-type/${id}`); // Gửi request xóa service type
+      await AdminApiRequest.delete(`/service-type/${id}`); // Gửi request xóa service type
       setServiceTypes(serviceTypes.filter(serviceType => serviceType.id !== id));
       message.success('Service Type deleted successfully!');
     } catch (err) {
@@ -57,12 +57,12 @@ const ServiceTypePage: React.FC = () => {
       if (isEditing && editServiceType) {
         // Cập nhật service type
         const updatedServiceType = { ...editServiceType, ...values };
-        await MainApiRequest.put(`/service-type/${editServiceType.id}`, updatedServiceType); 
+        await AdminApiRequest.put(`/service-type/${editServiceType.id}`, updatedServiceType); 
         setServiceTypes(serviceTypes.map(serviceType => (serviceType.id === updatedServiceType.id ? updatedServiceType : serviceType)));
         message.success('Service Type updated successfully!');
       } else {
         // Tạo mới service type
-        const response = await MainApiRequest.post('/service-type', values); 
+        const response = await AdminApiRequest.post('/service-type', values); 
         setServiceTypes([...serviceTypes, response.data]);
         message.success('Service Type created successfully!');
       }
