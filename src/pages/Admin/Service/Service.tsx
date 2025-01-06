@@ -1,47 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Input, Form, message } from 'antd';
+import MainApiRequest from '@/redux/apis/MainApiRequest';
 import './Service.scss';
 
 interface ServiceType {
   id: string;
   name: string;
+  images: string[];
   description: string;
-  price: number;
+  address: string;
+  phone: string;
+  email: string;
+  website: string;
+  mapMarker: string;
+  features: string[];
+  priceRange: string;
+  price: string;
+  serviceTypeId: number;
+  openingHours: Array<Record<string, any>>;
 }
-
-// Dữ liệu mẫu
-const sampleServices = [
-  {
-    id: '1',
-    name: 'Room Cleaning',
-    description: 'Thorough cleaning of the room including floors, furniture, and bedding.',
-    price: 50,
-  },
-  {
-    id: '2',
-    name: 'Laundry Service',
-    description: 'Washing and ironing of clothes.',
-    price: 30,
-  },
-  {
-    id: '3',
-    name: 'Airport Transfer',
-    description: 'Pick-up and drop-off from the airport to the hotel.',
-    price: 100,
-  },
-  {
-    id: '4',
-    name: 'Spa Treatment',
-    description: 'Relaxing spa services including massage and aromatherapy.',
-    price: 150,
-  },
-  {
-    id: '5',
-    name: 'Breakfast Buffet',
-    description: 'Enjoy a wide variety of dishes for breakfast.',
-    price: 25,
-  },
-];
 
 const ServicePage: React.FC = () => {
   const [services, setServices] = useState<ServiceType[]>([]);
@@ -57,9 +34,8 @@ const ServicePage: React.FC = () => {
     const fetchServices = async () => {
       setLoading(true);
       try {
-        // Thay thế phần fetch với dữ liệu mẫu
-        const data = sampleServices;
-        setServices(data);
+        const response = await MainApiRequest.get('/services'); 
+        setServices(response.data);
       } catch (err) {
         setError('Failed to fetch services');
       } finally {
@@ -85,7 +61,7 @@ const ServicePage: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      // Xóa dịch vụ theo ID
+      await MainApiRequest.delete(`/services/${id}`);
       setServices(services.filter(service => service.id !== id));
       message.success('Service deleted successfully!');
     } catch (error) {
@@ -98,14 +74,13 @@ const ServicePage: React.FC = () => {
       const values = await form.validateFields();
 
       if (isEditing && editService) {
-        // Cập nhật dịch vụ
         const updatedService = { ...editService, ...values };
-        setServices(services.map(service => service.id === updatedService.id ? updatedService : service));
+        await MainApiRequest.put(`/services/${editService.id}`, updatedService);
+        setServices(services.map(service => (service.id === updatedService.id ? updatedService : service)));
         message.success('Service updated successfully!');
       } else {
-        // Tạo mới dịch vụ
-        const newService = { ...values, id: Date.now().toString() };
-        setServices([...services, newService]);
+        const response = await MainApiRequest.post('/services', values);
+        setServices([...services, response.data]);
         message.success('Service created successfully!');
       }
 
@@ -113,26 +88,14 @@ const ServicePage: React.FC = () => {
       form.resetFields();
       setEditService(null);
     } catch (errorInfo) {
-      console.error('Validation Failed:', errorInfo);
+      message.error('Failed to submit service');
     }
   };
 
   const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
-    },
-    {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
-    },
+    { title: 'Name', dataIndex: 'name', key: 'name' },
+    { title: 'Description', dataIndex: 'description', key: 'description' },
+    { title: 'Price', dataIndex: 'price', key: 'price' },
     {
       title: 'Actions',
       key: 'actions',
@@ -175,11 +138,7 @@ const ServicePage: React.FC = () => {
         okText={isEditing ? 'Save' : 'Create'}
       >
         <Form form={form} layout="vertical">
-          <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: 'Please input the service name!' }]}
-          >
+          <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please input the service name!' }]}>
             <Input />
           </Form.Item>
           <Form.Item
@@ -189,12 +148,20 @@ const ServicePage: React.FC = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            name="price"
-            label="Price"
-            rules={[{ required: true, message: 'Please input the service price!' }]}
-          >
+          <Form.Item name="price" label="Price" rules={[{ required: true, message: 'Please input the service price!' }]}>
             <Input type="number" />
+          </Form.Item>
+          <Form.Item name="address" label="Address" rules={[{ required: true, message: 'Please input the address!' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="phone" label="Phone" rules={[{ required: true, message: 'Please input the phone!' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Please input the email!' }]}>
+            <Input type="email" />
+          </Form.Item>
+          <Form.Item name="website" label="Website" rules={[{ required: false }]}>
+            <Input />
           </Form.Item>
         </Form>
       </Modal>

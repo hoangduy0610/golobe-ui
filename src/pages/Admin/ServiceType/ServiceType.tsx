@@ -1,36 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Input, Form, message } from 'antd';
-import axios from 'axios';
+import MainApiRequest from '@/redux/apis/MainApiRequest'; 
 
 const ServiceTypePage: React.FC = () => {
-  const [serviceTypes, setServiceTypes] = useState<any[]>([]);  
-  const [loading, setLoading] = useState<boolean>(false); 
-  const [error, setError] = useState<string | null>(null); 
+  const [serviceTypes, setServiceTypes] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [form] = Form.useForm();
   const [editServiceType, setEditServiceType] = useState<any>(null);
 
-  const API_URL = 'http://api.example.com/serviceTypes';
-
-  // Sample data for service types
-  const sampleData = [
-    { id: 1, name: 'Room Service', description: 'Provides food and drinks delivered directly to the guest room.' },
-    { id: 2, name: 'Spa Service', description: 'A wellness service offering massages, facials, and other body treatments.' },
-    { id: 3, name: 'Housekeeping', description: 'Cleaning and maintenance service for guest rooms and public areas.' },
-    { id: 4, name: 'Laundry Service', description: 'Washing, ironing, and dry cleaning services for guests\' clothes.' },
-    { id: 5, name: 'Airport Shuttle', description: 'Transportation service to and from the airport for guests.' }
-  ];
-
   useEffect(() => {
     const fetchServiceTypes = async () => {
       setLoading(true);
       try {
-        // Simulate fetching data from API
-        // In a real-world scenario, use axios to fetch actual data from API
-        setServiceTypes(sampleData);
+        const response = await MainApiRequest.get('/serviceTypes'); 
+        setServiceTypes(response.data);
       } catch (err) {
-        setError('Failed to load service types');
+        setError('Failed to fetch service types');
       } finally {
         setLoading(false);
       }
@@ -54,8 +42,8 @@ const ServiceTypePage: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      // Simulate deletion by removing it from the list
-      setServiceTypes(serviceTypes.filter(serviceType => serviceType.id !== id)); 
+      await MainApiRequest.delete(`/serviceTypes/${id}`); // Gửi request xóa service type
+      setServiceTypes(serviceTypes.filter(serviceType => serviceType.id !== id));
       message.success('Service Type deleted successfully!');
     } catch (err) {
       message.error('Failed to delete service type');
@@ -68,12 +56,14 @@ const ServiceTypePage: React.FC = () => {
 
       if (isEditing && editServiceType) {
         // Cập nhật service type
-        setServiceTypes(serviceTypes.map(serviceType => serviceType.id === editServiceType.id ? { ...serviceType, ...values } : serviceType));
+        const updatedServiceType = { ...editServiceType, ...values };
+        await MainApiRequest.put(`/serviceTypes/${editServiceType.id}`, updatedServiceType); 
+        setServiceTypes(serviceTypes.map(serviceType => (serviceType.id === updatedServiceType.id ? updatedServiceType : serviceType)));
         message.success('Service Type updated successfully!');
       } else {
         // Tạo mới service type
-        const newServiceType = { id: Date.now(), ...values };
-        setServiceTypes([...serviceTypes, newServiceType]); 
+        const response = await MainApiRequest.post('/serviceTypes', values); 
+        setServiceTypes([...serviceTypes, response.data]);
         message.success('Service Type created successfully!');
       }
 
@@ -81,7 +71,7 @@ const ServiceTypePage: React.FC = () => {
       form.resetFields();
       setEditServiceType(null);
     } catch (errorInfo) {
-      console.error('Validation Failed:', errorInfo);
+      message.error('Failed to submit service type');
     }
   };
 
@@ -92,9 +82,10 @@ const ServiceTypePage: React.FC = () => {
       key: 'name',
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
+      title: 'Filters',
+      dataIndex: 'filters',
+      key: 'filters',
+      render: (filters: string[]) => filters.join(', '), 
     },
     {
       title: 'Actions',
@@ -141,14 +132,16 @@ const ServiceTypePage: React.FC = () => {
           <Form.Item
             name="name"
             label="Name"
-            rules={[{ required: true, message: 'Please input the service type name!' }]}>
+            rules={[{ required: true, message: 'Please input the service type name!' }]}
+          >
             <Input />
           </Form.Item>
           <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true, message: 'Please input the service type description!' }]}>
-            <Input />
+            name="filters"
+            label="Filters"
+            rules={[{ required: true, message: 'Please input the filters!' }]}
+          >
+            <Input placeholder="Enter filters separated by commas" />
           </Form.Item>
         </Form>
       </Modal>
