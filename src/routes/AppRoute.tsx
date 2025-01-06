@@ -1,21 +1,20 @@
-// src/routes/AppRoute.tsx
-import Layout from "@/components/Layout/Layout";
+import Layout from "@/components/layout/Layout";
 import Login from "@/pages/Login/Login";
 import Admin from "@/pages/Admin/Admin";
-import { RootState } from "@/redux/store";  // Đã được định nghĩa
+import ServicePage from "@/pages/Admin/Service/Service";
+import ServiceTypePage from "@/pages/Admin/ServiceType/ServiceType";
+import PlanPage from "@/pages/Admin/Plan/Plan";
 import { routePath } from "@/routes/routePath";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import LocationPage from "@/pages/Admin/Location/Location";
+import AdminBlog from "@/pages/Admin/AdminBlog/AdminBlog";
+import AdminForum from "@/pages/Admin/AdminForum/AdminForum";
+import User from "@/pages/Admin/User/User";
+import Review from "@/pages/Admin/Review/Review";
 
 export default function AppRoute() {
   const navigate = useNavigate();
-  // const token = useSelector((state: RootState) => state.user.token);
-  // useEffect(() => {
-  //   if (!token) {
-  //     navigate('/login');
-  //   }
-  // }, [token]);
 
   const routePathRender = () => {
     return routePath.map((route, index) => {
@@ -40,8 +39,18 @@ export default function AppRoute() {
 
       <Route path="/login" element={<Login />} />
 
-      <Route path="/admin/*" element={<Admin />} />
-
+      <Route path="/admin/*" element={<Admin />}>
+        {/* Admin panel routes */}
+        <Route path="location" element={<LocationPage />} />
+        <Route path="service" element={<ServicePage />} />
+        <Route path="service-type" element={<ServiceTypePage />} />
+        <Route path="plan" element={<PlanPage />} />
+        <Route path="blog" element={<AdminBlog />} />
+        <Route path="forum" element={<AdminForum />} />
+        <Route path="user" element={<User />} />
+        <Route path="review" element={<Review />} />
+        {/* Add more routes for other admin pages */}
+      </Route>
     </Routes>
   );
 }

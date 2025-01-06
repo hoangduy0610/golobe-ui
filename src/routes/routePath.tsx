@@ -4,6 +4,7 @@ import { Blog } from "@/pages/blog/Blog";
 import TripDetail from "@/pages/TripDetail/TripDetail";
 import Admin from "@/pages/Admin/Admin";
 import Trips from "@/pages/Trips/Trips";
+import LocationPage from "@/pages/Admin/Location/Location";
 
 export const routePath = [
     {
@@ -55,6 +56,14 @@ export const routePath = [
         title: 'Admin',
         component: <Admin />
     },
+    {
+        index: false,
+        path: 'location', 
+        icon: 'fas fa-map-marker-alt',
+        title: 'Location',
+        component: <LocationPage />
+    },
+    
     {
         index: false,
         path: '*',

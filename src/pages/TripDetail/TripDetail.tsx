@@ -8,7 +8,7 @@ import setting from "@/assets/setting.png";
 import sharePlan from "@/assets/share_plan.png";
 import twitterIcon from "@/assets/twitter_icon.svg";
 import youtubeIcon from "@/assets/youtube_icon.svg";
-import Header from "@/components/Header/Header";
+import Header from "@/components/header/Header";
 import MainApiRequest from "@/redux/apis/MainApiRequest";
 import moment from "moment";
 import React, { useEffect, useState } from 'react';

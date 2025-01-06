@@ -1,4 +1,3 @@
-// src/redux/store.ts
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 import { persistReducer, persistStore } from 'redux-persist';
@@ -10,7 +9,7 @@ import rootSagas from './sagas/rootSagas';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user', 'location'],
+  whitelist: ['user', 'location', ], 
 };
 
 const rootReducer = combineReducers({
