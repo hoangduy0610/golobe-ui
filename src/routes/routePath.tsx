@@ -5,6 +5,8 @@ import TripDetail from "@/pages/TripDetail/TripDetail";
 import Admin from "@/pages/Admin/Admin";
 import Trips from "@/pages/Trips/Trips";
 import LocationPage from "@/pages/Admin/Location/Location";
+import Forum from "@/pages/Forum/Forum";
+import Services from "@/pages/Services/Services";
 
 export const routePath = [
     {
@@ -34,6 +36,20 @@ export const routePath = [
         icon: 'fas fa-blog',
         title: 'Blog',
         component: <Blog />
+    },
+    {
+        index: false,
+        path: 'forum',
+        icon: 'fas fa-blog',
+        title: 'forum',
+        component: <Forum />
+    },
+    {
+        index: false,
+        path: 'services',
+        icon: 'fas fa-blog',
+        title: 'services',
+        component: <Services />
     },
     {
         index: false,

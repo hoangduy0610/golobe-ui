@@ -33,6 +33,19 @@
         border-radius: 8px;
     }
 
+    .custom-button {
+        background-color: #8DD3BB;  
+        border-color: #8DD3BB;    
+        color: #ffffff;               /* Màu chữ ban đầu */
+        width: 100%;
+        
+        &:hover {
+            background-color: darken(#8DD3BB, 10%) !important;
+            border-color: darken(#8DD3BB, 10%) !important;
+            color: #ffffff !important;  /* Giữ màu chữ không thay đổi khi hover */
+        }
+    }
+
     .card-review,
     .card-review * {
         top: 0;

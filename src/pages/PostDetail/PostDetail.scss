@@ -1,0 +1,38 @@
+.post-detail-container {
+    
+}
+
+.pagination-container {
+    margin-bottom: 16px;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.post-card {
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid #8DD3BB;
+}
+
+.post-card .ant-btn {
+    margin-top: 10px;
+}
+
+.reply-container {
+    margin-top: 20px;
+}
+
+.reply-buttons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.reply-buttons .ant-btn {
+    width: 48%;
+}

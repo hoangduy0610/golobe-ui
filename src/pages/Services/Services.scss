@@ -1,0 +1,59 @@
+.services-page {
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 50px 20px;
+  
+      .page-title {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 40px;
+        text-align: center;
+      }
+  
+      .service-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.3s ease;
+  
+        &:hover {
+          transform: translateY(-10px);
+        }
+  
+        .ant-card-body {
+          padding: 20px;
+        }
+  
+        .ant-rate {
+          margin-top: 10px;
+        }
+  
+        .ant-btn-primary {
+          background-color: #8DD3BB;
+          border-color: #8DD3BB;
+          width: 100%;
+          margin-top: 15px;
+  
+          &:hover {
+            background-color: darken(#8DD3BB, 10%);
+            border-color: darken(#8DD3BB, 10%);
+          }
+        }
+  
+        h3 {
+          font-size: 20px;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+  
+        p {
+          font-size: 14px;
+          color: #333;
+        }
+        
+      }
+    }
+  }
+  

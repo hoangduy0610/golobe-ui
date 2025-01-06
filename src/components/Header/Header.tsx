@@ -15,10 +15,10 @@ export default function Header() {
             <nav className="navbar">
                 <ul className="nav-links">
                     <li><Link to="/">Home</Link></li>
-                    <li>Services</li>
+                    <li><Link to="/services">Services</Link></li>
                     <li><Link to="/trips">Trips</Link></li>
                     <li><Link to="/blog">Blog</Link></li>
-                    <li>Forum</li>
+                    <li><Link to="/forum">Forum</Link></li>
                 </ul>
                 <ul className="btn-group">
                     <li><Link to="/login">Login</Link></li>
