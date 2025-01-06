@@ -1,108 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import './Sidebar.scss';
-import { comparePathname } from '@/utils/uri';
+// import huyHieuCA from "@/assets/HuyHieuCA.png";
+import sidebarStyles from "@/components/sidebar/Sidebar.module.css";
+import { routePath } from "@/routes/routePath";
+import { comparePathname } from "@/utils/uri";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
-const Sidebar: React.FC = () => {
-  const [currentPath, setCurrentPath] = useState("");
+export default function Sidebar() {
+    const [currentPath, setCurrentPath] = useState('');
 
-  const location = useLocation();
+    const location = useLocation();
 
-  useEffect(() => {
-    setCurrentPath(location.pathname);
-  }, [location]);
+    useEffect(() => {
+        setCurrentPath(location.pathname);
+    }, [location]);
 
-  const routes = [
-    {
-      title: 'Location',
-      link: '/admin/location',
-      icon: 'fas fa-map-marker-alt',
-    },
-    {
-      title: 'Service',
-      link: '/admin/service',
-      icon: 'fas fa-cogs',
-    },
-    {
-      title: 'Service Type',
-      link: '/admin/service-type',
-      icon: 'fas fa-layer-group',
-    },
-    {
-      title: 'Plan',
-      link: '/admin/plan',
-      icon: 'fas fa-calendar-alt',
-    },
-    {
-      title: 'Blog',
-      link: '/admin/blog',
-      icon: 'fas fa-blog',
-    },
-    {
-      title: 'Forum',
-      link: '/admin/forum',
-      icon: 'fas fa-comments',
-    },
-    {
-      title: 'User',
-      link: '/admin/user',
-      icon: 'fas fa-user',
-    },
-    {
-      title: 'Review',
-      link: '/admin/review',
-      icon: 'fas fa-star',
-    },
-  ];
+    const renderNavigationList = () => {
+        return routePath.map((route, index) => {
+            if (route.path === '*') {
+                return null;
+            }
+            return (
+                <li key={index} className="nav-item">
+                    <Link to={route.path} className={`nav-link ${comparePathname(route.path, currentPath) ? 'active' : 'text-dark'}`}>
+                        <i className={route.icon}></i>
+                        <span className="ms-2">{route.title}</span>
+                    </Link>
+                </li>
+            );
+        });
+    }
 
-  const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    window.location.href = '/admin/login';
-  };
-
-  return (
-    <div className="d-flex flex-column align-items-center w-100 min-vh-100 sidebar px-2">
-      <h1 className="logo">
-        {/* <img src={require("@/assets/logo.jpg")} alt="Logo" style={{ height: 150, width: 'auto' }} /> */}
-      </h1>
-      <h5 className="systems">Navigation Systems</h5>
-      <ul className="nav nav-pills d-flex flex-column w-100">
-        {routes.map((route, index) => {
-          const isActive = comparePathname(currentPath, route.link);
-
-          return (
-            <li key={index} className="flex-1 nav-item">
-              <Link
-                to={route.link}
-                className={`nav-link ${isActive ? "nav-link-active" : "text-dark"}`}
-              >
-                <span className="icon-circle">
-                  <i className={route.icon}></i>
-                </span>
-                <span
-                  className={`title ${isActive ? "title-active" : "text-dark"}`}
-                >
-                  {route.title}
-                </span>
-              </Link>
-            </li>
-          );
-        })}
-        <li className="flex-1 nav-item">
-          <Link
-            to="#"
-            onClick={handleLogout}
-            className="nav-link text-dark"
-          >
-            <span className="icon-circle">
-              <i className="fas fa-right-from-bracket"></i>
-            </span>
-            <span className="title text-dark">Logout</span>
-          </Link>
-        </li>
-      </ul>
-    </div>
-  );
-};
-
-export default Sidebar;
+    return (
+        <div className="d-flex flex-column align-items-center align-items-sm-start pt-2 min-vh-100">
+            {/* <img className={sidebarStyles.huyHieu} src={huyHieuCA} alt="Công an hiệu" /> */}
+            <h3 className="mt-2 align-self-center fw-bold">Giám sát</h3>
+            <ul className="nav nav-pills flex-column mb-auto w-100">
+                {renderNavigationList()}
+            </ul>
+        </div>
+    );
+}

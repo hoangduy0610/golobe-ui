@@ -1,5 +1,5 @@
-import '@/components/layout/Layout.css';
-import Sidebar from "@/components/sidebar/Sidebar";
+import '@/components/Layout/Layout.css';
+import Sidebar from "@/components/Sidebar/Sidebar";
 import { Outlet } from "react-router-dom";
 import logo from "@/assets/logo.svg";
 import { Link } from 'react-router-dom';
