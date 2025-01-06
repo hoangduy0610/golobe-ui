@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Input, Form, message } from 'antd';
-import axios from 'axios';
+import MainApiRequest from '@/redux/apis/MainApiRequest';
+
 
 const PlanPage: React.FC = () => {
   const [plans, setPlans] = useState<any[]>([]);
@@ -11,22 +12,13 @@ const PlanPage: React.FC = () => {
   const [form] = Form.useForm();
   const [editPlan, setEditPlan] = useState<any>(null);
 
-  const API_URL = 'http://api.example.com/plans';
-
-  // Sample data for plans
-  const sampleData = [
-    { id: 1, title: 'Trip to Paris', destination: 'Paris, France', startDate: '2025-06-01', endDate: '2025-06-10', description: 'A week-long vacation to Paris with sightseeing.' },
-    { id: 2, title: 'Business Trip to Tokyo', destination: 'Tokyo, Japan', startDate: '2025-07-15', endDate: '2025-07-20', description: 'Business meetings and conferences in Tokyo.' },
-    { id: 3, title: 'Summer Vacation in Bali', destination: 'Bali, Indonesia', startDate: '2025-08-01', endDate: '2025-08-15', description: 'A relaxing summer vacation to enjoy the beaches and culture of Bali.' },
-  ];
 
   useEffect(() => {
     const fetchPlans = async () => {
       setLoading(true);
       try {
-        // Simulate fetching data from API
-        // In a real-world scenario, use axios to fetch actual data from API
-        setPlans(sampleData);
+        const response = await MainApiRequest.get('/plan');
+        setPlans(response.data);
       } catch (err) {
         setError('Failed to load plans');
       } finally {
@@ -46,13 +38,19 @@ const PlanPage: React.FC = () => {
   const handleEdit = (plan: any) => {
     setEditPlan(plan);
     setIsEditing(true);
-    form.setFieldsValue(plan);
+    form.setFieldsValue({
+      name: plan.name,
+      description: plan.description,
+      locationId: plan.locationId,
+      startDate: plan.startDate.split('T')[0],
+      endDate: plan.endDate.split('T')[0],
+    });
     setIsModalVisible(true);
   };
 
   const handleDelete = async (id: number) => {
     try {
-      // Simulate deletion by removing it from the list
+      await MainApiRequest.delete(`/plan'/${id}`);
       setPlans(plans.filter(plan => plan.id !== id));
       message.success('Plan deleted successfully!');
     } catch (err) {
@@ -66,12 +64,23 @@ const PlanPage: React.FC = () => {
 
       if (isEditing && editPlan) {
         // Update plan
-        setPlans(plans.map(plan => plan.id === editPlan.id ? { ...plan, ...values } : plan));
+        const updatedPlan = {
+          ...values,
+          startDate: new Date(values.startDate).toISOString(),
+          endDate: new Date(values.endDate).toISOString(),
+        };
+        await MainApiRequest.put(`/plan'/${editPlan.id}`, updatedPlan);
+        setPlans(plans.map(plan => (plan.id === editPlan.id ? { ...plan, ...updatedPlan } : plan)));
         message.success('Plan updated successfully!');
       } else {
         // Create new plan
-        const newPlan = { id: Date.now(), ...values };
-        setPlans([...plans, newPlan]);
+        const newPlan = {
+          ...values,
+          startDate: new Date(values.startDate).toISOString(),
+          endDate: new Date(values.endDate).toISOString(),
+        };
+        const response = await MainApiRequest.post('/plan', newPlan);
+        setPlans([...plans, response.data]);
         message.success('Plan created successfully!');
       }
 
@@ -80,19 +89,25 @@ const PlanPage: React.FC = () => {
       setEditPlan(null);
     } catch (errorInfo) {
       console.error('Validation Failed:', errorInfo);
+      message.error('Failed to save plan');
     }
   };
 
   const columns = [
     {
       title: 'Title',
-      dataIndex: 'title',
-      key: 'title',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: 'Destination',
-      dataIndex: 'destination',
-      key: 'destination',
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
+    },
+    {
+      title: 'Location ID',
+      dataIndex: 'locationId',
+      key: 'locationId',
     },
     {
       title: 'Start Date',
@@ -103,11 +118,6 @@ const PlanPage: React.FC = () => {
       title: 'End Date',
       dataIndex: 'endDate',
       key: 'endDate',
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
     },
     {
       title: 'Actions',
@@ -152,34 +162,39 @@ const PlanPage: React.FC = () => {
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            name="title"
-            label="Title"
-            rules={[{ required: true, message: 'Please input the plan title!' }]}>
+            name="name"
+            label="Name"
+            rules={[{ required: true, message: 'Please input the plan title!' }]}
+          >
             <Input />
           </Form.Item>
           <Form.Item
-            name="destination"
-            label="Destination"
-            rules={[{ required: true, message: 'Please input the destination!' }]}>
+            name="description"
+            label="Description"
+            rules={[{ required: true, message: 'Please input the plan description!' }]}
+          >
             <Input />
+          </Form.Item>
+          <Form.Item
+            name="locationId"
+            label="Location ID"
+            rules={[{ required: true, message: 'Please input the location ID!' }]}
+          >
+            <Input type="number" />
           </Form.Item>
           <Form.Item
             name="startDate"
             label="Start Date"
-            rules={[{ required: true, message: 'Please select the start date!' }]}>
+            rules={[{ required: true, message: 'Please select the start date!' }]}
+          >
             <Input type="date" />
           </Form.Item>
           <Form.Item
             name="endDate"
             label="End Date"
-            rules={[{ required: true, message: 'Please select the end date!' }]}>
+            rules={[{ required: true, message: 'Please select the end date!' }]}
+          >
             <Input type="date" />
-          </Form.Item>
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true, message: 'Please input the plan description!' }]}>
-            <Input />
           </Form.Item>
         </Form>
       </Modal>
