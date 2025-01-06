@@ -15,16 +15,13 @@ export default function Header() {
             <nav className="navbar">
                 <ul className="nav-links">
                     <li><Link to="/">Home</Link></li>
-                    <li>Restaurants</li>
+                    <li>Services</li>
                     <li><Link to="/trips">Trips</Link></li>
-                    <li>Thing to do</li>
                     <li><Link to="/blog">Blog</Link></li>
                     <li>Forum</li>
-                    <li><Link to="/admin">Admin</Link></li>
                 </ul>
                 <ul className="btn-group">
-                    <li>Partner</li>
-                    <li>Login</li>
+                    <li><Link to="/login">Login</Link></li>
                     <li className="btn btn-white">Sign Up</li>
                 </ul>
             </nav>

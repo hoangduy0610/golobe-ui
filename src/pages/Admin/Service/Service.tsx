@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Input, Form, message } from 'antd';
-import MainApiRequest from '@/redux/apis/MainApiRequest';
+import { Table, Button, Modal, Input, Form, message, Tag } from 'antd';
+import AdminApiRequest from '@/redux/apis/AdminApiRequest';
 import './Service.scss';
+import { title } from 'process';
+import { render } from '@testing-library/react';
 
 interface ServiceType {
   id: string;
@@ -34,7 +36,7 @@ const ServicePage: React.FC = () => {
     const fetchServices = async () => {
       setLoading(true);
       try {
-        const response = await MainApiRequest.get('/services'); 
+        const response = await AdminApiRequest.get('/service/list');
         setServices(response.data);
       } catch (err) {
         setError('Failed to fetch services');
@@ -61,7 +63,7 @@ const ServicePage: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await MainApiRequest.delete(`/services/${id}`);
+      await AdminApiRequest.delete(`/service/${id}`);
       setServices(services.filter(service => service.id !== id));
       message.success('Service deleted successfully!');
     } catch (error) {
@@ -75,11 +77,11 @@ const ServicePage: React.FC = () => {
 
       if (isEditing && editService) {
         const updatedService = { ...editService, ...values };
-        await MainApiRequest.put(`/services/${editService.id}`, updatedService);
+        await AdminApiRequest.put(`/service/${editService.id}`, updatedService);
         setServices(services.map(service => (service.id === updatedService.id ? updatedService : service)));
         message.success('Service updated successfully!');
       } else {
-        const response = await MainApiRequest.post('/services', values);
+        const response = await AdminApiRequest.post('/service', values);
         setServices([...services, response.data]);
         message.success('Service created successfully!');
       }
@@ -92,10 +94,58 @@ const ServicePage: React.FC = () => {
     }
   };
 
+  const mapColor = (index: number) => {
+    const colors = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple'];
+    return colors[index % colors.length];
+  }
+
   const columns = [
+    {
+      title: 'Image',
+      dataIndex: 'images',
+      key: 'images',
+      render: (images: string[]) => <img src={images[0]} alt="service" style={{ width: '50px' }} />,
+    },
     { title: 'Name', dataIndex: 'name', key: 'name' },
-    { title: 'Description', dataIndex: 'description', key: 'description' },
-    { title: 'Price', dataIndex: 'price', key: 'price' },
+    {
+      title: 'Address',
+      dataIndex: 'address',
+      key: 'address',
+    },
+    {
+      title: 'Phone',
+      dataIndex: 'phone',
+      key: 'phone',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Website',
+      dataIndex: 'website',
+      key: 'website',
+    },
+    {
+      title: 'Features',
+      dataIndex: 'features',
+      key: 'features',
+      render: (features: string[]) => features.map((feature, index) => <Tag key={feature} color={mapColor(index)}>{feature}</Tag>),
+    },
+    {
+      title: 'Price Range',
+      dataIndex: 'priceRange',
+      key: 'priceRange',
+      render: (priceRange: string) => <Tag color="blue">{priceRange.toUpperCase()}</Tag>,
+    },
+    // {
+    //   title: 'Opening Hours',
+    //   dataIndex: 'openingHours',
+    //   key: 'openingHours',
+    // },
+    // { title: 'Description', dataIndex: 'description', key: 'description' },
+    // { title: 'Price', dataIndex: 'price', key: 'price' },
     {
       title: 'Actions',
       key: 'actions',

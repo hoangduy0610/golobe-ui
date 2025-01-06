@@ -199,270 +199,272 @@ function TripDetail() {
     }
 
     return (
-        <div className="app">
-            <div className="container-fluid">
-                <Header />
-                <div className="container">
-                    <section className="card shadow my-4 px-4 border-0">
-                        <div className="card-body">
-                            <input type="text" className="form-control bg-secondary py-3" placeholder="Search" />
+        <div className="trip_detail_page">
+            <div className="app">
+                <div className="container-fluid">
+                    <Header />
+                    <div className="container">
+                        <section className="card shadow my-4 px-4 border-0">
+                            <div className="card-body">
+                                <input type="text" className="form-control bg-secondary py-3" placeholder="Search" />
+                            </div>
+                        </section>
+                        <div className="frame" style={{ backgroundImage: `url(${trip?.location?.featureImage})` }}>
+                            <div className="frame-header">
+                                <button className="button button-invite">
+                                    <img src={invite} alt="Invite" className="button-icon" /> Invite
+                                </button>
+                                <button className="button button-share">
+                                    <img src={sharePlan} alt="Share" className="button-icon" />
+                                </button>
+                                <button className="button button-edit" onClick={toggleEditModal}>
+                                    <img src={setting} alt="Edit" className="button-icon" />
+                                </button>
+                            </div>
                         </div>
-                    </section>
-                    <div className="frame" style={{ backgroundImage: `url(${trip?.location?.featureImage})` }}>
-                        <div className="frame-header">
-                            <button className="button button-invite">
-                                <img src={invite} alt="Invite" className="button-icon" /> Invite
+                        <div className="tabs-container">
+                            <button
+                                className={`tab-button ${activeTab === 'itinerary' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('itinerary')}
+                            >
+                                Itinerary
                             </button>
-                            <button className="button button-share">
-                                <img src={sharePlan} alt="Share" className="button-icon" />
+                            <button
+                                className={`tab-button ${activeTab === 'favourite' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('favourite')}
+                            >
+                                Favourite
                             </button>
-                            <button className="button button-edit" onClick={toggleEditModal}>
-                                <img src={setting} alt="Edit" className="button-icon" />
+                            <button
+                                className={`tab-button ${activeTab === 'foryou' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('foryou')}
+                            >
+                                For You
                             </button>
                         </div>
-                    </div>
-                    <div className="tabs-container">
-                        <button
-                            className={`tab-button ${activeTab === 'itinerary' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('itinerary')}
-                        >
-                            Itinerary
-                        </button>
-                        <button
-                            className={`tab-button ${activeTab === 'favourite' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('favourite')}
-                        >
-                            Favourite
-                        </button>
-                        <button
-                            className={`tab-button ${activeTab === 'foryou' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('foryou')}
-                        >
-                            For You
-                        </button>
-                    </div>
-                    <div className="tab-content">
-                        {activeTab === 'itinerary' && renderItineraries()}
                         <div className="tab-content">
-                            {activeTab === 'favourite' && (
-                                <div>For Favourite</div>
-                            )}
-                        </div>
-                        {activeTab === 'foryou' && <div>For You content goes here</div>}
-                    </div>
-                </div>
-            </div>
-
-            {/* Add Tab for Things to Do, Place to Stay, etc. */}
-            {isAddTabOpen && (
-                <div>
-                    <div className="overlay active" onClick={() => setIsAddTabOpen(false)}></div>
-                    <div className="add-tab">
-                        <div className="add-tab-header">
-                            <h2>Add Service for plan</h2>
-                            <button className="btn-close" onClick={() => setIsAddTabOpen(false)}>&times;</button>
-                        </div>
-                        <div className="add-tab-body">
-                            <input type="text" className="search-input" placeholder="Search..." />
-                            <div className="add-items">
-                                {service.map(item => (
-                                    <div
-                                        key={item.id}
-                                        className={`item ${goingToAddItem?.id === item?.id ? 'selected' : ''}`}
-                                        onClick={() => toggleItemSelected(item)}
-                                    >
-                                        <img src={item.images[0]} alt={item.name} className="item-image" />
-                                        <span className="item-name">{item.name}</span>
-                                    </div>
-                                ))}
+                            {activeTab === 'itinerary' && renderItineraries()}
+                            <div className="tab-content">
+                                {activeTab === 'favourite' && (
+                                    <div>For Favourite</div>
+                                )}
                             </div>
-                            <button className="btn-add-to-itinerary" onClick={handleAddToItinerary}>Add to Schedule</button>
+                            {activeTab === 'foryou' && <div>For You content goes here</div>}
                         </div>
                     </div>
                 </div>
-            )}
 
-
-            {/* Edit Modal */}
-            {isEditModalOpen && (
-                <div className="edit-modal">
-                    <div className="edit-modal-content">
-                        <h2>Edit Trip</h2>
-                        <form>
-                            <div className="form-group">
-                                <label>Trip Name</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleInputChange}
-                                    className="form-control"
-                                    placeholder="Enter trip name"
-                                />
+                {/* Add Tab for Things to Do, Place to Stay, etc. */}
+                {isAddTabOpen && (
+                    <div>
+                        <div className="overlay active" onClick={() => setIsAddTabOpen(false)}></div>
+                        <div className="add-tab">
+                            <div className="add-tab-header">
+                                <h2>Add Service for plan</h2>
+                                <button className="btn-close" onClick={() => setIsAddTabOpen(false)}>&times;</button>
                             </div>
-                            <div className="form-group">
-                                <label>Destination</label>
-                                <select
-                                    name="locationId"
-                                    value={formData.locationId}
-                                    onChange={handleInputChange}
-                                    className="form-control"
-                                >
-                                    {
-                                        location.map((loc: any) => (
-                                            <option value={loc.id}>{loc.name}</option>
-                                        ))
-                                    }
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label>Start Date</label>
-                                <input
-                                    type="date"
-                                    name="startDate"
-                                    value={formData.startDate}
-                                    onChange={handleInputChange}
-                                    className="form-control"
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>End Date</label>
-                                <input
-                                    type="date"
-                                    name="endDate"
-                                    value={formData.endDate}
-                                    onChange={handleInputChange}
-                                    className="form-control"
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Description</label>
-                                <textarea
-                                    name="description"
-                                    value={formData.description}
-                                    onChange={handleInputChange}
-                                    className="form-control"
-                                    placeholder="Enter d</div>escription"
-                                />
-                            </div>
-
-                            {/* Nút Duplicate, Delete và Save Changes */}
-                            <div className="form-actions">
-                                <button
-                                    type="button"
-                                    className="btn btn-delete"
-                                    onClick={() => handleAction('delete')}
-                                >
-                                    Delete
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-save"
-                                    onClick={() => { handleAction('save') }}
-                                >
-                                    Save Changes
-                                </button>
-                            </div>
-                        </form>
-                        {/* Nút Close thay bằng dấu X */}
-                        <button className="btn-close" onClick={toggleEditModal}>
-                            ×
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {isDetailTabOpen && selectedItem && (
-
-                <div className="detail-overlay" onClick={(e) => {
-                    if (e.target !== e.currentTarget) {
-                        return;
-                    }
-                    closeDetailTab();
-                }}>
-                    <div className="detail-tab">
-                        <div className="detail-tab-header">
-                            <button className="btn-close" onClick={closeDetailTab}>×</button>
-                        </div>
-                        <div className="detail-tab-content">
-                            <div className="detail-tab-image">
-                                <img src={selectedItem?.service?.images[0]} alt="Item" />
-                            </div>
-                            <div className="detail-tab-info">
-                                <h3>{selectedItem?.service?.name}</h3>
-                                <p>{selectedItem?.service?.description}</p>
-                                <p><strong>Phone: </strong><a href={'tel:' + selectedItem?.service?.phone} target="_blank" rel="noopener noreferrer">{selectedItem?.service?.phone}</a></p>
-                                <p><strong>Address: </strong>{selectedItem?.service?.address}</p>
-                                <p><strong>Opening Hours: </strong></p>
-                                <ul>
-                                    {selectedItem?.service?.openingHours.map((op: any) => (
-                                        <li><strong>{op?.day}</strong>: {op?.hours === "Custom" ? (op?.customHours?.open + ' -> ' + op?.customHours?.close) : op?.hours}</li>
+                            <div className="add-tab-body">
+                                <input type="text" className="search-input" placeholder="Search..." />
+                                <div className="add-items">
+                                    {service.map(item => (
+                                        <div
+                                            key={item.id}
+                                            className={`item ${goingToAddItem?.id === item?.id ? 'selected' : ''}`}
+                                            onClick={() => toggleItemSelected(item)}
+                                        >
+                                            <img src={item.images[0]} alt={item.name} className="item-image" />
+                                            <span className="item-name">{item.name}</span>
+                                        </div>
                                     ))}
-                                </ul>
-                                <button className="btn btn-outline-danger btn-block" onClick={handleRemoveServiceFromDay}>
-                                    <FontAwesomeIcon icon={faTrash} /> Remove
-                                </button>
+                                </div>
+                                <button className="btn-add-to-itinerary" onClick={handleAddToItinerary}>Add to Schedule</button>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            <footer>
-                <div className="newsletter">
-                    <div className="row">
-                        <div className="col-8">
-                            <h1 style={{ margin: '15px 0px' }}>
-                                Subscribe <br /> Newsletter
-                            </h1>
-                            <strong>
-                                The Travel
-                            </strong>
-                            <p>Get inspired! Receive travel discounts, tips and behind the scenes stories.</p>
-                            <form className="d-flex w-75 flex-row align-items-center">
-                                <input type="text" className="form-control py-3 me-3" id="inlineFormInputGroupUsername" placeholder="Your email address" />
-                                <button type="submit" className="btn btn-dark py-3" style={{ background: '#112211' }}>Subscribe</button>
+
+                {/* Edit Modal */}
+                {isEditModalOpen && (
+                    <div className="edit-modal">
+                        <div className="edit-modal-content">
+                            <h2>Edit Trip</h2>
+                            <form>
+                                <div className="form-group">
+                                    <label>Trip Name</label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleInputChange}
+                                        className="form-control"
+                                        placeholder="Enter trip name"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Destination</label>
+                                    <select
+                                        name="locationId"
+                                        value={formData.locationId}
+                                        onChange={handleInputChange}
+                                        className="form-control"
+                                    >
+                                        {
+                                            location.map((loc: any) => (
+                                                <option value={loc.id}>{loc.name}</option>
+                                            ))
+                                        }
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label>Start Date</label>
+                                    <input
+                                        type="date"
+                                        name="startDate"
+                                        value={formData.startDate}
+                                        onChange={handleInputChange}
+                                        className="form-control"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>End Date</label>
+                                    <input
+                                        type="date"
+                                        name="endDate"
+                                        value={formData.endDate}
+                                        onChange={handleInputChange}
+                                        className="form-control"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Description</label>
+                                    <textarea
+                                        name="description"
+                                        value={formData.description}
+                                        onChange={handleInputChange}
+                                        className="form-control"
+                                        placeholder="Enter d</div>escription"
+                                    />
+                                </div>
+
+                                {/* Nút Duplicate, Delete và Save Changes */}
+                                <div className="form-actions">
+                                    <button
+                                        type="button"
+                                        className="btn btn-delete"
+                                        onClick={() => handleAction('delete')}
+                                    >
+                                        Delete
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-save"
+                                        onClick={() => { handleAction('save') }}
+                                    >
+                                        Save Changes
+                                    </button>
+                                </div>
                             </form>
-                        </div>
-                        <div className="col-4">
-                            <img src={newsletter} style={{ width: 'auto', height: '100%', maxWidth: '100%' }} />
+                            {/* Nút Close thay bằng dấu X */}
+                            <button className="btn-close" onClick={toggleEditModal}>
+                                ×
+                            </button>
                         </div>
                     </div>
-                </div>
-                <div className="row footer-content">
-                    <div className="col">
-                        <img src={footerLogo} />
-                        <div className="row mt-3">
-                            <div className="col">
-                                <img src={facebookIcon} />
-                                <img src={twitterIcon} className="ms-2" />
-                                <img src={instagramIcon} className="ms-2" />
-                                <img src={youtubeIcon} className="ms-2" />
+                )}
+
+                {isDetailTabOpen && selectedItem && (
+
+                    <div className="detail-overlay" onClick={(e) => {
+                        if (e.target !== e.currentTarget) {
+                            return;
+                        }
+                        closeDetailTab();
+                    }}>
+                        <div className="detail-tab">
+                            <div className="detail-tab-header">
+                                <button className="btn-close" onClick={closeDetailTab}>×</button>
+                            </div>
+                            <div className="detail-tab-content">
+                                <div className="detail-tab-image">
+                                    <img src={selectedItem?.service?.images[0]} alt="Item" />
+                                </div>
+                                <div className="detail-tab-info">
+                                    <h3>{selectedItem?.service?.name}</h3>
+                                    <p>{selectedItem?.service?.description}</p>
+                                    <p><strong>Phone: </strong><a href={'tel:' + selectedItem?.service?.phone} target="_blank" rel="noopener noreferrer">{selectedItem?.service?.phone}</a></p>
+                                    <p><strong>Address: </strong>{selectedItem?.service?.address}</p>
+                                    <p><strong>Opening Hours: </strong></p>
+                                    <ul>
+                                        {selectedItem?.service?.openingHours.map((op: any) => (
+                                            <li><strong>{op?.day}</strong>: {op?.hours === "Custom" ? (op?.customHours?.open + ' -> ' + op?.customHours?.close) : op?.hours}</li>
+                                        ))}
+                                    </ul>
+                                    <button className="btn btn-outline-danger btn-block" onClick={handleRemoveServiceFromDay}>
+                                        <FontAwesomeIcon icon={faTrash} /> Remove
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
+                )}
 
-                    <div className="col p-nm">
-                        <h5 className="fw-bold">Travel Blog</h5>
-                        <p>Bali Travel Guide</p>
-                        <p>Sri Lanka Travel Guide</p>
-                        <p>Maldives Travel Guide</p>
-                        <p>Thailand Travel Guide</p>
+                <footer>
+                    <div className="newsletter">
+                        <div className="row">
+                            <div className="col-8">
+                                <h1 style={{ margin: '15px 0px' }}>
+                                    Subscribe <br /> Newsletter
+                                </h1>
+                                <strong>
+                                    The Travel
+                                </strong>
+                                <p>Get inspired! Receive travel discounts, tips and behind the scenes stories.</p>
+                                <form className="d-flex w-75 flex-row align-items-center">
+                                    <input type="text" className="form-control py-3 me-3" id="inlineFormInputGroupUsername" placeholder="Your email address" />
+                                    <button type="submit" className="btn btn-dark py-3" style={{ background: '#112211' }}>Subscribe</button>
+                                </form>
+                            </div>
+                            <div className="col-4">
+                                <img src={newsletter} style={{ width: 'auto', height: '100%', maxWidth: '100%' }} />
+                            </div>
+                        </div>
                     </div>
+                    <div className="row footer-content">
+                        <div className="col">
+                            <img src={footerLogo} />
+                            <div className="row mt-3">
+                                <div className="col">
+                                    <img src={facebookIcon} />
+                                    <img src={twitterIcon} className="ms-2" />
+                                    <img src={instagramIcon} className="ms-2" />
+                                    <img src={youtubeIcon} className="ms-2" />
+                                </div>
+                            </div>
+                        </div>
 
-                    <div className="col p-nm">
-                        <h5 className="fw-bold">About Us</h5>
-                        <p>Our Story</p>
-                        <p>Work With Us</p>
-                    </div>
+                        <div className="col p-nm">
+                            <h5 className="fw-bold">Travel Blog</h5>
+                            <p>Bali Travel Guide</p>
+                            <p>Sri Lanka Travel Guide</p>
+                            <p>Maldives Travel Guide</p>
+                            <p>Thailand Travel Guide</p>
+                        </div>
 
-                    <div className="col p-nm">
-                        <h5 className="fw-bold">Contact Us</h5>
-                        <p>Our Story</p>
-                        <p>Work With Us</p>
+                        <div className="col p-nm">
+                            <h5 className="fw-bold">About Us</h5>
+                            <p>Our Story</p>
+                            <p>Work With Us</p>
+                        </div>
+
+                        <div className="col p-nm">
+                            <h5 className="fw-bold">Contact Us</h5>
+                            <p>Our Story</p>
+                            <p>Work With Us</p>
+                        </div>
                     </div>
-                </div>
-            </footer>
+                </footer>
+            </div>
         </div>
     );
 }

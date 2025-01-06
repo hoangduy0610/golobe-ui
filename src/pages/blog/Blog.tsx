@@ -92,104 +92,108 @@ export function Blog() {
     };
 
     return (
-        <div>
-            <Header />
-            <div className="container">
-                <section className="card shadow my-4 px-4 border-0">
-                    <div className="card-body">
-                        <input type="text" className="form-control bg-secondary py-3" placeholder="Search" />
-                    </div>
-                </section>
+        <div className="blog_page">
+            <div className="app">
+                <div className="container-fluid">
+                    <Header />
+                    <div className="container">
+                        <section className="card shadow my-4 px-4 border-0">
+                            <div className="card-body">
+                                <input type="text" className="form-control bg-secondary py-3" placeholder="Search" />
+                            </div>
+                        </section>
 
-                <div className="category-section">
-                    <div className="row justify-content-center">
-                        <div className="col-md-10 text-center">
-                            <h2 className="section-title">Choose a category</h2>
-                        </div>
-                    </div>
-
-                    <Slider {...settings}>
-                        {categories.map((category) => (
-                            <div
-                                key={category.id}
-                                className="category-card-container"
-                                onClick={() => handleCategoryClick(category.name)}
-                            >
-                                <div
-                                    className="category-card"
-                                    style={{
-                                        backgroundImage: `url(${category.image})`,
-                                    }}
-                                >
-                                    <div className="category-overlay">
-                                        <h3>{category.name}</h3>
-                                    </div>
+                        <div className="category-section">
+                            <div className="row justify-content-center">
+                                <div className="col-md-10 text-center">
+                                    <h2 className="section-title">Choose a category</h2>
                                 </div>
                             </div>
-                        ))}
-                    </Slider>
+
+                            <Slider {...settings}>
+                                {categories.map((category) => (
+                                    <div
+                                        key={category.id}
+                                        className="category-card-container"
+                                        onClick={() => handleCategoryClick(category.name)}
+                                    >
+                                        <div
+                                            className="category-card"
+                                            style={{
+                                                backgroundImage: `url(${category.image})`,
+                                            }}
+                                        >
+                                            <div className="category-overlay">
+                                                <h3>{category.name}</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </Slider>
+                        </div>
+
+                        <section className="my-4 featured-explore-section">
+                            <div className="row justify-content-center">
+                                <div className="col-md-10 text-center">
+                                    <h2 className="section-title">Featured explore</h2>
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                {displayExplores.map((explore) => (
+                                    <div key={explore.id} className="col-md-3 mb-4">
+                                        <div className="featured-card">
+                                            <img src={explore.image} alt={explore.title} className="featured-image" />
+                                            <div className="featured-content">
+                                                <h4 className="featured-title">{explore.title}</h4>
+                                                <p className="featured-description">{explore.description}</p>
+                                                <p className="post-by">Post by <strong>{explore.author}</strong></p>
+                                                <img src={share} alt="Share" className="share-icon" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="pagination">
+                                {Array.from({ length: totalPages }, (_, index) => (
+                                    <button
+                                        key={index + 1}
+                                        className={`page-button ${currentPage === index + 1 ? "active" : ""}`}
+                                        onClick={() => handlePageChange(index + 1)}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                ))}
+                            </div>
+                        </section>
+
+                        <section className="latest-blog-section my-4">
+                            <div className="row justify-content-center">
+                                <div className="col-md-10 text-center">
+                                    <h2 className="section-title">Latest Blog</h2>
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                {latestBlogs.map((blog) => (
+                                    <div key={blog.id} className="col-md-10 mb-4 latest-blog-card">
+                                        <div className="d-flex align-items-center">
+                                            <img src={blog.image} alt={blog.title} className="latest-blog-image mr-3" />
+                                            <div className="latest-blog-content">
+                                                <h4 className="latest-blog-title">{blog.title}</h4>
+                                                <p className="latest-blog-author">By {blog.author}</p>
+                                                <p className="latest-blog-date">{blog.date}</p>
+                                                <p className="latest-blog-excerpt">{blog.excerpt}</p>
+                                            </div>
+                                            <img src={share} alt="Share" className="share-icon" />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    </div>
                 </div>
-
-                <section className="my-4 featured-explore-section">
-                    <div className="row justify-content-center">
-                        <div className="col-md-10 text-center">
-                            <h2 className="section-title">Featured explore</h2>
-                        </div>
-                    </div>
-
-                    <div className="row">
-                        {displayExplores.map((explore) => (
-                            <div key={explore.id} className="col-md-3 mb-4">
-                                <div className="featured-card">
-                                    <img src={explore.image} alt={explore.title} className="featured-image" />
-                                    <div className="featured-content">
-                                        <h4 className="featured-title">{explore.title}</h4>
-                                        <p className="featured-description">{explore.description}</p>
-                                        <p className="post-by">Post by <strong>{explore.author}</strong></p>
-                                        <img src={share} alt="Share" className="share-icon" />
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="pagination">
-                        {Array.from({ length: totalPages }, (_, index) => (
-                            <button
-                                key={index + 1}
-                                className={`page-button ${currentPage === index + 1 ? "active" : ""}`}
-                                onClick={() => handlePageChange(index + 1)}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
-                    </div>
-                </section>
-
-                <section className="latest-blog-section my-4">
-                    <div className="row justify-content-center">
-                        <div className="col-md-10 text-center">
-                            <h2 className="section-title">Latest Blog</h2>
-                        </div>
-                    </div>
-
-                    <div className="row">
-                        {latestBlogs.map((blog) => (
-                            <div key={blog.id} className="col-md-10 mb-4 latest-blog-card">
-                                <div className="d-flex align-items-center">
-                                    <img src={blog.image} alt={blog.title} className="latest-blog-image mr-3" />
-                                    <div className="latest-blog-content">
-                                        <h4 className="latest-blog-title">{blog.title}</h4>
-                                        <p className="latest-blog-author">By {blog.author}</p>
-                                        <p className="latest-blog-date">{blog.date}</p>
-                                        <p className="latest-blog-excerpt">{blog.excerpt}</p>
-                                    </div>
-                                    <img src={share} alt="Share" className="share-icon" />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </section>
             </div>
         </div>
     );

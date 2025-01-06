@@ -1,22 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Table, Button, Modal, Input, Form, message } from 'antd';
+import { createLocation, deleteLocation, updateLocation } from '@/redux/reducers/locationReducer';
 import { LocationType } from '@/types/types';
+import { Button, Form, Input, Modal, Table, message } from 'antd';
+import React, { useEffect, useState } from 'react';
 import './Location.scss';
-import { fetchLocations, createLocation, updateLocation, deleteLocation } from '@/redux/reducers/locationReducer';
+import AdminApiRequest from '@/redux/apis/AdminApiRequest';
+import { render } from '@testing-library/react';
 
 const LocationPage: React.FC = () => {
-  const dispatch = useDispatch();
-  const { locations, loading, error } = useSelector((state: any) => state.location);
-
+  const [loadingLocationList, setLoadingLocationList] = useState(false);
+  const [locationList, setLocationList] = useState<LocationType[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [form] = Form.useForm();
   const [editLocation, setEditLocation] = useState<LocationType | null>(null);
 
-  useEffect(() => {
-    dispatch(fetchLocations());
-  }, [dispatch]);
+  const fetchLocations = async () => {
+    setLoadingLocationList(true);
+    // Fetch location list from API
+    const res = await AdminApiRequest.get('/location/list');
+    setLocationList(res.data);
+    setLoadingLocationList(false);
+  }
 
   const handleCreate = () => {
     form.resetFields();
@@ -32,7 +36,8 @@ const LocationPage: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    await dispatch(deleteLocation(id));
+    // await dispatch(deleteLocation(id));
+    const res = await AdminApiRequest.delete(`/location/${id}`);
     message.success('Location deleted successfully!');
   };
 
@@ -41,10 +46,12 @@ const LocationPage: React.FC = () => {
       const values = await form.validateFields();
 
       if (isEditing && editLocation) {
-        dispatch(updateLocation({ ...editLocation, ...values }));
+        // dispatch(updateLocation({ ...editLocation, ...values }));
+        const res = await AdminApiRequest.put(`/location/${editLocation.id}`, { ...editLocation, ...values });
         message.success('Location updated successfully!');
       } else {
-        dispatch(createLocation(values));
+        // dispatch(createLocation(values));
+        const res = await AdminApiRequest.post('/location', values);
         message.success('Location created successfully!');
       }
 
@@ -55,6 +62,12 @@ const LocationPage: React.FC = () => {
       console.error('Validation Failed:', errorInfo);
     }
   };
+
+  useEffect(() => {
+    if (locationList.length === 0) {
+      fetchLocations();
+    }
+  }, [])
 
   const columns = [
     {
@@ -76,6 +89,7 @@ const LocationPage: React.FC = () => {
       title: 'Feature Image',
       dataIndex: 'featureImage',
       key: 'featureImage',
+      render: (text: string) => <img src={text} alt="feature image" style={{ width: 100 }} />,
     },
     {
       title: 'Actions',
@@ -96,21 +110,19 @@ const LocationPage: React.FC = () => {
   return (
     <div className="location-container">
       <h2>Location Management</h2>
-      {loading && <p>Loading...</p>}
-      {error && <p>Error: {error}</p>}
-  
+
       <Button type="primary" onClick={handleCreate} className="mb-3">
         Create New Location
       </Button>
-  
+
       <Table
         columns={columns}
-        dataSource={locations}
+        dataSource={locationList}
         rowKey="id"
-        loading={loading}
+        loading={loadingLocationList}
         pagination={{ pageSize: 5 }}
       />
-  
+
       <Modal
         title={isEditing ? 'Edit Location' : 'Create Location'}
         visible={isModalVisible}

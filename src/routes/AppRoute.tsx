@@ -12,22 +12,30 @@ import AdminBlog from "@/pages/Admin/AdminBlog/AdminBlog";
 import AdminForum from "@/pages/Admin/AdminForum/AdminForum";
 import User from "@/pages/Admin/User/User";
 import Review from "@/pages/Admin/Review/Review";
+import { useEffect } from "react";
+import AdminLogin from "@/pages/Admin/Login/Login";
 
 export default function AppRoute() {
   const navigate = useNavigate();
+  const isAdminRoute = window.location.pathname.includes("admin");
+  const adminToken = localStorage.getItem("adminToken");
+  const token = localStorage.getItem("token");
 
-  const routePathRender = () => {
-    return routePath.map((route, index) => {
-      return (
-        <Route
-          key={index}
-          index={route.index}
-          path={route.path}
-          element={route.component}
-        />
-      );
-    });
-  };
+  const whitelistRoutes = [
+    "/login",
+    "/register",
+  ];
+
+  useEffect(() => {
+    if (whitelistRoutes.includes(window.location.pathname)) return;
+
+    if (isAdminRoute && !adminToken) {
+      navigate("/admin/login");
+    } else if (!isAdminRoute && !token) {
+      // navigate("/login");
+    }
+  }, []);
+
 
   return (
     <Routes>
@@ -39,6 +47,7 @@ export default function AppRoute() {
 
       <Route path="/login" element={<Login />} />
 
+      <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin/*" element={<Admin />}>
         {/* Admin panel routes */}
         <Route path="location" element={<LocationPage />} />

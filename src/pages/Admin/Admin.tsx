@@ -17,7 +17,7 @@ const Admin = () => {
         <Sidebar />
       </div>
       {/* Content Area */}
-      <div style={{ flex: 1, backgroundColor: "#fdfdfd" }}>
+      <div className="m-2" style={{ flex: 1, backgroundColor: "#fdfdfd" }}>
         <Outlet />
       </div>
     </div>
