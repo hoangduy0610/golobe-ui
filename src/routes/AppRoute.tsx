@@ -24,6 +24,9 @@ export default function AppRoute() {
   const whitelistRoutes = [
     "/login",
     "/register",
+    "/",
+    "/about",
+    "/blog"
   ];
 
   useEffect(() => {
@@ -32,7 +35,7 @@ export default function AppRoute() {
     if (isAdminRoute && !adminToken) {
       navigate("/admin/login");
     } else if (!isAdminRoute && !token) {
-      // navigate("/login");
+      navigate("/login");
     }
   }, []);
 

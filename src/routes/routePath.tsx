@@ -21,13 +21,13 @@ export const routePath = [
         title: 'Thông tin',
         component: <About />
     },
-    {
-        index: false,
-        path: 'dashboard',
-        icon: 'fas fa-tachometer-alt',
-        title: 'Quản lí danh mục',
-        component: <Dashboard />
-    },
+    // {
+    //     index: false,
+    //     path: 'dashboard',
+    //     icon: 'fas fa-tachometer-alt',
+    //     title: 'Quản lí danh mục',
+    //     component: <Dashboard />
+    // },
     {
         index: false,
         path: 'blog',
@@ -56,13 +56,13 @@ export const routePath = [
         title: 'Admin',
         component: <Admin />
     },
-    {
-        index: false,
-        path: 'location', 
-        icon: 'fas fa-map-marker-alt',
-        title: 'Location',
-        component: <LocationPage />
-    },
+    // {
+    //     index: false,
+    //     path: 'location', 
+    //     icon: 'fas fa-map-marker-alt',
+    //     title: 'Location',
+    //     component: <LocationPage />
+    // },
     
     {
         index: false,

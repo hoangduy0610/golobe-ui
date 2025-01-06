@@ -1,34 +1,38 @@
 import '@/pages/Login/Login.css';
+import MainApiRequest from '@/redux/apis/MainApiRequest';
 import { login } from '@/redux/reducers/userReducers';
 import { RootState } from '@/redux/store';
 import { LoadingOverlay } from '@achmadk/react-loading-overlay';
+import { message } from 'antd';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const isLoggingIn = useSelector((state: RootState) => state.user.isLoggingIn);
-    const token = useSelector((state: RootState) => state.user.token);
-
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const [remember, setRemember] = React.useState(false);
+    const [isLoggingIn, setIsLoggingIn] = React.useState(false);
 
-    const handleRememberOnChange = (e: any) => {
-        setRemember(e.target.checked);
-    }
+    const handleLogin = async () => {
+        setIsLoggingIn(true);
+        // dispatch(login({ username: email, password }));
+        const res = await MainApiRequest.post('/auth/signin', { email, password });
 
-    const handleLogin = () => {
-        dispatch(login({ username: email, password }));
+        if (res.status === 200) {
+            localStorage.setItem('token', res.data.token);
+            navigate('/');
+        } else {
+            message.error('Đăng nhập thất bại');
+        }
+        setIsLoggingIn(false)
     }
 
     useEffect(() => {
-        if (!isLoggingIn && token) {
+        if (localStorage.getItem('token')) {
             navigate('/');
         }
-    }, [isLoggingIn, token, navigate]);
+    }, []);
 
     return (
         <LoadingOverlay
@@ -73,10 +77,6 @@ const Login: React.FC = () => {
                                         </div>
 
                                         <div className="d-flex align-items-center">
-                                            <div className="form-check">
-                                                <input type="checkbox" name="remember" id="remember" className="form-check-input" onChange={handleRememberOnChange} />
-                                                <label className="form-check-label">Ghi nhớ đăng nhập</label>
-                                            </div>
                                             <button type="button" onClick={handleLogin} className="btn btn-primary ms-auto">
                                                 Đăng nhập
                                             </button>
