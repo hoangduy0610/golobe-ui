@@ -11,7 +11,7 @@ import { faCalendarDays, faLocationDot, faStar } from "@fortawesome/free-solid-s
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from 'react-router-dom';
 import "./Home.css";
-import Header from "@/components/header/Header";
+import Header from "@/components/Header/Header";
 
 export function Home() {
     return (
