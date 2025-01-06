@@ -4,7 +4,7 @@ import instagramIcon from "@/assets/instagram_icon.svg";
 import newsletter from "@/assets/newsletter.svg";
 import twitterIcon from "@/assets/twitter_icon.svg";
 import youtubeIcon from "@/assets/youtube_icon.svg";
-import Header from "@/components/header/Header";
+import Header from "@/components/Header/Header";
 import "./Trips.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar, faLocation, faLocationPin } from "@fortawesome/free-solid-svg-icons";
