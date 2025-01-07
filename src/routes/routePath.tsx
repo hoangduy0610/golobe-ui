@@ -53,7 +53,7 @@ export const routePath = [
     },
     {
         index: false,
-        path: 'trips/:id', 
+        path: 'trip-detail/:id', 
         icon: 'fas fa-plane',
         title: 'Trips',
         component: <TripDetail />

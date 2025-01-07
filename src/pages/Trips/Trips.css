@@ -1,17 +1,4 @@
 .trips_page {
-
-    /* General Styles */
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-
-    .container {
-        width: 100%;
-        padding: 20px;
-    }
-
     /* Frame */
     .frame {
         position: relative;
@@ -237,8 +224,8 @@
     }
 
     .btn {
-        padding: 10px 20px;
-        border-radius: 5px;
+        /* padding: 10px 20px;
+        border-radius: 5px; */
         cursor: pointer;
         width: 30%;
     }
@@ -456,8 +443,8 @@
     }
 
     .btn {
-        padding: 10px 20px;
-        margin: 5px;
+        /* padding: 10px 20px;
+        margin: 5px; */
         cursor: pointer;
         transition: background-color 0.3s ease, transform 0.3s ease;
     }

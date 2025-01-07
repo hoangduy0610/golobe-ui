@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, message } from 'antd';
+import { Table, Button, message, Rate } from 'antd';
 import axios from 'axios';
+import AdminApiRequest from '@/redux/apis/AdminApiRequest';
+import { render } from '@testing-library/react';
 
 const ReviewPage: React.FC = () => {
   const [reviews, setReviews] = useState<any[]>([]);
@@ -9,19 +11,12 @@ const ReviewPage: React.FC = () => {
 
   const API_URL = 'http://api.example.com/reviews';
 
-  // Sample data for reviews
-  const sampleReviews = [
-    { id: 1, username: 'john_doe', serviceName: 'Hotel Booking', rating: 5, comment: 'Great service, very satisfied!' },
-    { id: 2, username: 'jane_smith', serviceName: 'Tour Package', rating: 4, comment: 'Good experience, but could be improved in some areas.' },
-    { id: 3, username: 'alice_johnson', serviceName: 'Car Rental', rating: 3, comment: 'It was okay, but the car had some issues.' },
-  ];
-
   useEffect(() => {
     const fetchReviews = async () => {
       setLoading(true);
       try {
-        // Simulate fetching data from API
-        setReviews(sampleReviews);
+        const res = await AdminApiRequest.get('/review/list');
+        setReviews(res.data);
       } catch (err) {
         setError('Failed to load reviews');
       } finally {
@@ -35,18 +30,21 @@ const ReviewPage: React.FC = () => {
   const columns = [
     {
       title: 'Username',
-      dataIndex: 'username',
-      key: 'username',
+      dataIndex: 'user',
+      key: 'user',
+      render: (user: any) => user.name,
     },
     {
       title: 'Service Name',
-      dataIndex: 'serviceName',
-      key: 'serviceName',
+      dataIndex: 'service',
+      key: 'service',
+      render: (service: any) => service.name,
     },
     {
       title: 'Rating',
       dataIndex: 'rating',
       key: 'rating',
+      render: (rating: number) => (<Rate disabled value={rating} />),
     },
     {
       title: 'Comment',

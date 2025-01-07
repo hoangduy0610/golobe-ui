@@ -1,27 +1,33 @@
 .blog-detail-page {
+  .ant-btn-primary {
+    background-color: #8DD3BB;
+    border-color: #8DD3BB;
 
-
-    .blog-title {
-      font-size: 2.5rem;
-      font-weight: bold;
-    }
-  
-    .blog-detail-image {
-      width: 100%;  
-      max-width: 100%;  
-      height: auto;
-    }
-  
-    .blog-meta {
-      font-size: 1rem;
-      color: #888;
-    }
-  
-    .blog-content {
-      font-size: 1.2rem;
-      line-height: 1.6;
-      margin-top: 20px;
+    &:hover {
+      background-color: darken(#8DD3BB, 10%)!important;
+      border-color: darken(#8DD3BB, 10%)!important;
     }
   }
-  
-  
+
+  .blog-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+
+  .blog-detail-image {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .blog-meta {
+    font-size: 1rem;
+    color: #888;
+  }
+
+  .blog-content {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-top: 20px;
+  }
+}

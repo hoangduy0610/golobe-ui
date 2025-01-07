@@ -22,7 +22,7 @@ function Trips() {
     const [showCreateModal, setShowCreateModal] = useState(false);
 
     const fetchTrips = async () => {
-        const response = await MainApiRequest.get('/plan/list');
+        const response = await MainApiRequest.get('/plan/mine');
         setListTrips(response.data);
     }
 
@@ -71,7 +71,7 @@ function Trips() {
     }
 
     const navigateToDetail = (id: number) => () => {
-        navigate(`/trips/${id}`);
+        navigate(`/trip-detail/${id}`);
     }
 
     return (
@@ -88,7 +88,7 @@ function Trips() {
 
                         <section>
                             <h2>My Trips</h2>
-                            <button className="btn btn-primary" onClick={handleOpenCreateModal}>Create a new trip</button>
+                            <button className="btn btn-primary my-2" onClick={handleOpenCreateModal}>Create a new trip</button>
                             {listTrips.map((trip, index) => (
                                 <div className="card mb-3" onClick={navigateToDetail(trip.id)}>
                                     <div className="row g-0">

@@ -1,6 +1,4 @@
-.post-detail-container {
-    
-}
+.post-detail-container {}
 
 .pagination-container {
     margin-bottom: 16px;
@@ -35,4 +33,10 @@
 
 .reply-buttons .ant-btn {
     width: 48%;
+}
+
+.liked {
+    color: #1677ff !important;
+    background-color: #fff !important;
+    border-color: #1677ff !important;
 }

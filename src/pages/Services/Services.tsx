@@ -1,88 +1,60 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Button, Input, Rate, Pagination } from "antd";
 import { Link } from "react-router-dom";
 import "./Services.scss";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import hotelImage from "@/assets/hotel.jpg";
+import MainApiRequest from "@/redux/apis/MainApiRequest";
+import Paragraph from "antd/es/typography/Paragraph";
 
 interface Service {
     id: number;
-    title: string;
+    name: string;
     description: string;
-    price: string;
-    rating: number;
-    image: string;
-    link: string;
+    priceRange: string;
+    reviews: any[];
+    images: string[];
+    website: string;
 }
-
-const servicesData: Service[] = [
-    {
-        id: 1,
-        title: "Hotel Booking",
-        description: "Book your stay at the best hotels with amazing deals and offers.",
-        price: "$200 per night",
-        rating: 4.5,
-        image: hotelImage,
-        link: "/services/hotel-booking",
-    },
-    {
-        id: 2,
-        title: "Flight Booking",
-        description: "Find the best flights to your favorite destinations at unbeatable prices.",
-        price: "$499 per flight",
-        rating: 4.0,
-        image: hotelImage,
-        link: "/services/flight-booking",
-    },
-    {
-        id: 3,
-        title: "Tour Packages",
-        description: "Explore exclusive tour packages to various exotic destinations.",
-        price: "$1500 for 7 days",
-        rating: 5.0,
-        image: hotelImage,
-        link: "/services/tour-packages",
-    },
-    {
-        id: 4,
-        title: "Car Rental",
-        description: "Rent a car to make your travel more convenient and enjoyable.",
-        price: "$50 per day",
-        rating: 4.2,
-        image: hotelImage,
-        link: "/services/car-rental",
-    },
-    {
-        id: 5,
-        title: "Spa Services",
-        description: "Relax and rejuvenate with our luxurious spa services.",
-        price: "$100 per session",
-        rating: 4.7,
-        image: hotelImage,
-        link: "/services/spa-services",
-    },
-    {
-        id: 6,
-        title: "Restaurant Reservation",
-        description: "Reserve a table at the best restaurants with ease.",
-        price: "Varies",
-        rating: 4.8,
-        image: hotelImage,
-        link: "/services/restaurant-reservation",
-    },
-];
 
 const Services: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const servicesPerPage = 6;
-    const indexOfLastService = currentPage * servicesPerPage;
-    const indexOfFirstService = indexOfLastService - servicesPerPage;
-    const currentServices = servicesData.slice(indexOfFirstService, indexOfLastService);
+    const [servicesData, setServicesData] = useState<Service[]>([]);
+    const [currentServices, setCurrentServices] = useState<Service[]>([]);
+    // const indexOfLastService = currentPage * servicesPerPage;
+    // const indexOfFirstService = indexOfLastService - servicesPerPage;
+    // const currentServices = servicesData.slice(indexOfFirstService, indexOfLastService);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
+
+    const calculateReview = (reviews: any[]) => {
+        if (reviews.length === 0) return 0;
+        const totalRating = reviews.reduce((total, review) => total + review.rating, 0);
+        return totalRating / reviews.length;
+    }
+
+    const fetchServices = async () => {
+        try {
+            const res = await MainApiRequest.get('/service/list');
+            setServicesData(res.data);
+        } catch (error) {
+            console.log("Failed to fetch services list: ", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchServices();
+    }, []);
+
+    useEffect(() => {
+        const indexOfLastService = currentPage * servicesPerPage;
+        const indexOfFirstService = indexOfLastService - servicesPerPage;
+        setCurrentServices(servicesData.slice(indexOfFirstService, indexOfLastService));
+    }, [currentPage, servicesData]);
 
     return (
         <>
@@ -103,16 +75,25 @@ const Services: React.FC = () => {
                                         <Link to={`/services/${service.id}`}>
                                             <Card
                                                 hoverable
-                                                cover={<img alt={service.title} src={service.image} />}
+                                                cover={<img alt={service.name} src={service.images[0]} />}
                                                 bordered={false}
                                                 className="service-card"
                                             >
-                                                <h3>{service.title}</h3>
-                                                <Rate disabled defaultValue={service.rating} />
-                                                <p>{service.description}</p>
-                                                <p><strong>Price:</strong> {service.price}</p>
-                                                <Link to={service.link}>
-                                                    <Button className="service-button" type="primary">View Details</Button>
+                                                <h3>{service.name}</h3>
+                                                <Rate disabled allowHalf value={calculateReview(service?.reviews || [])} />
+                                                <Paragraph
+                                                    ellipsis={{
+                                                        rows: 3
+                                                    }}
+                                                >
+                                                    {service.description}
+                                                </Paragraph>
+                                                <p><strong>Price Range:</strong> {service.priceRange.toUpperCase()}</p>
+                                                <Link to={service.website}>
+                                                    <Button className="service-button btn w-100 btn-outline-primary" type="link">Booking</Button>
+                                                </Link>
+                                                <Link to={`/services/${service.id}`}>
+                                                    <Button className="service-button" type="primary">Details</Button>
                                                 </Link>
                                             </Card>
                                         </Link>
@@ -132,7 +113,7 @@ const Services: React.FC = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
             <Footer />
         </>
     );

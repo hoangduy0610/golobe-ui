@@ -4,6 +4,8 @@ import { Button, Row, Col, Avatar, Typography, Space, Pagination, Card, Breadcru
 import './PostDetail.scss';
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
+import MainApiRequest from '@/redux/apis/MainApiRequest';
+import moment from 'moment';
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
@@ -15,22 +17,15 @@ const PostDetail: React.FC = () => {
     const [page, setPage] = useState(1); // Trạng thái cho phân trang
     const [replyContent, setReplyContent] = useState(''); // Nội dung trả lời
 
+    const fetchPostData = async () => {
+        const res = await MainApiRequest.get(`/forum/${id}`);
+        setPost(res.data);
+    };
+
     // Giả lập lấy dữ liệu từ API
     useEffect(() => {
-        // API call giả định lấy thông tin bài đăng
-        // Thay thế bằng API thực tế khi có sẵn
-        const fetchPostData = () => {
-            setPost({
-                author: 'John Doe',
-                avatar: 'https://i.pravatar.cc/150?img=3',
-                postTime: '2 hours ago',
-                title: 'How to travel to the Maldives',
-                content: 'Content of the post will be displayed here. It is very detailed and informative.',
-                likes: 23,
-            });
-        };
         fetchPostData();
-    }, [id]);
+    }, []);
 
     // Xử lý chuyển trang
     const handlePageChange = (page: number) => {
@@ -44,17 +39,49 @@ const PostDetail: React.FC = () => {
     };
 
     // Xử lý gửi trả lời
-    const handlePostReply = () => {
+    const handlePostReply = async () => {
         if (replyContent) {
-            alert('Reply posted: ' + replyContent);
+            const res = await MainApiRequest.post(`/forum`, {
+                content: replyContent,
+                replyToId: parseInt(id || "0"),
+            });
+            fetchPostData(); // Tải lại dữ liệu bài đăng
             setReplyContent(''); // Xóa nội dung sau khi gửi
         }
     };
 
-    // Xử lý hủy bỏ trả lời
-    const handleCancelReply = () => {
-        setReplyContent(''); // Xóa nội dung nếu hủy
-    };
+    const handleLike = async (id: number, likeStatus: boolean) => {
+        if (likeStatus) {
+            const res = await MainApiRequest.delete(`/forum/like/${id}`);
+        } else {
+            const res = await MainApiRequest.post(`/forum/like/${id}`);
+        }
+        fetchPostData(); // Tải lại dữ liệu bài
+    }
+
+    const checkLiked = (reacts: any[]) => {
+        const currentUserId = parseInt(localStorage.getItem('userId') || "0");
+        const liked = reacts.find((react) => react.user.id === currentUserId);
+        return liked;
+    }
+
+    const isLiked = checkLiked(post?.reacts || []);
+
+    const richerContent = (content: string) => {
+        // process links
+        const linkRegex = /((http|https):\/\/[^\s]+)/g;
+        const linkMatch = content.match(linkRegex);
+        if (linkMatch) {
+            linkMatch.forEach((link) => {
+                content = content.replace(link, `<a href="${link}" target="_blank">${link}</a>`);
+            });
+        }
+
+        // process break lines
+        content = content.replace(/\n/g, '<br />');
+
+        return content;
+    }
 
     return (
         <>
@@ -73,9 +100,9 @@ const PostDetail: React.FC = () => {
                                 <Breadcrumb.Item>{post?.title}</Breadcrumb.Item>
                             </Breadcrumb>
 
-                            <Row justify="end" className="pagination-container">
+                            {/* <Row justify="end" className="pagination-container">
                                 <Pagination current={page} total={50} onChange={handlePageChange} />
-                            </Row>
+                            </Row> */}
 
                             {post ? (
                                 <Row gutter={[24, 24]}>
@@ -83,17 +110,45 @@ const PostDetail: React.FC = () => {
                                         {/* Card chứa Avatar và Tên */}
                                         <Card bordered={false} className="post-card">
                                             <Meta
-                                                avatar={<Avatar src={post.avatar} />}
-                                                title={post.author}
-                                                description={post.postTime}
+                                                avatar={<Avatar src={"https://i.pravatar.cc/150?img=3"} />}
+                                                title={post?.user?.name}
+                                                description={moment(post?.createdAt).format('DD/MM/YYYY HH:mm')}
                                             />
-                                            <Title level={2}>{post.title}</Title>
-                                            <p>{post.content}</p>
+                                            <Title level={2}>{post?.title}</Title>
+                                            <div dangerouslySetInnerHTML={{ __html: richerContent(post?.content) }}></div>
 
-                                            <Button type="primary" onClick={() => alert('Liked!')} icon={<i className="fas fa-thumbs-up" />}>
-                                                Like {post.likes}
+                                            <Button type="primary" className={isLiked ? 'liked' : ''} onClick={() => handleLike(post?.id || 0, isLiked)} icon={<i className="fas fa-thumbs-up" />}>
+                                                {isLiked ? 'Liked' : 'Like'} {post?.reacts?.length}
                                             </Button>
                                         </Card>
+
+                                        {
+                                            post?.replies.map((reply: any) => {
+                                                const isLikedReply = checkLiked(reply?.reacts || []);
+                                                return (
+                                                    <Card bordered={false} className="post-card mt-2" style={{
+                                                        width: '90%',
+                                                        marginLeft: '10%'
+                                                    }}>
+                                                        <Meta
+                                                            avatar={<Avatar src={"https://i.pravatar.cc/150?img=3"} />}
+                                                            title={reply?.user?.name}
+                                                            description={moment(reply?.createdAt).format('DD/MM/YYYY HH:mm')}
+                                                        />
+                                                        {/* Quote replied */}
+                                                        <Card bordered={false} className="my-2" style={{ backgroundColor: '#f5f5f5' }}>
+                                                            <Text strong>Replying:</Text>
+                                                            <p>{post?.content}</p>
+                                                        </Card>
+                                                        <div dangerouslySetInnerHTML={{ __html: richerContent(reply?.content) }}></div>
+
+                                                        <Button type="primary" className={isLikedReply ? 'liked' : ''} onClick={() => handleLike(reply?.id || 0, isLikedReply)} icon={<i className="fas fa-thumbs-up" />}>
+                                                            {isLikedReply ? 'Liked' : 'Like'} {reply?.reacts?.length}
+                                                        </Button>
+                                                    </Card>
+                                                )
+                                            })
+                                        }
 
                                         {/* Trường nhập liệu trả lời */}
                                         <div className="reply-container">
@@ -108,7 +163,6 @@ const PostDetail: React.FC = () => {
                                                 </Form.Item>
                                                 <Form.Item>
                                                     <Space>
-                                                        <Button onClick={handleCancelReply}>Cancel</Button>
                                                         <Button type="primary" onClick={handlePostReply}>
                                                             Post Reply
                                                         </Button>
@@ -122,7 +176,7 @@ const PostDetail: React.FC = () => {
                                 <p>Loading...</p>
                             )}
                         </div>
-                        
+
                     </div>
                 </div>
             </div>

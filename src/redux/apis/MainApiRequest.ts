@@ -14,6 +14,8 @@ MainApiRequest.interceptors.request.use(
         const token = localStorage.getItem('token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
+        } else if (localStorage.getItem('adminToken')) {
+            config.headers.Authorization = `Bearer ${localStorage.getItem('adminToken')}`;
         }
         return config;
     },

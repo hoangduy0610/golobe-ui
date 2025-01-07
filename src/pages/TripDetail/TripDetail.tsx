@@ -17,9 +17,11 @@ import { useParams } from "react-router-dom";
 import "./TripDetail.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faPhoneAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { Form, Input, Modal } from "antd";
 
 function TripDetail() {
-
+    const [modal, contextHolder] = Modal.useModal()
+    const [form] = Form.useForm();
     // Retrive id from route params
     const { id } = useParams<{ id: string }>();
     const [trip, setTrip] = useState<any>(null);
@@ -57,6 +59,7 @@ function TripDetail() {
         name: '',
         locationId: '',
         description: '',
+        visibility: 'private',
         startDate: moment().format('YYYY-MM-DD'),
         endDate: moment().format('YYYY-MM-DD'),
     });
@@ -70,6 +73,7 @@ function TripDetail() {
             name: response.data.name,
             locationId: response.data?.location?.id?.toString(),
             description: response.data.description,
+            visibility: response.data.visibility,
             startDate: moment(response.data.startDate).format('YYYY-MM-DD'),
             endDate: moment(response.data.endDate).format('YYYY-MM-DD'),
         });
@@ -190,12 +194,99 @@ function TripDetail() {
                                     </div>
                                 ))
                             }
-                            <button className="btn-add" onClick={() => toggleAddTab(schedule.day)}>+ Add</button>
+                            {
+                                isOwner &&
+                                <button className="btn-add" onClick={() => toggleAddTab(schedule.day)}>+ Add</button>
+                            }
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>
             )
         });
+    }
+
+    const isOwner = trip?.owner?.id?.toString() === localStorage.getItem('userId');
+
+    const handleShare = async () => {
+        let continious = true;
+        if (!trip || trip.visibility !== 'public') {
+            // Prompt user to change visibility to public
+            // message.error('Please change the visibility of the trip to public to share it');
+            await modal.confirm({
+                title: 'Please change the visibility of the trip to public to share it',
+                onOk: async () => {
+                    await MainApiRequest.put(`/plan/${id}`, {
+                        name: trip?.name,
+                        description: trip?.description,
+                        locationId: trip?.location?.id,
+                        startDate: trip?.startDate,
+                        endDate: trip?.endDate,
+                        visibility: 'public',
+                    });
+                    fetchTrip(id);
+                },
+                onCancel: () => {
+                    continious = false;
+                }
+            });
+        }
+
+        if (!continious) return;
+
+        // Call API to share the trip
+        await modal.confirm({
+            title: 'Share this trip',
+            content: (
+                <div>
+                    <h4>Content publishing to forum</h4>
+                    <Form
+                        form={form} layout="vertical"
+                        initialValues={
+                            {
+                                title: `My plan for a trip to ${trip?.location?.name || 'a beauty landscape'}`,
+                                content: `I'm planning a trip to ${trip?.location?.name || 'a beauty landscape'} and here is my itinerary: ${window.location.href}`
+                            }
+                        }
+                    >
+                        <Form.Item
+                            label="Title"
+                            name="title"
+                            rules={[{ required: true, message: 'Please input the title!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            label="Content"
+                            name="content"
+                            rules={[{ required: true, message: 'Please input the content!' }]}
+                        >
+                            <Input.TextArea rows={4} />
+                        </Form.Item>
+                    </Form>
+                </div>
+            ),
+            onOk: async () => {
+                await MainApiRequest.post('/forum', {
+                    title: form.getFieldValue('title'),
+                    content: form.getFieldValue('content'),
+                });
+
+                await modal.success({
+                    title: 'Shared successfully',
+                    onOk: () => {
+
+                    },
+                    cancelButtonProps: { style: { display: 'none' } }
+                });
+            },
+            onCancel: () => {
+                continious = false;
+            }
+        });
+
+        if (!continious) return;
+
+        window.location.href = '/forum';
     }
 
     return (
@@ -204,17 +295,18 @@ function TripDetail() {
                 <div className="container-fluid">
                     <Header />
                     <div className="container">
+                        {contextHolder}
                         <section className="card shadow my-4 px-4 border-0">
                             <div className="card-body">
                                 <input type="text" className="form-control bg-secondary py-3" placeholder="Search" />
                             </div>
                         </section>
                         <div className="frame" style={{ backgroundImage: `url(${trip?.location?.featureImage})` }}>
-                            <div className="frame-header">
-                                <button className="button button-invite">
+                            <div className="frame-header" hidden={!isOwner}>
+                                {/* <button className="button button-invite">
                                     <img src={invite} alt="Invite" className="button-icon" /> Invite
-                                </button>
-                                <button className="button button-share">
+                                </button> */}
+                                <button className="button button-share" onClick={handleShare}>
                                     <img src={sharePlan} alt="Share" className="button-icon" />
                                 </button>
                                 <button className="button button-edit" onClick={toggleEditModal}>
@@ -300,6 +392,18 @@ function TripDetail() {
                                         className="form-control"
                                         placeholder="Enter trip name"
                                     />
+                                </div>
+                                <div className="form-group">
+                                    <label>Visibility</label>
+                                    <select
+                                        name="visibility"
+                                        value={formData.visibility}
+                                        onChange={handleInputChange}
+                                        className="form-control"
+                                    >
+                                        <option value="public">Public</option>
+                                        <option value="private">Private</option>
+                                    </select>
                                 </div>
                                 <div className="form-group">
                                     <label>Destination</label>

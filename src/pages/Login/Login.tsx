@@ -21,6 +21,7 @@ const Login: React.FC = () => {
 
         if (res.status === 200) {
             localStorage.setItem('token', res.data.token);
+            localStorage.setItem('userId', res.data.info.id);
             navigate('/');
         } else {
             message.error('Đăng nhập thất bại');

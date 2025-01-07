@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Button, Modal, Input, Form, message } from 'antd';
 import { Link } from 'react-router-dom'; // Đảm bảo import Link từ react-router-dom
 import { Container, Row, Col } from 'react-bootstrap';
@@ -6,46 +6,49 @@ import Footer from '@/components/Footer/Footer';
 import Headers from '@/components/Header/Header';
 import './Forum.scss';
 import axios from 'axios';
+import moment from 'moment';
+import MainApiRequest from '@/redux/apis/MainApiRequest';
 
 interface Topic {
     id: number;
     title: string;
-    author: string;
-    posts: number;
-    lastPost: string;
+    user: any;
+    content: string;
+    replies: any[];
+    reacts: any[];
 }
 
 const Forum: React.FC = () => {
-    const [topics, setTopics] = useState<Topic[]>([
-        { id: 1, title: 'How to travel to the Maldives', author: 'John Doe', posts: 5, lastPost: '2 hours ago' },
-        { id: 2, title: 'Best hiking trails in Europe', author: 'Jane Smith', posts: 8, lastPost: '1 day ago' },
-        { id: 3, title: 'Top 10 beach destinations for 2025', author: 'Emily Johnson', posts: 3, lastPost: '3 days ago' },
-    ]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [form] = Form.useForm();
+    const [forumTopics, setForumTopics] = useState<Topic[]>([]);
 
     const showModal = () => setIsModalVisible(true);
     const handleCancel = () => setIsModalVisible(false);
+
+    const fetchForumTopics = async () => {
+        try {
+            const response = await MainApiRequest.get('/forum/main');
+            setForumTopics(response.data);
+        } catch (error) {
+            console.log('Failed to fetch forum topics: ', error);
+        }
+    }
+
+    useEffect(() => {
+        fetchForumTopics();
+    }, []);
 
     // Gửi yêu cầu POST đến API
     const handlePost = () => {
         form.validateFields().then(async (values) => {
             try {
-                const response = await axios.post('/forum', {
+                const response = await MainApiRequest.post('/forum', {
                     title: values.title,
-                    content: values.content,
-                    replyToId: 0,
+                    content: values.content
                 });
 
-                const newTopic: Topic = {
-                    id: topics.length + 1,
-                    title: values.title,
-                    author: values.author,
-                    posts: 0,
-                    lastPost: 'Just now',
-                };
-
-                setTopics([...topics, newTopic]);
+                setForumTopics([...forumTopics, response.data]);
                 form.resetFields();
                 setIsModalVisible(false);
                 message.success('Topic created successfully!');
@@ -57,27 +60,30 @@ const Forum: React.FC = () => {
 
     const columns = [
         {
-            title: 'Forum',
-            dataIndex: 'author',
-            key: 'author',
+            title: 'Author',
+            dataIndex: 'user',
+            key: 'user',
+            render: (user: any) => user?.name,
         },
         {
             title: 'Topic',
             dataIndex: 'title',
             key: 'title',
             render: (text: string, record: Topic) => (
-                <Link to={`/forum/${record.id}`}>{text}</Link> // Link chuyển đến trang chi tiết của bài đăng
+                <Link to={`/forum/${record?.id}`}>{text}</Link> // Link chuyển đến trang chi tiết của bài đăng
             ),
         },
         {
             title: 'Replies',
-            dataIndex: 'posts',
-            key: 'posts',
+            dataIndex: 'replies',
+            key: 'replies',
+            render: (replies: any[]) => replies?.length || 0,
         },
         {
             title: 'Last Post',
-            dataIndex: 'lastPost',
+            dataIndex: 'replies',
             key: 'lastPost',
+            render: (replies: any[]) => replies?.length > 0 ? moment(replies[replies?.length - 1]?.createdAt).fromNow() : 'Never',
         },
     ];
 
@@ -107,7 +113,7 @@ const Forum: React.FC = () => {
                                 <Col>
                                     <Table
                                         columns={columns}
-                                        dataSource={topics}
+                                        dataSource={forumTopics}
                                         rowKey="id"
                                         pagination={false}
                                     />
@@ -129,12 +135,6 @@ const Forum: React.FC = () => {
                             width={800}
                         >
                             <Form form={form} layout="vertical">
-                                <Form.Item
-                                    label="User"
-                                    name="author"
-                                    rules={[{ required: true, message: 'Please enter your name' }]} >
-                                    <Input placeholder="Enter your name" />
-                                </Form.Item>
                                 <Form.Item
                                     label="Topic"
                                     name="title"

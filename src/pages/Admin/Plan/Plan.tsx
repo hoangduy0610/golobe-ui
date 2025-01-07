@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Input, Form, message } from 'antd';
-import MainApiRequest from '@/redux/apis/MainApiRequest';
+import AdminApiRequest from '@/redux/apis/AdminApiRequest';
+import { useNavigate } from 'react-router-dom';
 
 
 const PlanPage: React.FC = () => {
+  const navigate = useNavigate();
   const [plans, setPlans] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -17,7 +19,7 @@ const PlanPage: React.FC = () => {
     const fetchPlans = async () => {
       setLoading(true);
       try {
-        const response = await MainApiRequest.get('/plan');
+        const response = await AdminApiRequest.get('/plan/list');
         setPlans(response.data);
       } catch (err) {
         setError('Failed to load plans');
@@ -50,7 +52,7 @@ const PlanPage: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await MainApiRequest.delete(`/plan'/${id}`);
+      await AdminApiRequest.delete(`/plan'/${id}`);
       setPlans(plans.filter(plan => plan.id !== id));
       message.success('Plan deleted successfully!');
     } catch (err) {
@@ -69,7 +71,7 @@ const PlanPage: React.FC = () => {
           startDate: new Date(values.startDate).toISOString(),
           endDate: new Date(values.endDate).toISOString(),
         };
-        await MainApiRequest.put(`/plan'/${editPlan.id}`, updatedPlan);
+        await AdminApiRequest.put(`/plan'/${editPlan.id}`, updatedPlan);
         setPlans(plans.map(plan => (plan.id === editPlan.id ? { ...plan, ...updatedPlan } : plan)));
         message.success('Plan updated successfully!');
       } else {
@@ -79,7 +81,7 @@ const PlanPage: React.FC = () => {
           startDate: new Date(values.startDate).toISOString(),
           endDate: new Date(values.endDate).toISOString(),
         };
-        const response = await MainApiRequest.post('/plan', newPlan);
+        const response = await AdminApiRequest.post('/plan', newPlan);
         setPlans([...plans, response.data]);
         message.success('Plan created successfully!');
       }
@@ -105,9 +107,10 @@ const PlanPage: React.FC = () => {
       key: 'description',
     },
     {
-      title: 'Location ID',
-      dataIndex: 'locationId',
-      key: 'locationId',
+      title: 'Location',
+      dataIndex: 'location',
+      key: 'location',
+      render: (location: any) => location.name,
     },
     {
       title: 'Start Date',
@@ -124,11 +127,14 @@ const PlanPage: React.FC = () => {
       key: 'actions',
       render: (_: any, plan: any) => (
         <div className="d-flex gap-2">
-          <Button type="primary" onClick={() => handleEdit(plan)}>
+          {/* <Button type="primary" onClick={() => handleEdit(plan)}>
             Edit
           </Button>
           <Button type="primary" danger onClick={() => handleDelete(plan.id)}>
             Delete
+          </Button> */}
+          <Button type="primary" onClick={() => navigate(`/trip-detail/${plan.id}`)}>
+            View
           </Button>
         </div>
       ),
@@ -141,9 +147,9 @@ const PlanPage: React.FC = () => {
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
 
-      <Button type="primary" onClick={handleCreate} className="mb-3">
+      {/* <Button type="primary" onClick={handleCreate} className="mb-3">
         Create New Plan
-      </Button>
+      </Button> */}
 
       <Table
         columns={columns}

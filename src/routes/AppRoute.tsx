@@ -27,7 +27,14 @@ export default function AppRoute() {
   const token = localStorage.getItem("token");
 
   // Danh sách route cho phép không cần xác thực
-  const whitelistRoutes = new Set(["/login", "/register", "/", "/about", "/blog"]);
+  const whitelistRoutes = new Set([
+    "/login",
+    "/register",
+    "/",
+    "/about",
+    "/blog",
+    "/trip-detail",
+  ]);
 
   useEffect(() => {
     const currentPath = window.location.pathname;
@@ -36,10 +43,11 @@ export default function AppRoute() {
 
     if (isAdminRoute && !adminToken) {
       navigate("/admin/login");
-    } else if (!isAdminRoute && !token) {
-      navigate("/login");
     }
-  }, [isAdminRoute, adminToken, token, navigate]);
+    // else if (!isAdminRoute && !token) {
+    //   navigate("/login");
+    // }
+  }, []);
 
   // Định nghĩa các route cho admin
   const adminRoutes = [
@@ -63,7 +71,7 @@ export default function AppRoute() {
       </Route>
 
       <Route path="/login" element={<Login />} />
-      <Route path="/blog-detail" element={<BlogDetail />} />
+      <Route path="/blog-detail/:id" element={<BlogDetail />} />
       <Route path="/forum/:id" Component={PostDetail} />
       <Route path="/services/:id" element={<ServiceDetails />} />
 

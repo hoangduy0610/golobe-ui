@@ -6,22 +6,23 @@ import "./BlogDetail.scss";
 import Header from "@/components/Header/Header";
 import beachImage from "@/assets/Beach.jpg";
 import Footer from "@/components/Footer/Footer";
+import MainApiRequest from "@/redux/apis/MainApiRequest";
+import moment from "moment";
 
 const BlogDetail = () => {
     const { id } = useParams();
 
     // Dữ liệu mẫu
-    const blogData = {
-        id: 1,
-        title: "Exploring the Maldives",
-        author: "John Doe",
-        date: "Nov 24, 2024",
-        content: `
-      The Maldives is a tropical paradise known for its white sandy beaches, crystal-clear waters, and luxury resorts. 
-      In this guide, we’ll explore the best places to visit, activities to try, and tips for making the most of your Maldives adventure.
-    `,
-        image: beachImage,
-    };
+    const [blogData, setBlogData] = React.useState<any>({});
+
+    const fetchBlogData = async () => {
+        const res = await MainApiRequest.get(`/blog/${id}`);
+        setBlogData(res.data);
+    }
+
+    React.useEffect(() => {
+        fetchBlogData();
+    }, []);
 
     return (
         <>
@@ -29,7 +30,7 @@ const BlogDetail = () => {
                 <div className="app">
                     <div className="container-fluid">
                         <Header />
-                        <div className="container">
+                        <div className="container-fluid w-75">
                             <Breadcrumb className="my-3">
                                 <Breadcrumb.Item>
                                     <Link to="/">Home</Link>
@@ -41,22 +42,56 @@ const BlogDetail = () => {
                             </Breadcrumb>
 
                             <Row>
-                                <Col md={11}>
+                                <Col md={8}>
                                     <Card
                                         cover={<img alt={blogData.title} src={blogData.image} className="blog-detail-image" />}
                                     >
                                         <h1 className="blog-title">{blogData.title}</h1>
                                         <p className="blog-meta">
-                                            By <strong>{blogData.author}</strong> | {blogData.date}
+                                            By <strong>{blogData?.user?.name}</strong> | {moment(blogData.createdAt).format('DD/MM/YYYY HH:mm')}
                                         </p>
-                                        <p className="blog-content">{blogData.content}</p>
+                                        <div
+                                            className="blog-content"
+                                            dangerouslySetInnerHTML={{ __html: blogData.content }}
+                                        />
                                     </Card>
+                                </Col>
+                                <Col md={4}>
+                                    {/* Linked Services */}
+                                    <div className="linked-services">
+                                        <h3>Linked Services</h3>
+                                        <ul className="p-0">
+                                            {blogData.linkedServices?.map((service: any) => (
+                                                <Card key={service.id} className="mt-3">
+                                                    <Row>
+                                                        <Col
+                                                            md={3}
+                                                        >
+                                                            <img
+                                                                src={service.images[0]}
+                                                                alt={service.name}
+                                                                style={{ width: "100%", height: 'auto' }}
+                                                            />
+                                                        </Col>
+                                                        <Col
+                                                            md={8}
+                                                        >
+                                                            <h4>{service.name}</h4>
+                                                            <Button type="primary" onClick={() => {
+                                                                window.location.href = `/services/${service.id}`;
+                                                            }}>View Service</Button>
+                                                        </Col>
+                                                    </Row>
+                                                </Card>
+                                            ))}
+                                        </ul>
+                                    </div>
                                 </Col>
                             </Row>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div >
+            </div >
             <Footer />
         </>
     );
