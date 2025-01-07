@@ -1,4 +1,4 @@
-import '@/pages/Login/Login.css';
+import '@/pages/Login/Login.scss';
 import AdminApiRequest from '@/redux/apis/AdminApiRequest';
 import { LoadingOverlay } from '@achmadk/react-loading-overlay';
 import { message } from 'antd';

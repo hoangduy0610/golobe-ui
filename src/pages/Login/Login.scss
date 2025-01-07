@@ -1,0 +1,118 @@
+// Reset margin, padding và set chiều cao toàn bộ trang
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%; 
+    overflow: hidden; 
+}
+
+// Phần nền đăng nhập
+.bg-login {
+    height: 100vh; // Chiều cao toàn bộ màn hình
+    display: flex;
+    justify-content: center; // Căn giữa theo chiều ngang
+    align-items: flex-start; // Căn giữa theo chiều dọc (bắt đầu từ trên)
+    padding-top: 250px; // Khoảng cách từ trên xuống
+    gap: 100px; // Khoảng cách giữa các phần tử
+    position: relative;
+}
+
+// Phần nền mờ
+.bg-login::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(5px); // Làm mờ nền
+    z-index: -1; // Đảm bảo phần nền không đè lên các phần tử khác
+}
+
+// Card chứa hình ảnh
+.login-image-card {
+    background-color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 590px;
+    width: 100%;
+    max-width: 1000px; 
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); 
+    padding: 0;
+} 
+
+// Card chứa form đăng nhập
+.login-form-card {
+    background-color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    flex-direction: column; 
+    width: 100%;
+    max-width: 1000px; 
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); 
+    padding: 40px;
+}
+
+// Phần form đăng nhập
+.form-section {
+    padding: 40px; // Khoảng cách cho phần form
+    background-color: #ffffff;
+}
+
+// Logo và tiêu đề LOGIN
+.login-logo {
+    width: 100px; 
+    margin-bottom: 20px; 
+}
+
+// Tiêu đề "LOGIN"
+.login-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+// Dòng chữ mô tả dưới tiêu đề
+.login-description {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+// Phần responsive cho thiết bị nhỏ (Mobile)
+@media (max-width: 768px) {
+    .bg-login {
+        flex-direction: column; // Đặt các phần tử theo chiều dọc
+    }
+
+    .login-image-card {
+        max-width: 100%; // Chiều rộng tối đa của card hình ảnh
+        border-radius: 0; // Loại bỏ bo góc
+        margin-bottom: 20px; // Khoảng cách dưới hình ảnh
+    }
+
+    .login-form-card {
+        max-width: 100%; // Đảm bảo form card không quá rộng
+        border-radius: 0; // Loại bỏ bo góc
+    }
+
+    .form-section {
+        padding: 30px; // Khoảng cách trong form cho thiết bị nhỏ
+    }
+
+    .login-title {
+        font-size: 28px; // Giảm kích thước tiêu đề trên thiết bị nhỏ
+    }
+
+    .login-description {
+        font-size: 12px; // Giảm kích thước văn bản mô tả trên thiết bị nhỏ
+    }
+}
