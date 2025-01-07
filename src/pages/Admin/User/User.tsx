@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Input, Form, message } from 'antd';
-import axios from 'axios';
+import AdminApiRequest from '@/redux/apis/AdminApiRequest';
+import { Button, Form, Input, Modal, Select, Table, Tag, message } from 'antd';
+import React, { useEffect, useState } from 'react';
 
 const UserPage: React.FC = () => {
   const [users, setUsers] = useState<any[]>([]);
@@ -11,26 +11,20 @@ const UserPage: React.FC = () => {
   const [form] = Form.useForm();
   const [editUser, setEditUser] = useState<any>(null);
 
-  const API_URL = 'http://api.example.com/users';
-
-  const sampleUsers = [
-    { id: 1, username: 'john_doe', email: 'john@example.com', role: 'User' },
-    { id: 2, username: 'jane_smith', email: 'jane@example.com', role: 'Admin' },
-    { id: 3, username: 'alice_johnson', email: 'alice@example.com', role: 'User' },
-  ];
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const res = await AdminApiRequest.get('/user/list');
+      setUsers(res.data);
+      // setUsers();
+    } catch (err) {
+      setError('Failed to load users');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      try {
-        setUsers(sampleUsers);
-      } catch (err) {
-        setError('Failed to load users');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUsers();
   }, []);
 
@@ -49,6 +43,7 @@ const UserPage: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
+      const res = await AdminApiRequest.delete(`/user/${id}`);
       setUsers(users.filter(user => user.id !== id));
       message.success('User deleted successfully!');
     } catch (err) {
@@ -62,12 +57,13 @@ const UserPage: React.FC = () => {
 
       if (isEditing && editUser) {
         // Update user
+        await AdminApiRequest.put(`/user/${editUser.id}`, values);
         setUsers(users.map(user => user.id === editUser.id ? { ...user, ...values } : user));
         message.success('User updated successfully!');
       } else {
         // Create new user
-        const newUser = { id: Date.now(), ...values };
-        setUsers([...users, newUser]);
+        const res = await AdminApiRequest.post('/user', values);
+        setUsers([...users, res.data]);
         message.success('User created successfully!');
       }
 
@@ -81,9 +77,9 @@ const UserPage: React.FC = () => {
 
   const columns = [
     {
-      title: 'Username',
-      dataIndex: 'username',
-      key: 'username',
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
       title: 'Email',
@@ -94,6 +90,7 @@ const UserPage: React.FC = () => {
       title: 'Role',
       dataIndex: 'role',
       key: 'role',
+      render: (role: any) => <Tag color={role === 'ROLE_ADMIN' ? 'red' : 'blue'}>{role}</Tag>,
     },
     {
       title: 'Actions',
@@ -138,8 +135,8 @@ const UserPage: React.FC = () => {
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            name="username"
-            label="Username"
+            name="name"
+            label="Name"
             rules={[{ required: true, message: 'Please input the username!' }]}>
             <Input />
           </Form.Item>
@@ -149,11 +146,25 @@ const UserPage: React.FC = () => {
             rules={[{ required: true, message: 'Please input the email address!' }]}>
             <Input />
           </Form.Item>
+
+          {
+            isEditing ? null : (
+              <Form.Item
+                name="password"
+                label="Password"
+                rules={[{ required: true, message: 'Please input the password!' }]}>
+                <Input.Password />
+              </Form.Item>
+            )
+          }
           <Form.Item
             name="role"
             label="Role"
             rules={[{ required: true, message: 'Please select the user role!' }]}>
-            <Input />
+            <Select>
+              <Select.Option value="ROLE_USER">User</Select.Option>
+              <Select.Option value="ROLE_ADMIN">Admin</Select.Option>
+            </Select>
           </Form.Item>
         </Form>
       </Modal>
