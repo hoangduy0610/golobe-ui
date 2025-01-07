@@ -32,8 +32,8 @@ AdminApiRequest.interceptors.response.use(
             window.location.href = '/admin/login';
         } else {
             // Show error message using antd message
-            // message.error(error.message);
-            return Promise.resolve(error.response);
+            message.error(error.message);
+            // return Promise.resolve(error.response);
         }
         return Promise.reject(error);
     },

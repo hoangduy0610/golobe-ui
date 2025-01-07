@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Input, Form, message, Tag } from 'antd';
 import AdminApiRequest from '@/redux/apis/AdminApiRequest';
+import { UploadOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Modal, Select, Table, Tag, Upload, message } from 'antd';
+import React, { useEffect, useState } from 'react';
 import './Service.scss';
-import { title } from 'process';
-import { render } from '@testing-library/react';
 
 interface ServiceType {
-  id: string;
+  id?: number;
   name: string;
   images: string[];
   description: string;
@@ -26,26 +25,47 @@ const ServicePage: React.FC = () => {
   const [services, setServices] = useState<ServiceType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
+  const [fileList, setFileList] = useState<any[]>([]);
+  const [showCustom, setShowCustom] = useState<Record<string, boolean>>({
+    'Monday': false,
+    'Tuesday': false,
+    'Wednesday': false,
+    'Thursday': false,
+    'Friday': false,
+    'Saturday': false,
+    'Sunday': false,
+  });
+  const [serviceTypes, setServiceTypes] = useState<any[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [form] = Form.useForm();
   const [editService, setEditService] = useState<ServiceType | null>(null);
+  const watchPriceRange = Form.useWatch('priceRange', form);
+
+  const fetchServices = async () => {
+    setLoading(true);
+    try {
+      const response = await AdminApiRequest.get('/service/list');
+      setServices(response.data);
+    } catch (err) {
+      setError('Failed to fetch services');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchServiceTypes = async () => {
+    try {
+      const response = await AdminApiRequest.get('/service-type/list');
+      setServiceTypes(response.data);
+    } catch (err) {
+      setError('Failed to fetch service types');
+    }
+  }
 
   useEffect(() => {
-    const fetchServices = async () => {
-      setLoading(true);
-      try {
-        const response = await AdminApiRequest.get('/service/list');
-        setServices(response.data);
-      } catch (err) {
-        setError('Failed to fetch services');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchServices();
+    fetchServiceTypes();
   }, []);
 
   const handleCreate = () => {
@@ -58,11 +78,24 @@ const ServicePage: React.FC = () => {
     setEditService(service);
     setIsEditing(true);
     form.setFieldsValue(service);
+    setFileList(service.images.map((url, index) => ({ uid: index, url })));
+    setShowCustom({
+      'Monday': service.openingHours[0].hours === 'Custom',
+      'Tuesday': service.openingHours[1].hours === 'Custom',
+      'Wednesday': service.openingHours[2].hours === 'Custom',
+      'Thursday': service.openingHours[3].hours === 'Custom',
+      'Friday': service.openingHours[4].hours === 'Custom',
+      'Saturday': service.openingHours[5].hours === 'Custom',
+      'Sunday': service.openingHours[6].hours === 'Custom',
+    });
     setIsModalVisible(true);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id?: number) => {
     try {
+      if (!id) {
+        return;
+      }
       await AdminApiRequest.delete(`/service/${id}`);
       setServices(services.filter(service => service.id !== id));
       message.success('Service deleted successfully!');
@@ -74,14 +107,61 @@ const ServicePage: React.FC = () => {
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
+      const mappingDate = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      const data: ServiceType = {
+        name: values.name,
+        serviceTypeId: values.serviceTypeId,
+        description: values.description,
+        address: values.address,
+        phone: values.phone,
+        email: values.email,
+        website: values.website,
+        features: values.features,
+        priceRange: values.priceRange,
+        mapMarker: editService?.mapMarker || '',
+        price: values?.price || '0',
+        images: fileList.map((file) => file.url),
+        openingHours: values.openingHours.map((hours: any, index: number) => {
+          if (!hours.hours) {
+            return {
+              day: mappingDate[index],
+              hours: 'Always',
+            };
+          }
+
+          if (hours.hours === 'Custom') {
+            return {
+              day: mappingDate[index],
+              hours: hours.hours,
+              customHours: {
+                open: hours.customHours.open,
+                close: hours.customHours.close,
+              },
+            };
+          }
+
+          return {
+            day: mappingDate[index],
+            hours: hours.hours,
+          };
+        }),
+      }
 
       if (isEditing && editService) {
-        const updatedService = { ...editService, ...values };
-        await AdminApiRequest.put(`/service/${editService.id}`, updatedService);
-        setServices(services.map(service => (service.id === updatedService.id ? updatedService : service)));
+        const updatedService = { ...editService, ...data };
+        await AdminApiRequest.put(`/service/${editService?.id}`, updatedService);
+        setServices(
+          services.map(service =>
+          (service.id === editService.id
+            ? {
+              id: editService.id,
+              ...updatedService
+            }
+            : service))
+        );
         message.success('Service updated successfully!');
       } else {
-        const response = await AdminApiRequest.post('/service', values);
+        const response = await AdminApiRequest.post('/service', data);
         setServices([...services, response.data]);
         message.success('Service created successfully!');
       }
@@ -90,6 +170,7 @@ const ServicePage: React.FC = () => {
       form.resetFields();
       setEditService(null);
     } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
       message.error('Failed to submit service');
     }
   };
@@ -154,13 +235,35 @@ const ServicePage: React.FC = () => {
           <Button type="primary" onClick={() => handleEdit(service)}>
             Edit
           </Button>
-          <Button type="primary" danger onClick={() => handleDelete(service.id)}>
+          <Button type="primary" danger onClick={() => handleDelete(service?.id)}>
             Delete
           </Button>
         </div>
       ),
     },
   ];
+
+  const beforeUpload = async (file: any) => {
+    // Call the API to upload the image
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await AdminApiRequest.post('/file/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    file.url = response.data.url;
+    setFileList([...fileList, file]);
+    return false;
+  };
+
+  const handleChangeImage = (info: any) => {
+    setFileList(info.fileList);
+  };
+
+  const handleRemoveImage = (file: any) => {
+    setFileList(fileList.filter((f: any) => f.uid !== file.uid));
+  };
 
   return (
     <div className="service-container">
@@ -188,8 +291,32 @@ const ServicePage: React.FC = () => {
         okText={isEditing ? 'Save' : 'Create'}
       >
         <Form form={form} layout="vertical">
+          <Form.Item name="images" label="Images" rules={[{ required: true, message: 'Please upload at least one image!' }]}>
+            <Upload
+              listType="picture-card"
+              fileList={fileList}
+              beforeUpload={beforeUpload}
+              onRemove={handleRemoveImage}
+              onChange={handleChangeImage}
+            >
+              <UploadOutlined /> Upload
+            </Upload>
+          </Form.Item>
           <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please input the service name!' }]}>
             <Input />
+          </Form.Item>
+          <Form.Item
+            name="serviceTypeId"
+            label="Service Type"
+            rules={[{ required: true, message: 'Please select the service type!' }]}
+          >
+            <Select>
+              {serviceTypes.map((serviceType) => (
+                <Select.Option key={serviceType.id} value={serviceType.id}>
+                  {serviceType.name}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item
             name="description"
@@ -197,9 +324,6 @@ const ServicePage: React.FC = () => {
             rules={[{ required: true, message: 'Please input the service description!' }]}
           >
             <Input />
-          </Form.Item>
-          <Form.Item name="price" label="Price" rules={[{ required: true, message: 'Please input the service price!' }]}>
-            <Input type="number" />
           </Form.Item>
           <Form.Item name="address" label="Address" rules={[{ required: true, message: 'Please input the address!' }]}>
             <Input />
@@ -210,9 +334,77 @@ const ServicePage: React.FC = () => {
           <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Please input the email!' }]}>
             <Input type="email" />
           </Form.Item>
-          <Form.Item name="website" label="Website" rules={[{ required: false }]}>
+          <Form.Item name="website" label="Website" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
+          <Form.Item
+            name="features"
+            label="Features"
+            rules={[{ required: true, message: 'Please input the features!' }]}
+          >
+            <Select mode="tags" style={{ width: '100%' }} placeholder="Features" />
+          </Form.Item>
+          <Form.Item
+            name="priceRange"
+            label="Price Range"
+            rules={[{ required: true, message: 'Please input the price range!' }]}
+          >
+            <Select style={{ width: '100%' }} placeholder="Price Range">
+              <Select.Option value="cheap">Cheap</Select.Option>
+              <Select.Option value="moderate">Moderate</Select.Option>
+              <Select.Option value="expensive">Expensive</Select.Option>
+              <Select.Option value="custom">Custom</Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            name="price"
+            label="Price"
+            rules={[{ required: false, message: 'Please input the service price!' }]}
+            hidden={watchPriceRange !== 'custom'}>
+            <Input type="number" />
+          </Form.Item>
+          {/* Opening hours */}
+          <>
+            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, index) => (
+              <div key={index} className="d-flex gap-2 my-2">
+                <span style={{ width: 100 }}>{day}</span>
+                <Form.Item name={['openingHours', index, 'day']} noStyle hidden>
+                  <Input hidden readOnly value={day} />
+                </Form.Item>
+                <Form.Item name={['openingHours', index, 'hours']} noStyle>
+                  <Select style={{ width: 100 }} defaultValue="Always" placeholder="Select" onChange={(e) => {
+                    if (e === 'Custom') {
+                      setShowCustom({ ...showCustom, [day]: true });
+                    } else {
+                      setShowCustom({ ...showCustom, [day]: false });
+                    }
+                  }}>
+                    <Select.Option value="Always">Open</Select.Option>
+                    <Select.Option value="Closed">Close</Select.Option>
+                    <Select.Option value="Custom">Custom</Select.Option>
+                  </Select>
+                </Form.Item>
+                <>
+                  <Form.Item
+                    hidden={!showCustom[day]}
+                    name={['openingHours', index, 'customHours', 'open']}
+                    noStyle
+                    rules={[{ required: false, message: 'Please input the opening time!' }]}
+                  >
+                    <Input type="time" placeholder="Open" style={{ width: 'calc(50% - 112px)' }} />
+                  </Form.Item>
+                  <Form.Item
+                    hidden={!showCustom[day]}
+                    name={['openingHours', index, 'customHours', 'close']}
+                    noStyle
+                    rules={[{ required: false, message: 'Please input the closing time!' }]}
+                  >
+                    <Input type="time" placeholder="Close" style={{ width: 'calc(50% - 112px)' }} />
+                  </Form.Item>
+                </>
+              </div>
+            ))}
+          </>
         </Form>
       </Modal>
     </div>

@@ -5,11 +5,14 @@ import React, { useEffect, useState } from 'react';
 import './Location.scss';
 import AdminApiRequest from '@/redux/apis/AdminApiRequest';
 import { render } from '@testing-library/react';
+import Upload from 'antd/es/upload/Upload';
+import { PlusOutlined } from '@ant-design/icons';
 
 const LocationPage: React.FC = () => {
   const [loadingLocationList, setLoadingLocationList] = useState(false);
   const [locationList, setLocationList] = useState<LocationType[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [featImg, setFeatImg] = useState<string>('');
   const [isEditing, setIsEditing] = useState(false);
   const [form] = Form.useForm();
   const [editLocation, setEditLocation] = useState<LocationType | null>(null);
@@ -32,6 +35,7 @@ const LocationPage: React.FC = () => {
     setEditLocation(location);
     setIsEditing(true);
     form.setFieldsValue(location);
+    setFeatImg(location.featureImage);
     setIsModalVisible(true);
   };
 
@@ -39,22 +43,24 @@ const LocationPage: React.FC = () => {
     // await dispatch(deleteLocation(id));
     const res = await AdminApiRequest.delete(`/location/${id}`);
     message.success('Location deleted successfully!');
+    fetchLocations();
   };
 
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
+      const data = { ...values, featureImage: featImg };
 
       if (isEditing && editLocation) {
         // dispatch(updateLocation({ ...editLocation, ...values }));
-        const res = await AdminApiRequest.put(`/location/${editLocation.id}`, { ...editLocation, ...values });
+        const res = await AdminApiRequest.put(`/location/${editLocation.id}`, { ...editLocation, ...data });
         message.success('Location updated successfully!');
       } else {
         // dispatch(createLocation(values));
-        const res = await AdminApiRequest.post('/location', values);
+        const res = await AdminApiRequest.post('/location', data);
         message.success('Location created successfully!');
       }
-
+      fetchLocations();
       setIsModalVisible(false);
       form.resetFields();
       setEditLocation(null);
@@ -68,6 +74,19 @@ const LocationPage: React.FC = () => {
       fetchLocations();
     }
   }, [])
+
+  const handleUpload = async (file: any) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await AdminApiRequest.post('/file/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+
+    setFeatImg(res.data.url);
+  }
 
   const columns = [
     {
@@ -149,7 +168,20 @@ const LocationPage: React.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item name="featureImage" label="Feature Image">
-            <Input />
+            {/* <Input /> */}
+            <Upload
+              fileList={featImg ? [{
+                uid: '-1',
+                name: 'image.png',
+                status: 'done',
+                url: featImg,
+              }] : []}
+              listType="picture-card"
+              beforeUpload={handleUpload}
+            >
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>Upload</div>
+            </Upload>
           </Form.Item>
         </Form>
       </Modal>

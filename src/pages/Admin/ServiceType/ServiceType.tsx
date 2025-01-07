@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Input, Form, message } from 'antd';
-import AdminApiRequest from '@/redux/apis/AdminApiRequest'; 
+import { Table, Button, Modal, Input, Form, message, Select, Tag } from 'antd';
+import AdminApiRequest from '@/redux/apis/AdminApiRequest';
 
 const ServiceTypePage: React.FC = () => {
   const [serviceTypes, setServiceTypes] = useState<any[]>([]);
@@ -15,7 +15,7 @@ const ServiceTypePage: React.FC = () => {
     const fetchServiceTypes = async () => {
       setLoading(true);
       try {
-        const response = await AdminApiRequest.get('/service-type/list'); 
+        const response = await AdminApiRequest.get('/service-type/list');
         setServiceTypes(response.data);
       } catch (err) {
         setError('Failed to fetch service types');
@@ -52,17 +52,25 @@ const ServiceTypePage: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      const values = await form.validateFields();
+      const name = await form.getFieldValue('name');
+      const filters = await form.getFieldValue('filters');
 
       if (isEditing && editServiceType) {
         // Cập nhật service type
-        const updatedServiceType = { ...editServiceType, ...values };
-        await AdminApiRequest.put(`/service-type/${editServiceType.id}`, updatedServiceType); 
+        const updatedServiceType = {
+          ...editServiceType,
+          name,
+          filters,
+        };
+        await AdminApiRequest.put(`/service-type/${editServiceType.id}`, updatedServiceType);
         setServiceTypes(serviceTypes.map(serviceType => (serviceType.id === updatedServiceType.id ? updatedServiceType : serviceType)));
         message.success('Service Type updated successfully!');
       } else {
         // Tạo mới service type
-        const response = await AdminApiRequest.post('/service-type', values); 
+        const response = await AdminApiRequest.post('/service-type', {
+          name,
+          filters,
+        });
         setServiceTypes([...serviceTypes, response.data]);
         message.success('Service Type created successfully!');
       }
@@ -85,7 +93,7 @@ const ServiceTypePage: React.FC = () => {
       title: 'Filters',
       dataIndex: 'filters',
       key: 'filters',
-      render: (filters: string[]) => filters.join(', '), 
+      render: (filters: string[]) => filters.map(filter => <Tag key={filter} color={mappingColor(filter)}>{filter}</Tag>),
     },
     {
       title: 'Actions',
@@ -102,6 +110,34 @@ const ServiceTypePage: React.FC = () => {
       ),
     },
   ];
+
+  const filterOptions = [
+    { label: 'Keyword', value: 'keyword' },
+    { label: 'Place Pair', value: 'placePair' },
+    { label: 'Singular Place', value: 'placeSingular' },
+    { label: 'Date range', value: 'dateRange' },
+    { label: 'Date', value: 'dateSingle' },
+    { label: 'Guest Number', value: 'guests' },
+  ];
+
+  const mappingColor = (filter: string) => {
+    switch (filter) {
+      case 'keyword':
+        return 'magenta';
+      case 'placePair':
+        return 'red';
+      case 'placeSingular':
+        return 'volcano';
+      case 'dateRange':
+        return 'orange';
+      case 'dateSingle':
+        return 'gold';
+      case 'guests':
+        return 'lime';
+      default:
+        return 'green';
+    }
+  };
 
   return (
     <div className="service-type-container">
@@ -141,7 +177,15 @@ const ServiceTypePage: React.FC = () => {
             label="Filters"
             rules={[{ required: true, message: 'Please input the filters!' }]}
           >
-            <Input placeholder="Enter filters separated by commas" />
+            <Select mode="tags" style={{ width: '100%' }} placeholder="Filters">
+              {
+                filterOptions.map(option => (
+                  <Select.Option key={option.value} value={option.value}>
+                    {option.label}
+                  </Select.Option>
+                ))
+              }
+            </Select>
           </Form.Item>
         </Form>
       </Modal>
