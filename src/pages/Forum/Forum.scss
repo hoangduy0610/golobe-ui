@@ -1,0 +1,22 @@
+.forum-page {
+    h1 {
+        margin-top: 20px;
+    }
+
+    .ant-btn-primary {
+        background-color: #8DD3BB !important;
+        border-color: #8DD3BB !important;
+        color: #fff !important;
+
+        &:hover {
+            background-color: darken(#8DD3BB, 10%) !important;
+            border-color: darken(#8DD3BB, 10%) !important;
+        }
+
+        &:focus {
+            background-color: lighten(#8DD3BB, 5%) !important;
+            border-color: lighten(#8DD3BB, 5%) !important;
+            box-shadow: 0 0 0 2px rgba(141, 211, 187, 0.2) !important;
+        }
+    }
+}

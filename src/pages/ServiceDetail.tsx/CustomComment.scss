@@ -1,0 +1,25 @@
+.custom-comment {
+    border: 1px solid #f0f0f0;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+
+    .comment-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+
+        .comment-author {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    .comment-content {
+        margin-top: 8px;
+        font-size: 14px;
+    }
+}
