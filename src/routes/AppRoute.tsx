@@ -18,6 +18,7 @@ import User from "@/pages/Admin/User/User";
 import Review from "@/pages/Admin/Review/Review";
 import PostDetail from "@/pages/PostDetail/PostDetail";
 import ServiceDetails from "@/pages/ServiceDetail.tsx/ServiceDetail";
+import Chat from "@/pages/Chat/Chat";
 
 
 export default function AppRoute() {
@@ -74,6 +75,7 @@ export default function AppRoute() {
       <Route path="/blog-detail/:id" element={<BlogDetail />} />
       <Route path="/forum/:id" Component={PostDetail} />
       <Route path="/services/:id" element={<ServiceDetails />} />
+      <Route path='/chat' element={<Chat />} />
 
       {/* Routes cho admin */}
       <Route path="/admin/login" element={<AdminLogin />} />
