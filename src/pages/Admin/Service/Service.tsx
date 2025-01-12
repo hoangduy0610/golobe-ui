@@ -80,13 +80,13 @@ const ServicePage: React.FC = () => {
     form.setFieldsValue(service);
     setFileList(service.images.map((url, index) => ({ uid: index, url })));
     setShowCustom({
-      'Monday': service.openingHours[0].hours === 'Custom',
-      'Tuesday': service.openingHours[1].hours === 'Custom',
-      'Wednesday': service.openingHours[2].hours === 'Custom',
-      'Thursday': service.openingHours[3].hours === 'Custom',
-      'Friday': service.openingHours[4].hours === 'Custom',
-      'Saturday': service.openingHours[5].hours === 'Custom',
-      'Sunday': service.openingHours[6].hours === 'Custom',
+      'Monday': service?.openingHours[0]?.hours === 'Custom',
+      'Tuesday': service?.openingHours[1]?.hours === 'Custom',
+      'Wednesday': service?.openingHours[2]?.hours === 'Custom',
+      'Thursday': service?.openingHours[3]?.hours === 'Custom',
+      'Friday': service?.openingHours[4]?.hours === 'Custom',
+      'Saturday': service?.openingHours[5]?.hours === 'Custom',
+      'Sunday': service?.openingHours[6]?.hours === 'Custom',
     });
     setIsModalVisible(true);
   };
