@@ -1,47 +1,51 @@
 import MainApiRequest from '@/redux/apis/MainApiRequest';
 import { message, Spin, Card, Form, Input, Button, Row, Col, Typography } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import bglogin from '@/assets/BG-Login.jpg';
+import logo from '@/assets/logo.png'; // Logo
 import login1 from '@/assets/Login1.png';
 import login2 from '@/assets/Login2.jpg';
 import login3 from '@/assets/Login3.jpg';
 import login4 from '@/assets/Login4.jpg';
-import bglogin from '@/assets/BG-Login.jpg';
-import logo from '@/assets/logo.png'; // Logo
-import './Login.scss';
+import './SignUp.scss';
 
-const Login: React.FC = () => {
+const SignUp: React.FC = () => {
     const navigate = useNavigate();
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
-    const [isLoggingIn, setIsLoggingIn] = useState(false);
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [isSigningUp, setIsSigningUp] = useState(false);
     const [currentImage, setCurrentImage] = useState(login1);
 
     const images = [login1, login2, login3, login4];
 
-    const handleLogin = async () => {
-        setIsLoggingIn(true);
+    const handleSignUp = async () => {
+        if (password !== confirmPassword) {
+            message.error('Password and confirm password do not match');
+            return;
+        }
+
+        setIsSigningUp(true);
         try {
-            const res = await MainApiRequest.post('/auth/signin', { email, password });
+            const res = await MainApiRequest.post('/auth/signup', { firstName, lastName, email, phone, password });
             if (res.status === 200) {
-                localStorage.setItem('token', res.data.token);
-                localStorage.setItem('userId', res.data.info.id);
-                message.success('Login successful');
-                navigate('/');
+                message.success('Sign up successful');
+                navigate('/login'); // Redirect to login page after successful sign-up
             } else {
-                message.error('Login failed');
+                message.error('Sign up failed');
             }
         } catch (error) {
             message.error('System error, please try again');
         }
-        setIsLoggingIn(false);
+        setIsSigningUp(false);
     };
 
     useEffect(() => {
-        if (localStorage.getItem('token')) {
-            navigate('/');
-        }
-
+        // Change image every 5 seconds
         const interval = setInterval(() => {
             setCurrentImage((prev) => {
                 const currentIndex = images.indexOf(prev);
@@ -67,41 +71,63 @@ const Login: React.FC = () => {
                 height: '100%',
             }}
         >
-            <Spin spinning={isLoggingIn} size="large" tip="Logging in...">
+            <Spin spinning={isSigningUp} size="large" tip="Signing up...">
                 <Row className="h-100" justify="center" align="middle">
-                    {/* Image Card */}
+                    {/* Image card */}
                     <Col xs={24} sm={12} md={12} lg={12}>
                         <Card className="login-image-card shadow">
                             <img
-                                src={currentImage}
+                                src={currentImage} // Use image that changes over time
                                 alt="Illustrative image"
                                 className="img-fluid rounded"
                             />
                         </Card>
                     </Col>
 
-                    {/* Login Form Card */}
+                    {/* Sign-up card */}
                     <Col xs={24} sm={12} md={12} lg={12}>
                         <Card className="login-form-card shadow">
                             <Row justify="center" align="middle">
                                 <Col span={24} className="text-center">
                                     {/* Logo */}
                                     <img src={logo} alt="Golobe Logo" className="login-logo" />
-                                    {/* Title "LOGIN" */}
+                                    {/* Title "SIGN UP" */}
                                     <Typography.Title level={2}>
-                                        LOGIN
+                                        SIGN UP
                                     </Typography.Title>
                                     {/* Description */}
                                     <Typography.Text type="secondary">
-                                        Login to access your Golobe account
+                                        Create an account to access your Golobe experience
                                     </Typography.Text>
                                 </Col>
                             </Row>
                             <Row>
                                 <Col span={24}>
-                                    <Form layout="vertical" onFinish={handleLogin}>
+                                    <Form layout="vertical" onFinish={handleSignUp}>
                                         <Form.Item
-                                            label="E-Mail"
+                                            label="First Name"
+                                            name="firstName"
+                                            rules={[{ required: true, message: 'Please enter your first name' }]}
+                                        >
+                                            <Input
+                                                value={firstName}
+                                                onChange={(e) => setFirstName(e.target.value)}
+                                                placeholder="Enter your first name"
+                                            />
+                                        </Form.Item>
+                                        <Form.Item
+                                            label="Last Name"
+                                            name="lastName"
+                                            rules={[{ required: true, message: 'Please enter your last name' }]}
+                                        >
+                                            <Input
+                                                value={lastName}
+                                                onChange={(e) => setLastName(e.target.value)}
+                                                placeholder="Enter your last name"
+                                            />
+                                        </Form.Item>
+                                        <Form.Item
+                                            label="Email"
                                             name="email"
                                             rules={[{ required: true, message: 'Please enter your email' }, { type: 'email', message: 'Invalid email' }]}
                                         >
@@ -109,6 +135,17 @@ const Login: React.FC = () => {
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
                                                 placeholder="Enter your email"
+                                            />
+                                        </Form.Item>
+                                        <Form.Item
+                                            label="Phone Number"
+                                            name="phone"
+                                            rules={[{ required: true, message: 'Please enter your phone number' }]}
+                                        >
+                                            <Input
+                                                value={phone}
+                                                onChange={(e) => setPhone(e.target.value)}
+                                                placeholder="Enter your phone number"
                                             />
                                         </Form.Item>
                                         <Form.Item
@@ -122,32 +159,36 @@ const Login: React.FC = () => {
                                                 placeholder="Enter your password"
                                             />
                                         </Form.Item>
-                                        <Form.Item>
-                                            <div className="d-flex justify-content-between">
-                                                <a href="forgot.html" style={{ fontWeight: 'bold', color: 'black' }}>
-                                                    Forgot password
-                                                </a>
-                                            </div>
+                                        <Form.Item
+                                            label="Confirm Password"
+                                            name="confirmPassword"
+                                            rules={[{ required: true, message: 'Please confirm your password' }]}
+                                        >
+                                            <Input.Password
+                                                value={confirmPassword}
+                                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                                placeholder="Confirm your password"
+                                            />
                                         </Form.Item>
                                         <Form.Item>
                                             <Button
                                                 type="primary"
                                                 htmlType="submit"
                                                 block
-                                                disabled={isLoggingIn}
+                                                disabled={isSigningUp}
                                                 style={{ backgroundColor: '#8DD3BB', borderColor: '#8DD3BB' }}
                                             >
-                                                Login
+                                                Sign Up
                                             </Button>
                                         </Form.Item>
-                                        {/* Sign up text and link */}
+                                        {/* Text and "Login" button */}
                                         <Form.Item>
                                             <div className="d-flex justify-content-between">
                                                 <Typography.Text type="secondary">
-                                                    Don’t have an account?
-                                                    <Link to="/sign-up" style={{ fontWeight: 'bold', color: 'black' }}>
-                                                        Sign up
-                                                    </Link>
+                                                    Already have an account? 
+                                                    <a href="/login" style={{ fontWeight: 'bold', color: 'black' }}>
+                                                        Log in
+                                                    </a>
                                                 </Typography.Text>
                                             </div>
                                         </Form.Item>
@@ -162,4 +203,4 @@ const Login: React.FC = () => {
     );
 };
 
-export default Login;
+export default SignUp;
