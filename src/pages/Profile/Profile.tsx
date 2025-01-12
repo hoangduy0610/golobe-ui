@@ -32,7 +32,6 @@ export function Profile() {
         const data = {
             name: values.name,
             email: values.email,
-            role: 'ROLE_USER'
         }
         const res = await MainApiRequest.put(`/user/${user?.id}`, data)
             .then(() => {
