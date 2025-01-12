@@ -20,6 +20,7 @@ import PostDetail from "@/pages/PostDetail/PostDetail";
 import ServiceDetails from "@/pages/ServiceDetail.tsx/ServiceDetail";
 import SignUp from "@/pages/SignUp/SignUp";
 import Chat from "@/pages/Chat/Chat";
+import { Profile } from "@/pages/Profile/Profile";
 
 
 export default function AppRoute() {
@@ -76,8 +77,9 @@ export default function AppRoute() {
       <Route path="/blog-detail/:id" element={<BlogDetail />} />
       <Route path="/forum/:id" Component={PostDetail} />
       <Route path="/services/:id" element={<ServiceDetails />} />
-      <Route path="/sign-up" element={<SignUp />} />
+      <Route path="/register" element={<SignUp />} />
       <Route path='/chat' element={<Chat />} />
+      <Route path='/profile' element={<Profile />} />
 
       {/* Routes cho admin */}
       <Route path="/admin/login" element={<AdminLogin />} />

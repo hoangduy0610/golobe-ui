@@ -1,7 +1,7 @@
 import MainApiRequest from '@/redux/apis/MainApiRequest';
 import { message, Spin, Card, Form, Input, Button, Row, Col, Typography } from 'antd';
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import bglogin from '@/assets/BG-Login.jpg';
 import logo from '@/assets/logo.png'; // Logo
 import login1 from '@/assets/Login1.png';
@@ -9,13 +9,13 @@ import login2 from '@/assets/Login2.jpg';
 import login3 from '@/assets/Login3.jpg';
 import login4 from '@/assets/Login4.jpg';
 import './SignUp.scss';
+import FloatInput from '@/components/FloatInput/FloatInput';
 
 const SignUp: React.FC = () => {
     const navigate = useNavigate();
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
+    // const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isSigningUp, setIsSigningUp] = useState(false);
@@ -31,7 +31,11 @@ const SignUp: React.FC = () => {
 
         setIsSigningUp(true);
         try {
-            const res = await MainApiRequest.post('/auth/signup', { firstName, lastName, email, phone, password });
+            const res = await MainApiRequest.post('/auth/signup', {
+                name: fullName,
+                email,
+                password
+            });
             if (res.status === 200) {
                 message.success('Sign up successful');
                 navigate('/login'); // Redirect to login page after successful sign-up
@@ -58,148 +62,154 @@ const SignUp: React.FC = () => {
     }, []);
 
     return (
-        <div
-            className="h-100 bg-login"
-            style={{
-                backgroundImage: `url(${bglogin})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-            }}
-        >
-            <Spin spinning={isSigningUp} size="large" tip="Signing up...">
-                <Row className="h-100" justify="center" align="middle">
-                    {/* Image card */}
-                    <Col xs={24} sm={12} md={12} lg={12}>
-                        <Card className="login-image-card shadow">
-                            <img
-                                src={currentImage} // Use image that changes over time
-                                alt="Illustrative image"
-                                className="img-fluid rounded"
+        <div className="container-fluid justify-content-center d-flex register-page">
+            <div className="row w-100" style={{ marginTop: 50, maxWidth: 1000 }}>
+                <div className="col-5">
+                    <Card
+                        style={{ width: '100%', maxHeight: 635, aspectRatio: '9/16' }}
+                        cover={
+                            <div style={{ overflow: "hidden", height: '100%' }}>
+                                <img src={currentImage} alt="register" className="register-image" />
+                            </div>
+                        }
+                        className="register-card">
+                        <div className="indicator">
+                            {images.map((image, index) => (
+                                <div key={index} className={`indicator-dot ${currentImage === image ? 'active' : ''}`} />
+                            ))}
+                        </div>
+                    </Card>
+                </div>
+                <div className="col-7">
+                    <img src={logo} alt="logo" className="logo" width={80} />
+                    <h2 className='mt-4'>Sign up</h2>
+                    <p className='mt-2'>Let's get you all setup so you can access your personal account</p>
+                    <FloatInput
+                        label="Full name"
+                        placeholder="Full name"
+                        name="fullName"
+                        onChange={(e) => setFullName(e.target.value)}
+                        required
+                        value={fullName}
+                        style={{ marginTop: 20 }}
+                        inputStyle={{
+                            minHeight: 50,
+                        }}
+                    />
+                    <FloatInput
+                        label="Email"
+                        placeholder="Email"
+                        name="email"
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        value={email}
+                        style={{ marginTop: 20 }}
+                        inputStyle={{
+                            minHeight: 50,
+                        }}
+                    />
+                    {/* <FloatInput
+                        label="Password"
+                        placeholder="Password"
+                        name="password"
+                        type="password"
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        value={password}
+                        style={{ marginTop: 20 }}
+                        inputStyle={{
+                            minHeight: 50,
+                        }}
+                    />
+                    <FloatInput
+                        label="Confirm password"
+                        placeholder="Confirm password"
+                        name="confirmPassword"
+                        type="password"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                        value={confirmPassword}
+                        style={{ marginTop: 20 }}
+                        inputStyle={{
+                            minHeight: 50,
+                        }}
+                    /> */}
+                    {/* form group with 2 input in a line */}
+                    <div className="row">
+                        <div className="col-6">
+                            <FloatInput
+                                label="Password"
+                                placeholder="Password"
+                                name="password"
+                                type="password"
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                value={password}
+                                style={{ marginTop: 20 }}
+                                inputStyle={{
+                                    minHeight: 50,
+                                }}
                             />
-                        </Card>
-                    </Col>
+                        </div>
+                        <div className="col-6">
+                            <FloatInput
+                                label="Confirm password"
+                                placeholder="Confirm password"
+                                name="confirmPassword"
+                                type="password"
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                                value={confirmPassword}
+                                style={{ marginTop: 20 }}
+                                inputStyle={{
+                                    minHeight: 50,
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <div className="d-flex flex-row justify-content-start align-items-center my-4">
+                        <div className="form-check">
+                            <input className="form-check-input" type="checkbox" id="flexCheckDefault" />
+                            <label className="form-check-label" htmlFor="flexCheckDefault">
+                                I agree to all the <Link to="#" className="forgot-password">Terms & Conditions</Link>
+                            </label>
+                        </div>
+                    </div>
+                    <button
+                        style={{ height: 50 }}
+                        onClick={handleSignUp}
+                        disabled={isSigningUp}
+                        className='btn d-block w-100 btn-primary'
+                    >
+                        {isSigningUp ? <Spin /> : 'Create account'}
+                    </button>
+                    <div className="d-flex flex-row justify-content-center gap-2 align-items-center mt-4">
+                        <p className='m-0'>Already have an account?</p>
+                        <Link to="/login" className="register">Sign in</Link>
+                    </div>
 
-                    {/* Sign-up card */}
-                    <Col xs={24} sm={12} md={12} lg={12}>
-                        <Card className="login-form-card shadow">
-                            <Row justify="center" align="middle">
-                                <Col span={24} className="text-center">
-                                    {/* Logo */}
-                                    <img src={logo} alt="Golobe Logo" className="login-logo" />
-                                    {/* Title "SIGN UP" */}
-                                    <Typography.Title level={2}>
-                                        SIGN UP
-                                    </Typography.Title>
-                                    {/* Description */}
-                                    <Typography.Text type="secondary">
-                                        Create an account to access your Golobe experience
-                                    </Typography.Text>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col span={24}>
-                                    <Form layout="vertical" onFinish={handleSignUp}>
-                                        <Form.Item
-                                            label="First Name"
-                                            name="firstName"
-                                            rules={[{ required: true, message: 'Please enter your first name' }]}
-                                        >
-                                            <Input
-                                                value={firstName}
-                                                onChange={(e) => setFirstName(e.target.value)}
-                                                placeholder="Enter your first name"
-                                            />
-                                        </Form.Item>
-                                        <Form.Item
-                                            label="Last Name"
-                                            name="lastName"
-                                            rules={[{ required: true, message: 'Please enter your last name' }]}
-                                        >
-                                            <Input
-                                                value={lastName}
-                                                onChange={(e) => setLastName(e.target.value)}
-                                                placeholder="Enter your last name"
-                                            />
-                                        </Form.Item>
-                                        <Form.Item
-                                            label="Email"
-                                            name="email"
-                                            rules={[{ required: true, message: 'Please enter your email' }, { type: 'email', message: 'Invalid email' }]}
-                                        >
-                                            <Input
-                                                value={email}
-                                                onChange={(e) => setEmail(e.target.value)}
-                                                placeholder="Enter your email"
-                                            />
-                                        </Form.Item>
-                                        <Form.Item
-                                            label="Phone Number"
-                                            name="phone"
-                                            rules={[{ required: true, message: 'Please enter your phone number' }]}
-                                        >
-                                            <Input
-                                                value={phone}
-                                                onChange={(e) => setPhone(e.target.value)}
-                                                placeholder="Enter your phone number"
-                                            />
-                                        </Form.Item>
-                                        <Form.Item
-                                            label="Password"
-                                            name="password"
-                                            rules={[{ required: true, message: 'Please enter your password' }]}
-                                        >
-                                            <Input.Password
-                                                value={password}
-                                                onChange={(e) => setPassword(e.target.value)}
-                                                placeholder="Enter your password"
-                                            />
-                                        </Form.Item>
-                                        <Form.Item
-                                            label="Confirm Password"
-                                            name="confirmPassword"
-                                            rules={[{ required: true, message: 'Please confirm your password' }]}
-                                        >
-                                            <Input.Password
-                                                value={confirmPassword}
-                                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                                placeholder="Confirm your password"
-                                            />
-                                        </Form.Item>
-                                        <Form.Item>
-                                            <Button
-                                                type="primary"
-                                                htmlType="submit"
-                                                block
-                                                disabled={isSigningUp}
-                                                style={{ backgroundColor: '#8DD3BB', borderColor: '#8DD3BB' }}
-                                            >
-                                                Sign Up
-                                            </Button>
-                                        </Form.Item>
-                                        {/* Text and "Login" button */}
-                                        <Form.Item>
-                                            <div className="d-flex justify-content-between">
-                                                <Typography.Text type="secondary">
-                                                    Already have an account? 
-                                                    <a href="/login" style={{ fontWeight: 'bold', color: 'black' }}>
-                                                        Log in
-                                                    </a>
-                                                </Typography.Text>
-                                            </div>
-                                        </Form.Item>
-                                    </Form>
-                                </Col>
-                            </Row>
-                        </Card>
-                    </Col>
-                </Row>
-            </Spin>
-        </div>
+                    {/* Or signin with divider */}
+                    <div className="d-flex flex-row justify-content-center align-items-center" style={{ marginTop: 50, marginBottom: 20 }}>
+                        <div className="divider" />
+                        <p className="m-0 mx-2" style={{ color: "#ccc" }}>Or sign up with</p>
+                        <div className="divider" />
+                    </div>
+
+                    {/* Bootstrap button groups with 3 button outline primary */}
+                    <div className="d-flex flex-row justify-content-center align-items-center gap-2">
+                        <button className="d-flex flex-1 justify-content-center btn btn-outline-primary">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Facebook_Logo_2023.png" alt="google" height={24} />
+                        </button>
+                        <button className="d-flex flex-1 justify-content-center btn btn-outline-primary">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt="google" height={24} />
+                        </button>
+                        <button className="d-flex flex-1 justify-content-center btn btn-outline-primary">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/625px-Apple_logo_black.svg.png" alt="google" height={24} />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div >
     );
 };
 

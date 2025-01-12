@@ -1,0 +1,57 @@
+.app-mini-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 50px;
+    /* height: 50px; */
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+
+    a {
+        text-decoration: none;
+        color: #000;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+
+        * {
+            align-items: center;
+        }
+
+        >ul {
+            display: flex;
+            list-style: none;
+
+            >li {
+                color: white;
+                cursor: pointer;
+            }
+        }
+
+        .nav-links {
+            gap: 20px;
+            font-weight: bold;
+        }
+    }
+
+    .btn-group {
+        justify-content: flex-end;
+        gap: 20px;
+        list-style: none;
+        margin-bottom: 0px;
+        align-items: center;
+
+        .btn-white {
+            color: #000;
+            border-radius: 8px;
+        }
+    }
+}

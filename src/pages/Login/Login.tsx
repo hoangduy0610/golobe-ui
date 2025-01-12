@@ -1,13 +1,13 @@
-import MainApiRequest from '@/redux/apis/MainApiRequest';
-import { message, Spin, Card, Form, Input, Button, Row, Col, Typography } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import login1 from '@/assets/Login1.png';
 import login2 from '@/assets/Login2.jpg';
 import login3 from '@/assets/Login3.jpg';
 import login4 from '@/assets/Login4.jpg';
-import bglogin from '@/assets/BG-Login.jpg';
 import logo from '@/assets/logo.png'; // Logo
+import FloatInput from '@/components/FloatInput/FloatInput';
+import MainApiRequest from '@/redux/apis/MainApiRequest';
+import { Card, Spin, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Login.scss';
 
 const Login: React.FC = () => {
@@ -54,111 +54,97 @@ const Login: React.FC = () => {
     }, []);
 
     return (
-        <div
-            className="h-100 bg-login"
-            style={{
-                backgroundImage: `url(${bglogin})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-            }}
-        >
-            <Spin spinning={isLoggingIn} size="large" tip="Logging in...">
-                <Row className="h-100" justify="center" align="middle">
-                    {/* Image Card */}
-                    <Col xs={24} sm={12} md={12} lg={12}>
-                        <Card className="login-image-card shadow">
-                            <img
-                                src={currentImage}
-                                alt="Illustrative image"
-                                className="img-fluid rounded"
-                            />
-                        </Card>
-                    </Col>
+        <div className="container-fluid justify-content-center d-flex login-page">
+            <div className="row w-100" style={{ marginTop: 50, maxWidth: 1000 }}>
+                <div className="col-6">
+                    <img src={logo} alt="logo" className="logo" width={80} />
+                    <h2 className='mt-4'>Login</h2>
+                    <p className='mt-2'>Login to access your Golobe resource</p>
+                    <FloatInput
+                        label="Email"
+                        placeholder="Email"
+                        name="email"
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        value={email}
+                        style={{ marginTop: 20 }}
+                        inputStyle={{
+                            minHeight: 50,
+                        }}
+                    />
+                    <FloatInput
+                        label="Password"
+                        placeholder="Password"
+                        name="password"
+                        type="password"
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        value={password}
+                        style={{ marginTop: 20 }}
+                        inputStyle={{
+                            minHeight: 50,
+                        }}
+                    />
+                    <div className="d-flex flex-row justify-content-between align-items-center my-4">
+                        <div className="form-check">
+                            <input className="form-check-input" type="checkbox" id="flexCheckDefault" />
+                            <label className="form-check-label" htmlFor="flexCheckDefault">
+                                Remember me
+                            </label>
+                        </div>
+                        <Link to="#" className="forgot-password">Forgot password?</Link>
+                    </div>
+                    <button
+                        style={{ height: 50 }}
+                        onClick={handleLogin}
+                        disabled={isLoggingIn}
+                        className='btn d-block w-100 btn-primary'
+                    >
+                        {isLoggingIn ? <Spin /> : 'Login'}
+                    </button>
+                    <div className="d-flex flex-row justify-content-center gap-2 align-items-center mt-4">
+                        <p className='m-0'>Don't have an account?</p>
+                        <Link to="/register" className="register">Sign up</Link>
+                    </div>
 
-                    {/* Login Form Card */}
-                    <Col xs={24} sm={12} md={12} lg={12}>
-                        <Card className="login-form-card shadow">
-                            <Row justify="center" align="middle">
-                                <Col span={24} className="text-center">
-                                    {/* Logo */}
-                                    <img src={logo} alt="Golobe Logo" className="login-logo" />
-                                    {/* Title "LOGIN" */}
-                                    <Typography.Title level={2}>
-                                        LOGIN
-                                    </Typography.Title>
-                                    {/* Description */}
-                                    <Typography.Text type="secondary">
-                                        Login to access your Golobe account
-                                    </Typography.Text>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col span={24}>
-                                    <Form layout="vertical" onFinish={handleLogin}>
-                                        <Form.Item
-                                            label="E-Mail"
-                                            name="email"
-                                            rules={[{ required: true, message: 'Please enter your email' }, { type: 'email', message: 'Invalid email' }]}
-                                        >
-                                            <Input
-                                                value={email}
-                                                onChange={(e) => setEmail(e.target.value)}
-                                                placeholder="Enter your email"
-                                            />
-                                        </Form.Item>
-                                        <Form.Item
-                                            label="Password"
-                                            name="password"
-                                            rules={[{ required: true, message: 'Please enter your password' }]}
-                                        >
-                                            <Input.Password
-                                                value={password}
-                                                onChange={(e) => setPassword(e.target.value)}
-                                                placeholder="Enter your password"
-                                            />
-                                        </Form.Item>
-                                        <Form.Item>
-                                            <div className="d-flex justify-content-between">
-                                                <a href="forgot.html" style={{ fontWeight: 'bold', color: 'black' }}>
-                                                    Forgot password
-                                                </a>
-                                            </div>
-                                        </Form.Item>
-                                        <Form.Item>
-                                            <Button
-                                                type="primary"
-                                                htmlType="submit"
-                                                block
-                                                disabled={isLoggingIn}
-                                                style={{ backgroundColor: '#8DD3BB', borderColor: '#8DD3BB' }}
-                                            >
-                                                Login
-                                            </Button>
-                                        </Form.Item>
-                                        {/* Sign up text and link */}
-                                        <Form.Item>
-                                            <div className="d-flex justify-content-between">
-                                                <Typography.Text type="secondary">
-                                                    Don’t have an account?
-                                                    <Link to="/sign-up" style={{ fontWeight: 'bold', color: 'black' }}>
-                                                        Sign up
-                                                    </Link>
-                                                </Typography.Text>
-                                            </div>
-                                        </Form.Item>
-                                    </Form>
-                                </Col>
-                            </Row>
-                        </Card>
-                    </Col>
-                </Row>
-            </Spin>
-        </div>
+                    {/* Or signin with divider */}
+                    <div className="d-flex flex-row justify-content-center align-items-center" style={{ marginTop: 50, marginBottom: 20 }}>
+                        <div className="divider" />
+                        <p className="m-0 mx-2" style={{ color: "#ccc" }}>Or sign in with</p>
+                        <div className="divider" />
+                    </div>
+
+                    {/* Bootstrap button groups with 3 button outline primary */}
+                    <div className="d-flex flex-row justify-content-center align-items-center gap-2">
+                        <button className="d-flex flex-1 justify-content-center btn btn-outline-primary">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Facebook_Logo_2023.png" alt="google" height={24} />
+                        </button>
+                        <button className="d-flex flex-1 justify-content-center btn btn-outline-primary">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt="google" height={24} />
+                        </button>
+                        <button className="d-flex flex-1 justify-content-center btn btn-outline-primary">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/625px-Apple_logo_black.svg.png" alt="google" height={24} />
+                        </button>
+                    </div>
+                </div>
+                <div className="col-6">
+                    <Card
+                        style={{ width: '100%', maxHeight: 565, aspectRatio: '9/16' }}
+                        cover={
+                            <div style={{ overflow: "hidden", height: '100%' }}>
+                                <img src={currentImage} alt="login" className="login-image" />
+                            </div>
+                        }
+                        className="login-card">
+                        <div className="indicator">
+                            {images.map((image, index) => (
+                                <div key={index} className={`indicator-dot ${currentImage === image ? 'active' : ''}`} />
+                            ))}
+                        </div>
+                    </Card>
+                </div>
+            </div>
+        </div >
     );
 };
 

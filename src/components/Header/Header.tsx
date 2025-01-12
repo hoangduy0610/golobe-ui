@@ -57,7 +57,7 @@ export default function Header() {
                     ) : (
                         <>
                             <li><Link to="/login">Login</Link></li>
-                            <li className="btn btn-white">Sign Up</li>
+                            <li className="btn btn-white" onClick={() => { window.location.href = "/register" }}>Sign up</li>
                         </>
                     )}
                 </ul>
