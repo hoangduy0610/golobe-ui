@@ -84,7 +84,7 @@ export function Blog() {
                                                     <h4 className="featured-title">{explore.title}</h4>
                                                     <p className="featured-description">{htmlNormalizer(explore.content).slice(0, 100)}</p>
                                                     <p className="post-by">Post by <strong>{explore.user.name}</strong></p>
-                                                    <img src={share} alt="Share" className="share-icon" />
+                                                    {/* <img src={share} alt="Share" className="share-icon" /> */}
                                                 </div>
                                             </div>
                                         </Link>

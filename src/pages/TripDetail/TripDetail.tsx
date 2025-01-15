@@ -321,18 +321,7 @@ function TripDetail() {
                             >
                                 Itinerary
                             </button>
-                            <button
-                                className={`tab-button ${activeTab === 'favourite' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('favourite')}
-                            >
-                                Favourite
-                            </button>
-                            <button
-                                className={`tab-button ${activeTab === 'foryou' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('foryou')}
-                            >
-                                For You
-                            </button>
+
                         </div>
                         <div className="tab-content">
                             {activeTab === 'itinerary' && renderItineraries()}
