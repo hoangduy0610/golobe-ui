@@ -42,11 +42,11 @@ export default function Header() {
                     <li><Link to="/blog">Blog</Link></li>
                     <li><Link to="/forum">Forum</Link></li>
                     <li><Link to="/chat">Chat</Link></li>
-                    {
+                    {/* {
                         isAdmin && (
                             <li><Link to="/admin">Admin</Link></li>
                         )
-                    }
+                    } */}
                 </ul>
                 <ul className="btn-group">
                     {isLogin ? (

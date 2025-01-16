@@ -13,13 +13,14 @@ import MainApiRequest from "@/redux/apis/MainApiRequest";
 import moment from "moment";
 import React, { useEffect, useState } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./TripDetail.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faPhoneAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Form, Input, Modal } from "antd";
 
 function TripDetail() {
+    const navigate = useNavigate();
     const [modal, contextHolder] = Modal.useModal()
     const [form] = Form.useForm();
     // Retrive id from route params
@@ -123,11 +124,12 @@ function TripDetail() {
     };
 
     const handleItemClick = (item: any, day: number) => {
-        setSelectedItem({
-            ...item,
-            selectedDay: day,
-        });
-        setIsDetailTabOpen(true);
+        // setSelectedItem({
+        //     ...item,
+        //     selectedDay: day,
+        // });
+        // setIsDetailTabOpen(true);
+        navigate(`/services/${item?.service?.id}`);
     };
 
     const handleRemoveServiceFromDay = async () => {
