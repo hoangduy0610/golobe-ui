@@ -61,7 +61,8 @@ function Trips() {
             description: tripDescription,
             startDate: tripStartDate,
             endDate: tripEndDate,
-            locationId: parseInt(tripLocation)
+            locationId: parseInt(tripLocation),
+            visibility: 'private'
         });
 
         if (response.status === 200) {

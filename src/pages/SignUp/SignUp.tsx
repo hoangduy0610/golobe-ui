@@ -31,7 +31,7 @@ const SignUp: React.FC = () => {
 
         setIsSigningUp(true);
         try {
-            const res = await MainApiRequest.post('/auth/signup', {
+            const res = await MainApiRequest.post('/auth/register', {
                 name: fullName,
                 email,
                 password
