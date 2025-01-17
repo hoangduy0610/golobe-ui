@@ -89,9 +89,14 @@ const Services: React.FC = () => {
                                                     {service.description}
                                                 </Paragraph>
                                                 <p><strong>Price Range:</strong> {service.priceRange.toUpperCase()}</p>
-                                                <Link to={service.website}>
-                                                    <Button className="service-button btn w-100 btn-outline-primary" type="link">Booking</Button>
-                                                </Link>
+                                                <Button
+                                                    className="service-button btn w-100 btn-outline-primary"
+                                                    onClick={(e) => {
+                                                        e.preventDefault()
+                                                        e.stopPropagation()
+                                                        window.open(service.website, "_blank")
+                                                    }}
+                                                >Booking</Button>
                                                 <Link to={`/services/${service.id}`}>
                                                     <Button className="service-button" type="primary">Details</Button>
                                                 </Link>
