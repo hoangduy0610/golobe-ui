@@ -1,5 +1,5 @@
 import Footer from "@/components/Footer/Footer";
-import Header from "@/components/Header/Header";
+import MiniHeader from "@/components/Header/MiniHeader";
 import React, { useEffect } from "react";
 import "./Chat.scss";
 import { Card } from "antd";
@@ -125,7 +125,7 @@ const Chat: React.FC = () => {
         <>
             <div className="app">
                 <div className="container-fluid">
-                    <Header />
+                    <MiniHeader />
                     <div className="container mt-3">
                         <h1 className="text-center">Chat with Golobe</h1>
 

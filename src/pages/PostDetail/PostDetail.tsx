@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Button, Row, Col, Avatar, Typography, Space, Pagination, Card, Breadcrumb, Input, Form } from 'antd';
 import './PostDetail.scss';
 import Footer from '@/components/Footer/Footer';
-import Header from '@/components/Header/Header';
+import MiniHeader from '@/components/Header/MiniHeader';
 import MainApiRequest from '@/redux/apis/MainApiRequest';
 import moment from 'moment';
 
@@ -88,7 +88,7 @@ const PostDetail: React.FC = () => {
             <div className="post-detail-container">
                 <div className="app">
                     <div className="container-fluid">
-                        <Header />
+                        <MiniHeader />
                         <div className="container">
                             <Breadcrumb className="my-3">
                                 <Breadcrumb.Item>

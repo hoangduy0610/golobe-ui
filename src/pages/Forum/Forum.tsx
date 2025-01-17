@@ -3,11 +3,11 @@ import { Table, Button, Modal, Input, Form, message } from 'antd';
 import { Link } from 'react-router-dom'; // Đảm bảo import Link từ react-router-dom
 import { Container, Row, Col } from 'react-bootstrap';
 import Footer from '@/components/Footer/Footer';
-import Headers from '@/components/Header/Header';
 import './Forum.scss';
 import axios from 'axios';
 import moment from 'moment';
 import MainApiRequest from '@/redux/apis/MainApiRequest';
+import MiniHeader from '@/components/Header/MiniHeader';
 
 interface Topic {
     id: number;
@@ -92,7 +92,7 @@ const Forum: React.FC = () => {
             <div className="forum-page">
                 <div className="app">
                     <div className="container-fluid">
-                        <Headers />
+                        <MiniHeader />
                         <div className="container">
                             <Row className="mb-4">
                                 <Col>

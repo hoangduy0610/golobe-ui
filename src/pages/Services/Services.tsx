@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Button, Input, Rate, Pagination } from "antd";
 import { Link } from "react-router-dom";
 import "./Services.scss";
-import Header from "@/components/Header/Header";
+import MiniHeader from "@/components/Header/MiniHeader";
 import Footer from "@/components/Footer/Footer";
 import hotelImage from "@/assets/hotel.jpg";
 import MainApiRequest from "@/redux/apis/MainApiRequest";
@@ -61,13 +61,13 @@ const Services: React.FC = () => {
             <div className="services-page">
                 <div className="app">
                     <div className="container-fluid">
-                        <Header />
+                        <MiniHeader />
                         <div className="container">
-                            <section className="card shadow my-4 px-4 border-0">
+                            {/* <section className="card shadow my-4 px-4 border-0">
                                 <div className="card-body">
                                     <Input className="bg-secondary py-3" placeholder="Search" />
                                 </div>
-                            </section>
+                            </section> */}
                             <h1 className="page-title">Discovery</h1>
                             <Row gutter={16}>
                                 {currentServices.map((service) => (

@@ -8,7 +8,7 @@ import setting from "@/assets/setting.png";
 import sharePlan from "@/assets/share_plan.png";
 import twitterIcon from "@/assets/twitter_icon.svg";
 import youtubeIcon from "@/assets/youtube_icon.svg";
-import Header from "@/components/Header/Header";
+import MiniHeader from "@/components/Header/MiniHeader";
 import MainApiRequest from "@/redux/apis/MainApiRequest";
 import moment from "moment";
 import React, { useEffect, useState } from 'react';
@@ -295,14 +295,14 @@ function TripDetail() {
         <div className="trip_detail_page">
             <div className="app">
                 <div className="container-fluid">
-                    <Header />
+                    <MiniHeader />
                     <div className="container">
                         {contextHolder}
-                        <section className="card shadow my-4 px-4 border-0">
+                        {/* <section className="card shadow my-4 px-4 border-0">
                             <div className="card-body">
                                 <input type="text" className="form-control bg-secondary py-3" placeholder="Search" />
                             </div>
-                        </section>
+                        </section> */}
                         <div className="frame" style={{ backgroundImage: `url(${trip?.location?.featureImage})` }}>
                             <div className="frame-header" hidden={!isOwner}>
                                 {/* <button className="button button-invite">

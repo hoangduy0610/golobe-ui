@@ -4,7 +4,7 @@ import { Breadcrumb, Card, Typography, Row, Col, Divider, Carousel, Button, List
 import { EnvironmentOutlined, PhoneOutlined, GlobalOutlined, DollarOutlined } from "@ant-design/icons";
 import "./ServiceDetail.scss";
 import Footer from "@/components/Footer/Footer";
-import Header from "@/components/Header/Header";
+import MiniHeader from "@/components/Header/MiniHeader";
 import hotelImage from "@/assets/hotel.jpg";
 import CustomComment from "./CustomComment";
 import MainApiRequest from "@/redux/apis/MainApiRequest";
@@ -120,7 +120,7 @@ const ServiceDetails: React.FC = () => {
         <div className="service-details-page">
             <div className="app">
                 <div className="container-fluid">
-                    <Header />
+                    <MiniHeader />
                     <div className="container">
                         <Breadcrumb className="my-3">
                             <Breadcrumb.Item>

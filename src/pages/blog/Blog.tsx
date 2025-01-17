@@ -4,7 +4,7 @@ import { Pagination, Input } from "antd";  // Sử dụng Pagination và Input t
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Header from "@/components/Header/Header";
+import MiniHeader from "@/components/Header/MiniHeader";
 import Footer from "@/components/Footer/Footer";
 import beachImage from "@/assets/Beach.jpg";
 import share from "@/assets/share.png";
@@ -58,13 +58,13 @@ export function Blog() {
         <div className="blog_page">
             <div className="app">
                 <div className="container-fluid">
-                    <Header />
+                    <MiniHeader />
                     <div className="container">
-                        <section className="card shadow my-4 px-4 border-0">
+                        {/* <section className="card shadow my-4 px-4 border-0">
                             <div className="card-body">
                                 <Input className="search-input" placeholder="Search" />
                             </div>
-                        </section>
+                        </section> */}
 
                         {/* Featured Explore Section */}
                         <section className="featured-explore-section my-4">

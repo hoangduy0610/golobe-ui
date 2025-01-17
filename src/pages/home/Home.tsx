@@ -86,11 +86,11 @@ export function Home() {
                         <Header />
                         <div className="container">
                             {/* Search Input */}
-                            <section className="card shadow my-4 px-4 border-0">
+                            {/* <section className="card shadow my-4 px-4 border-0">
                                 <div className="card-body">
                                     <Input className="bg-secondary py-3" placeholder="Search" />
                                 </div>
-                            </section>
+                            </section> */}
 
                             {/* Plan your perfect trip */}
                             <section className="my-4">

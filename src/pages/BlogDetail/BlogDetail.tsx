@@ -3,7 +3,7 @@ import { Breadcrumb, Button, Card } from "antd";
 import { Link, useParams } from "react-router-dom";
 import { Row, Col, Container } from "react-bootstrap";
 import "./BlogDetail.scss";
-import Header from "@/components/Header/Header";
+import MiniHeader from "@/components/Header/MiniHeader";
 import beachImage from "@/assets/Beach.jpg";
 import Footer from "@/components/Footer/Footer";
 import MainApiRequest from "@/redux/apis/MainApiRequest";
@@ -29,7 +29,7 @@ const BlogDetail = () => {
             <div className="blog-detail-page">
                 <div className="app">
                     <div className="container-fluid">
-                        <Header />
+                        <MiniHeader />
                         <div className="container-fluid w-75">
                             <Breadcrumb className="my-3">
                                 <Breadcrumb.Item>

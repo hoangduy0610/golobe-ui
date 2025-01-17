@@ -4,7 +4,7 @@ import instagramIcon from "@/assets/instagram_icon.svg";
 import newsletter from "@/assets/newsletter.svg";
 import twitterIcon from "@/assets/twitter_icon.svg";
 import youtubeIcon from "@/assets/youtube_icon.svg";
-import Header from "@/components/Header/Header";
+import MiniHeader from "@/components/Header/MiniHeader";
 import "./Trips.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar, faLocation, faLocationPin } from "@fortawesome/free-solid-svg-icons";
@@ -79,16 +79,16 @@ function Trips() {
         <div className="trips_page">
             <div className="app">
                 <div className="container-fluid">
-                    <Header />
+                    <MiniHeader />
                     <div className="container">
-                        <section className="card shadow my-4 px-4 border-0">
+                        {/* <section className="card shadow my-4 px-4 border-0">
                             <div className="card-body">
                                 <input type="text" className="form-control bg-secondary py-3" placeholder="Search" />
                             </div>
-                        </section>
+                        </section> */}
 
-                        <section>
-                            <h2>My Trips</h2>
+                        <section className="my-4">
+                            <h2 className="mt-3">My Trips</h2>
                             <button className="btn btn-primary my-2" onClick={handleOpenCreateModal}>Create a new trip</button>
                             {listTrips.map((trip, index) => (
                                 <div className="card mb-3" onClick={navigateToDetail(trip.id)}>
