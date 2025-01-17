@@ -101,10 +101,10 @@ const ServiceTypePage: React.FC = () => {
       render: (_: any, serviceType: any) => (
         <div className="d-flex gap-2">
           <Button type="primary" onClick={() => handleEdit(serviceType)}>
-            Edit
+            <i className="fas fa-edit"></i>
           </Button>
           <Button type="primary" danger onClick={() => handleDelete(serviceType.id)}>
-            Delete
+            <i className="fas fa-trash"></i>
           </Button>
         </div>
       ),

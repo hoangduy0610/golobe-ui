@@ -46,11 +46,11 @@ export default function MiniHeader() {
                     <li className={`${isActive("/") ? 'active' : ''}`}><Link to="/blog">Blog</Link></li>
                     <li className={`${isActive("/") ? 'active' : ''}`}><Link to="/forum">Forum</Link></li>
                     <li className={`${isActive("/") ? 'active' : ''}`}><Link to="/chat">Chat</Link></li>
-                    {
+                    {/* {
                         isAdmin && (
                             <li className={`${isActive("/") ? 'active' : ''}`}><Link to="/admin">Admin</Link></li>
                         )
-                    }
+                    } */}
                 </ul>
             </nav>
             <ul className="btn-group">

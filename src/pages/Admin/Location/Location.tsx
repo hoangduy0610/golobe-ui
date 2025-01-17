@@ -116,10 +116,10 @@ const LocationPage: React.FC = () => {
       render: (_: any, location: LocationType) => (
         <div className="d-flex gap-2">
           <Button type="primary" onClick={() => handleEdit(location)}>
-            Edit
+            <i className="fas fa-edit"></i>
           </Button>
           <Button type="primary" danger onClick={() => handleDelete(location.id)}>
-            Delete
+            <i className="fas fa-trash"></i>
           </Button>
         </div>
       ),

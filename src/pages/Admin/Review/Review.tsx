@@ -44,6 +44,7 @@ const ReviewPage: React.FC = () => {
       title: 'Rating',
       dataIndex: 'rating',
       key: 'rating',
+      width: 200,
       render: (rating: number) => (<Rate disabled value={rating} />),
     },
     {

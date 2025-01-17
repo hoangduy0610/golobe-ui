@@ -134,7 +134,7 @@ const PlanPage: React.FC = () => {
             Delete
           </Button> */}
           <Button type="primary" onClick={() => navigate(`/trip-detail/${plan.id}`)}>
-            View
+            <i className="fas fa-link"></i>
           </Button>
         </div>
       ),

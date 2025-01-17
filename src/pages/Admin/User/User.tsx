@@ -98,10 +98,10 @@ const UserPage: React.FC = () => {
       render: (_: any, user: any) => (
         <div className="d-flex gap-2">
           <Button type="primary" onClick={() => handleEdit(user)}>
-            Edit
+            <i className="fas fa-edit"></i>
           </Button>
           <Button type="primary" danger onClick={() => handleDelete(user.id)}>
-            Delete
+            <i className="fas fa-trash"></i>
           </Button>
         </div>
       ),

@@ -132,13 +132,15 @@ const BlogPage: React.FC = () => {
       key: 'title',
     },
     {
-      title: 'Preview Content',
+      title: 'Content',
       dataIndex: 'content',
       key: 'content',
       render: (content: string) => <Button onClick={() => {
         setPreviewContent(content)
         setShowPreview(true)
-      }}>Preview</Button>,
+      }}>
+        <i className="fas fa-eye"></i>
+      </Button>,
     },
     {
       title: 'Author',
@@ -163,14 +165,14 @@ const BlogPage: React.FC = () => {
       key: 'actions',
       render: (_: any, blog: any) => (
         <div className="d-flex gap-2">
-          <Button type="primary" onClick={() => handleDuplicate(blog)}>
-            Duplicate
+          <Button onClick={() => handleDuplicate(blog)}>
+            <i className="fas fa-copy"></i>
           </Button>
           <Button type="primary" onClick={() => handleEdit(blog)}>
-            Edit
+            <i className="fas fa-edit"></i>
           </Button>
           <Button type="primary" danger onClick={() => handleDelete(blog.id)}>
-            Delete
+            <i className="fas fa-trash"></i>
           </Button>
         </div>
       ),

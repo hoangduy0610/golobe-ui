@@ -198,16 +198,16 @@ const ServicePage: React.FC = () => {
       dataIndex: 'phone',
       key: 'phone',
     },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-    },
-    {
-      title: 'Website',
-      dataIndex: 'website',
-      key: 'website',
-    },
+    // {
+    //   title: 'Email',
+    //   dataIndex: 'email',
+    //   key: 'email',
+    // },
+    // {
+    //   title: 'Website',
+    //   dataIndex: 'website',
+    //   key: 'website',
+    // },
     {
       title: 'Features',
       dataIndex: 'features',
@@ -233,10 +233,10 @@ const ServicePage: React.FC = () => {
       render: (_: any, service: ServiceType) => (
         <div className="d-flex gap-2">
           <Button type="primary" onClick={() => handleEdit(service)}>
-            Edit
+            <i className="fas fa-edit"></i>
           </Button>
           <Button type="primary" danger onClick={() => handleDelete(service?.id)}>
-            Delete
+            <i className="fas fa-trash"></i>
           </Button>
         </div>
       ),
@@ -276,6 +276,7 @@ const ServicePage: React.FC = () => {
       </Button>
 
       <Table
+        tableLayout='auto'
         columns={columns}
         dataSource={services}
         rowKey="id"

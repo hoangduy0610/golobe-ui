@@ -66,7 +66,7 @@ const ForumPage: React.FC = () => {
       render: (_: any, post: any) => (
         <div className="d-flex gap-2">
           <Button type="primary" danger onClick={() => handleDelete(post.id)}>
-            Delete
+            <i className="fas fa-trash"></i>
           </Button>
         </div>
       ),
