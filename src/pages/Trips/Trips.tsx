@@ -32,6 +32,17 @@ function Trips() {
         listLocation(response.data);
     }
 
+    const handleRemoveTrip = async (id: number) => {
+        const confirmDelete = window.confirm("Are you sure you want to remove this trip?");
+        if (confirmDelete) {
+            const response = await MainApiRequest.delete(`/plan/${id}`);
+            if (response.status === 200) {
+                // Cập nhật danh sách sau khi xóa
+                fetchTrips();
+            }
+        }
+    };
+
     useEffect(() => {
         if (listTrips.length === 0) {
             fetchTrips();
@@ -113,6 +124,27 @@ function Trips() {
                                                 <p className="card-text">
                                                     <FontAwesomeIcon icon={faLocation} /> {trip.location.name}, {trip.location.address}
                                                 </p>
+                                                {/* Buttons for Edit and Remove */}
+                                                <div className="action-buttons">
+                                                    <button
+                                                        className="btn btn-secondary"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            navigateToDetail(trip.id)();
+                                                        }}
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-danger"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleRemoveTrip(trip.id);
+                                                        }}
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
