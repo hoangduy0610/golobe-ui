@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import logo from "@/assets/logo.svg";
 import "./Header.css";
 import MainApiRequest from '@/redux/apis/MainApiRequest';
+import { Avatar } from 'antd';
+import defaultAvatar from '@/assets/avatar.jpeg';
 
 export default function Header() {
     const isLogin = localStorage.getItem('token');
@@ -51,7 +53,10 @@ export default function Header() {
                 <ul className="btn-group">
                     {isLogin ? (
                         <>
-                            <li className='fw-bold'><Link to="/profile">Hello, {user?.name?.split(' ')[user?.name?.split(' ')?.length - 1]}</Link></li>
+                            <li className='fw-bold'><Link to="/profile">
+                                <Avatar src={user?.avatar || defaultAvatar} className='me-2' />
+                                Hello, {user?.name?.split(' ')[user?.name?.split(' ')?.length - 1]}
+                            </Link></li>
                             <li className="btn btn-white" onClick={handleLogout}>Logout</li>
                         </>
                     ) : (
