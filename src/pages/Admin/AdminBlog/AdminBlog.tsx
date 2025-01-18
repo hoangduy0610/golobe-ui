@@ -66,7 +66,9 @@ const BlogPage: React.FC = () => {
   const handleDelete = async (id: number) => {
     try {
       // Simulate deletion by removing it from the list
-      setBlogs(blogs.filter(blog => blog.id !== id));
+      // setBlogs(blogs.filter(blog => blog.id !== id));
+      await AdminApiRequest.delete(`/blog/${id}`);
+      fetchBlogs();
       message.success('Blog deleted successfully!');
     } catch (err) {
       message.error('Failed to delete blog');
@@ -210,7 +212,7 @@ const BlogPage: React.FC = () => {
         dataSource={blogs}
         rowKey="id"
         loading={loading}
-        pagination={{ pageSize: 5 }}
+        pagination={{ showSizeChanger: true }}
       />
 
       <Modal

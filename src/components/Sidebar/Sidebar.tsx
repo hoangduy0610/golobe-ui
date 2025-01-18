@@ -61,7 +61,7 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <div className="d-flex flex-column align-items-center w-100 min-vh-100 sidebar px-2">
+    <div className="d-flex flex-column align-items-center w-100 min-vh-100 h-100 sidebar px-2">
       <h1 className="logo">
         {/* <img src={require("@/assets/logo.jpg")} alt="Logo" style={{ height: 150, width: 'auto' }} /> */}
       </h1>

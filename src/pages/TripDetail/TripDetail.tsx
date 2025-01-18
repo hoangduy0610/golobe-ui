@@ -17,7 +17,7 @@ import { useNavigate, useNavigation, useParams } from "react-router-dom";
 import "./TripDetail.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faPhoneAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { Form, Input, Modal, Select, message } from "antd";
+import { Button, Form, Input, Modal, Select, message } from "antd";
 import { LoadingOverlay } from "@achmadk/react-loading-overlay";
 import Footer from "@/components/Footer/Footer";
 
@@ -179,6 +179,17 @@ function TripDetail() {
         navigate(`/services/${item?.service?.id}`);
     };
 
+    const handleDeleteScheduleItem = async (item: any, day: number) => {
+        await MainApiRequest.delete(`/plan/schedule/item`, {
+            data: {
+                planId: trip.id,
+                serviceId: item?.service?.id,
+                day: day,
+            }
+        });
+        fetchTrip(id);
+    }
+
     const handleRemoveServiceFromDay = async () => {
         if (!selectedItem) return;
         await MainApiRequest.delete(`/plan/schedule/item`, {
@@ -240,6 +251,17 @@ function TripDetail() {
                                             <p> <FontAwesomeIcon icon={faLocationDot} /> {item?.service?.address}</p>
                                             <p> <FontAwesomeIcon icon={faPhoneAlt} /> {item?.service?.phone}</p>
                                         </span>
+                                        {
+                                            isOwner && <Button
+                                                className="me-4"
+                                                danger
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDeleteScheduleItem(item, schedule.day);
+                                                }}>
+                                                <FontAwesomeIcon icon={faTrash} />
+                                            </Button>
+                                        }
                                     </div>
                                 ))
                             }

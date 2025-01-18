@@ -3,6 +3,7 @@ import { Table, Button, message, Rate } from 'antd';
 import axios from 'axios';
 import AdminApiRequest from '@/redux/apis/AdminApiRequest';
 import { render } from '@testing-library/react';
+import { title } from 'process';
 
 const ReviewPage: React.FC = () => {
   const [reviews, setReviews] = useState<any[]>([]);
@@ -26,6 +27,20 @@ const ReviewPage: React.FC = () => {
 
     fetchReviews();
   }, []);
+
+  const handleDelete = async (id: number) => {
+    try {
+      const res = await AdminApiRequest.delete(`/review/${id}`);
+      if (res.status === 200) {
+        message.success('Review deleted successfully');
+        setReviews(reviews.filter((review) => review.id !== id));
+      } else {
+        message.error('Failed to delete review');
+      }
+    } catch (err) {
+      message.error('Failed to delete review');
+    }
+  };
 
   const columns = [
     {
@@ -52,6 +67,15 @@ const ReviewPage: React.FC = () => {
       dataIndex: 'comment',
       key: 'comment',
     },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (record: any) => (
+        <Button danger onClick={() => handleDelete(record.id)}>
+          <i className="fas fa-trash"></i>
+        </Button>
+      ),
+    }
   ];
 
   return (
@@ -65,7 +89,9 @@ const ReviewPage: React.FC = () => {
         dataSource={reviews}
         rowKey="id"
         loading={loading}
-        pagination={{ pageSize: 5 }}
+        pagination={{
+          showSizeChanger: true,
+        }}
       />
     </div>
   );

@@ -123,7 +123,7 @@ const UserPage: React.FC = () => {
         dataSource={users}
         rowKey="id"
         loading={loading}
-        pagination={{ pageSize: 5 }}
+        pagination={{ showSizeChanger: true }}
       />
 
       <Modal

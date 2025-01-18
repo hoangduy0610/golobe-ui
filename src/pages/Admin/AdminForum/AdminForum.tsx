@@ -84,7 +84,7 @@ const ForumPage: React.FC = () => {
         dataSource={forumPosts}
         rowKey="id"
         loading={loading}
-        pagination={{ pageSize: 5 }}
+        pagination={{ showSizeChanger: true }}
       />
     </div>
   );

@@ -139,7 +139,7 @@ const LocationPage: React.FC = () => {
         dataSource={locationList}
         rowKey="id"
         loading={loadingLocationList}
-        pagination={{ pageSize: 5 }}
+        pagination={{ showSizeChanger: true }}
       />
 
       <Modal

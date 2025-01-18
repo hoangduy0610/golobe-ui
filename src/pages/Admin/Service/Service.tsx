@@ -294,7 +294,7 @@ const ServicePage: React.FC = () => {
         dataSource={services}
         rowKey="id"
         loading={loading}
-        pagination={{ pageSize: 5 }}
+        pagination={{ showSizeChanger: true }}
       />
 
       <Modal

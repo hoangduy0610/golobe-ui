@@ -156,7 +156,7 @@ const PlanPage: React.FC = () => {
         dataSource={plans}
         rowKey="id"
         loading={loading}
-        pagination={{ pageSize: 5 }}
+        pagination={{ showSizeChanger: true }}
       />
 
       <Modal
