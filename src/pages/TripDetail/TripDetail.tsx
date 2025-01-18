@@ -13,11 +13,11 @@ import MainApiRequest from "@/redux/apis/MainApiRequest";
 import moment from "moment";
 import React, { useEffect, useState } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
-import { useNavigate, useNavigation, useParams } from "react-router-dom";
+import { Link, useNavigate, useNavigation, useParams } from "react-router-dom";
 import "./TripDetail.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faPhoneAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { Button, Form, Input, Modal, Select, message } from "antd";
+import { Breadcrumb, Button, Form, Input, Modal, Select, message } from "antd";
 import { LoadingOverlay } from "@achmadk/react-loading-overlay";
 import Footer from "@/components/Footer/Footer";
 
@@ -394,12 +394,22 @@ function TripDetail() {
                     <div className="container-fluid">
                         <MiniHeader />
                         <div className="container">
+
                             {contextHolder}
                             {/* <section className="card shadow my-4 px-4 border-0">
                             <div className="card-body">
                                 <input type="text" className="form-control bg-secondary py-3" placeholder="Search" />
                             </div>
                         </section> */}
+                            <Breadcrumb className="my-3">
+                                <Breadcrumb.Item>
+                                    <Link to="/">Home</Link>
+                                </Breadcrumb.Item>
+                                <Breadcrumb.Item>
+                                    <Link to="/trips">Trips</Link>
+                                </Breadcrumb.Item>
+                                <Breadcrumb.Item>{trip?.name}</Breadcrumb.Item>
+                            </Breadcrumb>
                             <div className="frame" style={{ backgroundImage: `url(${trip?.location?.featureImage})` }}>
                                 <div className="frame-header" hidden={!isOwner}>
                                     {/* <button className="button button-invite">
