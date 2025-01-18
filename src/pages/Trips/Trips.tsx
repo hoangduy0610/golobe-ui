@@ -13,6 +13,8 @@ import MainApiRequest from "@/redux/apis/MainApiRequest";
 import moment from "moment";
 import { useNavigate, useNavigation } from "react-router-dom";
 import Footer from "@/components/Footer/Footer";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Button } from "antd";
 
 function Trips() {
     const navigate = useNavigate();
@@ -126,24 +128,28 @@ function Trips() {
                                                 </p>
                                                 {/* Buttons for Edit and Remove */}
                                                 <div className="action-buttons">
-                                                    <button
-                                                        className="btn btn-secondary"
+                                                    <Button
+                                                        type="primary"
+                                                        icon={<EditOutlined />}
+                                                        size="small"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             navigateToDetail(trip.id)();
                                                         }}
                                                     >
                                                         Edit
-                                                    </button>
-                                                    <button
-                                                        className="btn btn-danger"
+                                                    </Button>
+                                                    <Button
+                                                        danger
+                                                        icon={<DeleteOutlined />}
+                                                        size="small"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             handleRemoveTrip(trip.id);
                                                         }}
                                                     >
-                                                        Remove
-                                                    </button>
+                                        
+                                                    </Button>
                                                 </div>
                                             </div>
                                         </div>
