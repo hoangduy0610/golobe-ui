@@ -29,7 +29,7 @@ export function Home() {
     }
 
     const fetchTrips = async () => {
-        const res = await MainApiRequest.get('/plan/list');
+        const res = await MainApiRequest.get('/plan/mine');
         if (res.data.length > 2) {
             setTrips(res.data.slice(0, 2));
         } else {
@@ -103,7 +103,9 @@ export function Home() {
                                     {
                                         services.map((service, index) => (
                                             <Col key={index} md={8} sm={12} xs={24} className="mt-4">
-                                                <Card hoverable>
+                                                <Card hoverable onClick={() => {
+                                                    navigate(`/services/${service.id}`);
+                                                }}>
                                                     <div className="d-flex align-items-center">
                                                         <div className="squircle-img">
                                                             <img src={service.images[0]} className="w-100 h-100" alt="destination" />
@@ -130,7 +132,9 @@ export function Home() {
                                     {
                                         trips.map((trip, index) => (
                                             <Col key={index} md={24} className="mt-4">
-                                                <Card hoverable>
+                                                <Card hoverable onClick={() => {
+                                                    navigate(`/trip-detail/${trip.id}`);
+                                                }}>
                                                     <div className="d-flex align-items-center">
                                                         <div className="squircle-img squircle-img-lg">
                                                             <img src={trip.location.featureImage} className="w-100" alt="trip" />
@@ -168,7 +172,9 @@ export function Home() {
                                     {
                                         reviews.map((review, index) => (
                                             <Col key={index} md={8} sm={12} xs={24} className="mt-4">
-                                                <Card hoverable className="card-review">
+                                                <Card hoverable className="card-review" onClick={() => {
+                                                    navigate(`/services/${review.service.id}`);
+                                                }}>
                                                     <div className="card-body">
                                                         <h4>{review.service.name}</h4>
                                                         <p>{review.comment}</p>
