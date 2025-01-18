@@ -189,6 +189,12 @@
         color: black;
     }
 
+    .card .action-buttons {
+        display: flex;
+        justify-content: end;
+        gap: 0.5rem; /* Khoảng cách giữa các nút */
+      }
+
     /* Nút lưu, xóa và duplicate */
     .form-actions {
         display: flex;
