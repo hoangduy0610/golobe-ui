@@ -4,11 +4,12 @@ import MainApiRequest from '@/redux/apis/MainApiRequest';
 import { LoadingOverlay } from '@achmadk/react-loading-overlay';
 import { faCalendarDays, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Card, Col, Input, Rate, Row } from 'antd';
+import { Avatar, Button, Card, Col, Input, Rate, Row } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "./Home.scss";
+import defaultAvatar from '@/assets/avatar.jpeg';
 
 export function Home() {
     const navigate = useNavigate();
@@ -175,8 +176,13 @@ export function Home() {
                                                         <div className="rating" style={{ margin: '20px 0px' }}>
                                                             <Rate disabled value={review.rating} style={{ fontSize: '24px', color: '#FFC107' }} />
                                                         </div>
-                                                        <strong>{review.user.name}</strong>
-                                                        <p>{moment(review.user.createdAt).format('DD/MM/YYYY')}</p>
+                                                        <div className="d-flex flex-row gap-2">
+                                                            <Avatar src={review?.user?.avatar || defaultAvatar} />
+                                                            <div className="d-flex flex-column">
+                                                                <strong>{review.user.name}</strong>
+                                                                <p>{moment(review.user.createdAt).format('DD/MM/YYYY')}</p>
+                                                            </div>
+                                                        </div>
                                                         <div className="review-img">
                                                             <img src={review.service.images[0]} className="w-100" alt="review" />
                                                         </div>

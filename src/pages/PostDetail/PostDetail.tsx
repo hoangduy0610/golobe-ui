@@ -6,6 +6,7 @@ import Footer from '@/components/Footer/Footer';
 import MiniHeader from '@/components/Header/MiniHeader';
 import MainApiRequest from '@/redux/apis/MainApiRequest';
 import moment from 'moment';
+import avatarDefault from '@/assets/avatar.jpeg';
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
@@ -110,7 +111,7 @@ const PostDetail: React.FC = () => {
                                         {/* Card chứa Avatar và Tên */}
                                         <Card bordered={false} className="post-card">
                                             <Meta
-                                                avatar={<Avatar src={"https://i.pravatar.cc/150?img=3"} />}
+                                                avatar={<Avatar src={post?.user?.avatar || avatarDefault} />}
                                                 title={post?.user?.name}
                                                 description={moment(post?.createdAt).format('DD/MM/YYYY HH:mm')}
                                             />
@@ -131,7 +132,7 @@ const PostDetail: React.FC = () => {
                                                         marginLeft: '10%'
                                                     }}>
                                                         <Meta
-                                                            avatar={<Avatar src={"https://i.pravatar.cc/150?img=3"} />}
+                                                            avatar={<Avatar src={reply?.user?.avatar || avatarDefault} />}
                                                             title={reply?.user?.name}
                                                             description={moment(reply?.createdAt).format('DD/MM/YYYY HH:mm')}
                                                         />

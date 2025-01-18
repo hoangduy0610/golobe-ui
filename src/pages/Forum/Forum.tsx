@@ -8,6 +8,7 @@ import axios from 'axios';
 import moment from 'moment';
 import MainApiRequest from '@/redux/apis/MainApiRequest';
 import MiniHeader from '@/components/Header/MiniHeader';
+import { title } from 'process';
 
 interface Topic {
     id: number;
@@ -22,6 +23,7 @@ const Forum: React.FC = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [form] = Form.useForm();
     const [forumTopics, setForumTopics] = useState<Topic[]>([]);
+    const currentUserId = parseInt(localStorage.getItem('userId') || "0");
 
     const showModal = () => setIsModalVisible(true);
     const handleCancel = () => setIsModalVisible(false);
@@ -74,6 +76,12 @@ const Forum: React.FC = () => {
             ),
         },
         {
+            title: 'Reacts',
+            dataIndex: 'reacts',
+            key: 'reacts',
+            render: (reacts: any[]) => reacts?.length || 0,
+        },
+        {
             title: 'Replies',
             dataIndex: 'replies',
             key: 'replies',
@@ -85,6 +93,28 @@ const Forum: React.FC = () => {
             key: 'lastPost',
             render: (replies: any[]) => replies?.length > 0 ? moment(replies[replies?.length - 1]?.createdAt).fromNow() : 'Never',
         },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (text: string, record: Topic) =>
+                record.user.id === currentUserId && (
+                    <Button
+                        danger
+                        type="primary"
+                        onClick={async () => {
+                            try {
+                                await MainApiRequest.delete(`/forum/${record.id}`);
+                                setForumTopics(forumTopics.filter(topic => topic.id !== record.id));
+                                message.success('Topic deleted successfully!');
+                            } catch (error) {
+                                message.error('Failed to delete topic. Please try again!');
+                            }
+                        }}
+                    >
+                        <i className="fas fa-trash-alt"></i>
+                    </Button >
+                ),
+        }
     ];
 
     return (
@@ -115,7 +145,9 @@ const Forum: React.FC = () => {
                                         columns={columns}
                                         dataSource={forumTopics}
                                         rowKey="id"
-                                        pagination={false}
+                                        pagination={{
+                                            showSizeChanger: true,
+                                        }}
                                     />
                                 </Col>
                             </Row>

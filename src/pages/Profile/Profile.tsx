@@ -2,16 +2,17 @@ import Footer from '@/components/Footer/Footer';
 import MiniHeader from '@/components/Header/MiniHeader';
 import "./Profile.scss";
 import cover from '@/assets/cover_profile.jpeg';
-import avatar from '@/assets/avatar.jpeg';
+import avatarDefault from '@/assets/avatar.jpeg';
 import { Button, Card, Form, Input, Spin, message } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import MainApiRequest from '@/redux/apis/MainApiRequest';
 
 export function Profile() {
     const [form] = Form.useForm();
-
+    const inputFile = useRef<HTMLInputElement | null>(null);
     const [user, setUser] = useState<any>({});
     const [isUpdating, setIsUpdating] = useState(false);
+    const [isUploadingImg, setIsUploadingImg] = useState(false);
 
     const fetchUserInfo = async () => {
         const res = await MainApiRequest.get('/auth/callback');
@@ -45,8 +46,58 @@ export function Profile() {
             });
     }
 
+    const handleUploadAvatar = () => {
+        setIsUploadingImg(true);
+        try {
+            inputFile?.current?.click();
+        } catch (error) {
+            message.error('Update failed');
+        }
+        setIsUploadingImg(false);
+    }
+
+    const onChangeFile = async (event: any) => {
+        setIsUploadingImg(true);
+        try {
+            event.stopPropagation();
+            event.preventDefault();
+            const file = event.target.files[0];
+
+            const formData = new FormData();
+            formData.append('file', file);
+            const res = await MainApiRequest.post('/file/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            const data = {
+                name: user?.name,
+                email: user?.email,
+                avatar: res.data.url
+            }
+
+            const res2 = await MainApiRequest.put(`/user/${user?.id}`, data)
+            message.success('Update successful');
+            setUser({
+                ...user,
+                avatar: res.data.url
+            });
+        } catch (error) {
+            message.error('Update failed');
+        }
+        setIsUploadingImg(false);
+    }
+
     return (
         <>
+            <input
+                type='file'
+                id='file'
+                accept="image/*"
+                ref={inputFile}
+                style={{ display: 'none' }}
+                onChange={onChangeFile}
+            />
             <MiniHeader />
             <div className="profile-page">
                 <div className="app">
@@ -56,9 +107,14 @@ export function Profile() {
                                 <img src={cover} style={{ width: '100%' }} />
                             </div>
                             <div className="avatar">
-                                <img src={avatar} alt="Avatar" />
+                                <img src={user?.avatar || avatarDefault} alt="Avatar" />
                             </div>
                         </div>
+                        <center>
+                            <button className="my-4 btn btn-primary" onClick={handleUploadAvatar}>
+                                {isUploadingImg ? <Spin /> : 'Upload Avatar'}
+                            </button>
+                        </center>
                         <div className="profile-content" style={{}}>
                             <h4 className="text-center fw-bold">{user?.name || 'N/A'}</h4>
                             <p className="text-center">{user?.email || 'N/A'}</p>

@@ -214,6 +214,7 @@ const ServiceDetails: React.FC = () => {
                                 dataSource={service?.reviews}
                                 renderItem={(item) => (
                                     <CustomComment
+                                        avatarAuthor={item?.user?.avatar}
                                         author={item?.user?.name}
                                         content={item.comment}
                                         rating={item.rating}
