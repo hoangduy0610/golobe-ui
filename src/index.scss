@@ -25,3 +25,13 @@ body {
     color: black;
     border: 1px solid black;
 }
+
+.w-md-75 {
+    width: 75%;
+}
+
+@media screen and (max-width: 768px) {
+    .w-md-75 {
+        width: auto;
+    }    
+}
