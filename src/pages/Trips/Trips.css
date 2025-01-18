@@ -194,35 +194,6 @@
         justify-content: end;
         gap: 0.5rem; /* Khoảng cách giữa các nút */
       }
-    
-      .card .action-buttons .btn {
-        font-size: 0.75rem; /* Giảm cỡ chữ nhỏ hơn */
-        padding: 0.2rem 0.4rem; /* Đệm trong nhỏ gọn */
-        border-radius: 0.2rem; /* Góc bo mềm mại */
-        transition: all 0.2s ease-in-out; /* Hiệu ứng hover */
-        line-height: 1.2; /* Chiều cao dòng nhỏ hơn */
-        width: 70px;
-      }
-    
-      .card .action-buttons .btn-secondary {
-        background-color: #8dd3bb;
-        border: none;
-        color: #fff;
-      }
-    
-      .card .action-buttons .btn-secondary:hover {
-        background-color: #68b197; /* Màu tối hơn khi hover */
-      }
-    
-      .card .action-buttons .btn-danger {
-        background-color: #dc3545;
-        border: none;
-        color: #fff;
-      }
-    
-      .card .action-buttons .btn-danger:hover {
-        background-color: #c82333; /* Màu tối hơn khi hover */
-      }    
 
     /* Nút lưu, xóa và duplicate */
     .form-actions {
