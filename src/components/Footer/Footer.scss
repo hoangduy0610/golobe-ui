@@ -26,3 +26,14 @@ footer {
 .p-nm p {
     margin: 5px 0px;
 }
+
+@media screen and (max-width: 768px) {
+    footer .newsletter {
+        left: 10px;
+        width: calc(100% - 20px);
+    }
+
+    .footer-content {
+        padding: 50px 10px;
+    }
+}

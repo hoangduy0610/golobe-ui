@@ -32,7 +32,7 @@ export default function MiniHeader() {
     }
 
     return (
-        <header className="app-mini-header">
+        <header className="app-mini-header d-flex flex-column flex-md-row">
             <nav className="navbar">
                 <div className="logo">
                     <Link to="/">

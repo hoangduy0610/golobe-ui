@@ -34,15 +34,17 @@
     }
 
     .custom-button {
-        background-color: #8DD3BB;  
-        border-color: #8DD3BB;    
-        color: #ffffff;               /* Màu chữ ban đầu */
-        width: 100%;
-        
+        background-color: #8DD3BB;
+        border-color: #8DD3BB;
+        color: #ffffff;
+        /* Màu chữ ban đầu */
+        // width: 100%;
+
         &:hover {
             background-color: darken(#8DD3BB, 10%) !important;
             border-color: darken(#8DD3BB, 10%) !important;
-            color: #ffffff !important;  /* Giữ màu chữ không thay đổi khi hover */
+            color: #ffffff !important;
+            /* Giữ màu chữ không thay đổi khi hover */
         }
     }
 
@@ -95,5 +97,21 @@
 
     .p-nm p {
         margin: 5px 0px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .home_page {
+        .custom-button {
+            white-space: break-spaces;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        .section-header-custom {
+            h2 {
+                max-width: 80%;
+            }
+        }
     }
 }

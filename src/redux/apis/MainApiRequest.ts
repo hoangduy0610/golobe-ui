@@ -34,7 +34,7 @@ MainApiRequest.interceptors.response.use(
             window.location.href = '/login';
         } else {
             // Show error message using antd message
-            message.error(error.message);
+            message.error(error.response.data.message || error.message);
         }
         return Promise.reject(error);
     },

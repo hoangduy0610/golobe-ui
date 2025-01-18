@@ -51,19 +51,20 @@ export function Profile() {
             <div className="profile-page">
                 <div className="app">
                     <div className="container">
-                        <div className="cover mt-4">
-                            <img src={cover} style={{ width: '100%' }} />
-
+                        <div className="cover-container">
+                            <div className="cover mt-4">
+                                <img src={cover} style={{ width: '100%' }} />
+                            </div>
                             <div className="avatar">
                                 <img src={avatar} alt="Avatar" />
                             </div>
                         </div>
-                        <div className="profile-content" style={{ marginTop: 50 }}>
+                        <div className="profile-content" style={{}}>
                             <h4 className="text-center fw-bold">{user?.name || 'N/A'}</h4>
                             <p className="text-center">{user?.email || 'N/A'}</p>
                         </div>
                         <center>
-                            <Card className="mt-4 w-75">
+                            <Card className="mt-4 w-md-75">
                                 <Form
                                     form={form}
                                     layout="vertical"

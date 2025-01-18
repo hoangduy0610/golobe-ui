@@ -5,9 +5,13 @@
         overflow: hidden;
         border-radius: 20px;
 
+
+    }
+
+    .cover-container {
         .avatar {
-            position: absolute;
-            bottom: 30%;
+            position: relative;
+            bottom: 0px;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 100px;

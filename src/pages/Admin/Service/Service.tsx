@@ -18,11 +18,13 @@ interface ServiceType {
   priceRange: string;
   price: string;
   serviceTypeId: number;
+  locationId: number;
   openingHours: Array<Record<string, any>>;
 }
 
 const ServicePage: React.FC = () => {
   const [services, setServices] = useState<ServiceType[]>([]);
+  const [location, setLocation] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [fileList, setFileList] = useState<any[]>([]);
@@ -63,9 +65,19 @@ const ServicePage: React.FC = () => {
     }
   }
 
+  const fetchLocation = async () => {
+    try {
+      const response = await AdminApiRequest.get('/location/list');
+      setLocation(response.data);
+    } catch (err) {
+      setError('Failed to fetch location');
+    }
+  }
+
   useEffect(() => {
-    fetchServices();
+    fetchLocation();
     fetchServiceTypes();
+    fetchServices();
   }, []);
 
   const handleCreate = () => {
@@ -145,10 +157,11 @@ const ServicePage: React.FC = () => {
             hours: hours.hours,
           };
         }),
+        locationId: values.locationId,
       }
 
       if (isEditing && editService) {
-        const updatedService = { ...editService, ...data };
+        const updatedService = { ...data };
         await AdminApiRequest.put(`/service/${editService?.id}`, updatedService);
         setServices(
           services.map(service =>
@@ -305,6 +318,19 @@ const ServicePage: React.FC = () => {
           </Form.Item>
           <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please input the service name!' }]}>
             <Input />
+          </Form.Item>
+          <Form.Item
+            name="locationId"
+            label="Location"
+            rules={[{ required: true, message: 'Please select the location!' }]}
+          >
+            <Select>
+              {location.map((loc) => (
+                <Select.Option key={loc.id} value={loc.id}>
+                  {loc.name}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item
             name="serviceTypeId"

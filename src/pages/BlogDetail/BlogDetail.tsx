@@ -30,7 +30,7 @@ const BlogDetail = () => {
                 <div className="app">
                     <div className="container-fluid">
                         <MiniHeader />
-                        <div className="container-fluid w-75">
+                        <div className="container-fluid w-md-75">
                             <Breadcrumb className="my-3">
                                 <Breadcrumb.Item>
                                     <Link to="/">Home</Link>

@@ -55,11 +55,25 @@ const Login: React.FC = () => {
 
     return (
         <div className="container-fluid justify-content-center d-flex login-page">
-            <div className="row w-100" style={{ marginTop: 50, maxWidth: 1000 }}>
-                <div className="col-6">
+            <div className="row w-100 gap-2 gap-md-0" style={{ marginTop: 50, maxWidth: 1000 }}>
+                <div className="col-12 col-md-6">
                     <img src={logo} alt="logo" className="logo" width={80} />
                     <h2 className='mt-4'>Login</h2>
                     <p className='mt-2'>Login to access your Golobe resource</p>
+                    <Card
+                        style={{ width: '100%', maxHeight: 250, aspectRatio: '16/9' }}
+                        cover={
+                            <div style={{ overflow: "hidden", height: '100%', transform: 'translateY(-50%)' }}>
+                                <img src={currentImage} alt="login" className="login-image" />
+                            </div>
+                        }
+                        className="login-card d-md-none">
+                        <div className="indicator">
+                            {images.map((image, index) => (
+                                <div key={index} className={`indicator-dot ${currentImage === image ? 'active' : ''}`} />
+                            ))}
+                        </div>
+                    </Card>
                     <FloatInput
                         label="Email"
                         placeholder="Email"
@@ -127,7 +141,7 @@ const Login: React.FC = () => {
                         </button>
                     </div>
                 </div>
-                <div className="col-6">
+                <div className="col-12 col-md-6 d-none d-md-flex">
                     <Card
                         style={{ width: '100%', maxHeight: 565, aspectRatio: '9/16' }}
                         cover={

@@ -87,3 +87,22 @@
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);
     z-index: 1;
 }
+
+@media screen and (max-width: 768px) {
+    .app-header {
+        padding: 10px 20px;
+
+        .navbar {
+            justify-content: center;
+
+            .nav-links {
+                padding: 0;
+                flex-wrap: wrap;
+                justify-content: center;
+                row-gap: 10px;
+                border-bottom: 1px solid #e0e0e0;
+                padding-bottom: 10px;
+            }
+        }
+    }
+}

@@ -63,8 +63,8 @@ const SignUp: React.FC = () => {
 
     return (
         <div className="container-fluid justify-content-center d-flex register-page">
-            <div className="row w-100" style={{ marginTop: 50, maxWidth: 1000 }}>
-                <div className="col-5">
+            <div className="row w-100 gap-2 gap-md-0" style={{ marginTop: 50, maxWidth: 1000 }}>
+                <div className="col-12 col-md-5 d-none d-md-flex">
                     <Card
                         style={{ width: '100%', maxHeight: 635, aspectRatio: '9/16' }}
                         cover={
@@ -80,10 +80,24 @@ const SignUp: React.FC = () => {
                         </div>
                     </Card>
                 </div>
-                <div className="col-7">
+                <div className="col-12 col-md-7">
                     <img src={logo} alt="logo" className="logo" width={80} />
                     <h2 className='mt-4'>Sign up</h2>
                     <p className='mt-2'>Let's get you all setup so you can access your personal account</p>
+                    <Card
+                        style={{ width: '100%', maxHeight: 250, aspectRatio: '16/9' }}
+                        cover={
+                            <div style={{ overflow: "hidden", height: '100%', transform: 'translateY(-50%)' }}>
+                                <img src={currentImage} alt="register" className="register-image" />
+                            </div>
+                        }
+                        className="register-card">
+                        <div className="indicator">
+                            {images.map((image, index) => (
+                                <div key={index} className={`indicator-dot ${currentImage === image ? 'active' : ''}`} />
+                            ))}
+                        </div>
+                    </Card>
                     <FloatInput
                         label="Full name"
                         placeholder="Full name"

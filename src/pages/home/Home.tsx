@@ -94,14 +94,10 @@ export function Home() {
 
                             {/* Plan your perfect trip */}
                             <section className="my-4">
-                                <Row gutter={16} align="middle">
-                                    <Col span={20}>
-                                        <h2>Plan your perfect trip</h2>
-                                    </Col>
-                                    <Col span={4}>
-                                        <Button className="custom-button" onClick={() => { navigate("/services") }}>See more services</Button>
-                                    </Col>
-                                </Row>
+                                <div className="d-flex flex-row justify-content-between section-header-custom">
+                                    <h2 className="d-md-flex">Plan your perfect trip</h2>
+                                    <Button className="custom-button" onClick={() => { navigate("/services") }}>See more services</Button>
+                                </div>
                                 <Row gutter={16}>
                                     {
                                         services.map((service, index) => (
@@ -109,7 +105,7 @@ export function Home() {
                                                 <Card hoverable>
                                                     <div className="d-flex align-items-center">
                                                         <div className="squircle-img">
-                                                            <img src={service.images[0]} className="w-100" alt="destination" />
+                                                            <img src={service.images[0]} className="w-100 h-100" alt="destination" />
                                                         </div>
                                                         <div className="d-flex ms-2 flex-column">
                                                             <p style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 4 }}>{service.name}</p>
@@ -125,14 +121,10 @@ export function Home() {
 
                             {/* My trips */}
                             <section className="my-4">
-                                <Row gutter={16} align="middle">
-                                    <Col span={20}>
-                                        <h2>My trips</h2>
-                                    </Col>
-                                    <Col span={4}>
-                                        <Button className="custom-button" onClick={() => { navigate("/trips") }}>See more trips</Button>
-                                    </Col>
-                                </Row>
+                                <div className="d-flex flex-row justify-content-between section-header-custom">
+                                    <h2>My trips</h2>
+                                    <Button className="custom-button" onClick={() => { navigate("/trips") }}>See more trips</Button>
+                                </div>
                                 <Row gutter={16}>
                                     {
                                         trips.map((trip, index) => (
