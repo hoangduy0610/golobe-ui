@@ -325,12 +325,12 @@
         align-items: center;
         margin-bottom: 10px;
         cursor: pointer;
-        transition: transform 0.3s ease, background-color 0.3s ease;
+        /* transition: transform 0.3s ease, background-color 0.3s ease; */
     }
 
     .item:hover {
         background-color: rgba(0, 0, 0, 0.1);
-        transform: scale(1.05);
+        /* transform: scale(1.05); */
     }
 
     .item-name {
@@ -588,7 +588,7 @@
 
     .item:hover {
         background-color: rgba(0, 0, 0, 0.1);
-        transform: scale(1.05);
+        /* transform: scale(1.05); */
     }
 
     .item.selected:hover {

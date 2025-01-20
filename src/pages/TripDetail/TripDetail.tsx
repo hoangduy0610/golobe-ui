@@ -1,25 +1,18 @@
-import facebookIcon from "@/assets/facebook_icon.svg";
-import footerLogo from "@/assets/footer_logo.svg";
-import instagramIcon from "@/assets/instagram_icon.svg";
-import invite from "@/assets/invite.png";
-import newsletter from "@/assets/newsletter.svg";
-import reviewImg from "@/assets/review_img.jpg";
 import setting from "@/assets/setting.png";
 import sharePlan from "@/assets/share_plan.png";
-import twitterIcon from "@/assets/twitter_icon.svg";
-import youtubeIcon from "@/assets/youtube_icon.svg";
+import Footer from "@/components/Footer/Footer";
 import MiniHeader from "@/components/Header/MiniHeader";
 import MainApiRequest from "@/redux/apis/MainApiRequest";
+import { LoadingOverlay } from "@achmadk/react-loading-overlay";
+import { faLocationDot, faPhoneAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, Form, Input, Modal, Select, message } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
-import { useNavigate, useNavigation, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { ReactSortable } from "react-sortablejs";
 import "./TripDetail.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot, faPhoneAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { Button, Form, Input, Modal, Select, message } from "antd";
-import { LoadingOverlay } from "@achmadk/react-loading-overlay";
-import Footer from "@/components/Footer/Footer";
 
 function TripDetail() {
     const navigate = useNavigate();
@@ -231,6 +224,36 @@ function TripDetail() {
         fetchTrip(id);
     };
 
+    const updateScheduleItems = async (day: number, items: any[]) => {
+        setTrip({
+            ...trip,
+            schedule: trip.schedule.map((schedule: any) => {
+                if (schedule.day === day) {
+                    return {
+                        ...schedule,
+                        items: items,
+                    }
+                }
+                return schedule;
+            })
+        });
+    }
+
+    const syncOrderToAPI = async (day: number, oldIndex?: number, newIndex?: number) => {
+        if (oldIndex === newIndex || oldIndex === undefined || newIndex === undefined) return;
+        setIsLoading(true);
+        const previousItems = trip.schedule.find((schedule: any) => schedule.day === day)?.items.map((item: any) => item.id);
+        const newItems = [...previousItems];
+        const [removedItem] = newItems.splice(oldIndex, 1);
+        newItems.splice(newIndex, 0, removedItem);
+        await MainApiRequest.put(`/plan/schedule/order`, {
+            planId: trip.id,
+            day: day,
+            items: newItems,
+        });
+        setIsLoading(false);
+    }
+
     const renderItineraries = () => {
         if (!trip || !trip?.schedule) return null;
 
@@ -242,29 +265,54 @@ function TripDetail() {
                     <Accordion.Item eventKey="0">
                         <Accordion.Header><strong style={{ fontSize: '1.25rem' }}>{scheduleDay} (Day {schedule.day}) - {schedule?.location?.name}</strong></Accordion.Header>
                         <Accordion.Body>
-                            {
-                                schedule?.items && schedule.items.map((item: any) => (
-                                    <div className="item" onClick={() => handleItemClick(item, schedule.day)}>
-                                        <img src={item?.service?.images ? item?.service?.images[0] : ''} alt="Things to Do" className="item-image" />
-                                        <span className="item-name">
-                                            <h4>{item?.service?.name || ''}</h4>
-                                            <p> <FontAwesomeIcon icon={faLocationDot} /> {item?.service?.address}</p>
-                                            <p> <FontAwesomeIcon icon={faPhoneAlt} /> {item?.service?.phone}</p>
-                                        </span>
-                                        {
-                                            isOwner && <Button
-                                                className="me-4"
-                                                danger
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleDeleteScheduleItem(item, schedule.day);
-                                                }}>
-                                                <FontAwesomeIcon icon={faTrash} />
-                                            </Button>
-                                        }
-                                    </div>
-                                ))
-                            }
+                            <ReactSortable
+                                animation={200}
+                                disabled={!isOwner}
+                                group={`day-${schedule.day}`}
+                                delayOnTouchOnly={true}
+                                delay={2}
+                                touchStartThreshold={5}
+                                swapThreshold={100}
+                                invertedSwapThreshold={1}
+                                list={schedule.items}
+                                setList={(newState) => {
+                                    updateScheduleItems(schedule.day, newState);
+                                }}
+                                onEnd={(evt) => {
+                                    syncOrderToAPI(schedule.day, evt.oldIndex, evt.newIndex);
+                                }}
+                            >
+                                {
+                                    schedule?.items && schedule.items.map((item: any) => (
+                                        <div className="item" onClick={() => handleItemClick(item, schedule.day)}>
+                                            {
+                                                isOwner && <i className="fas fa-bars me-2"
+                                                    style={{
+                                                        alignSelf: 'stretch',
+                                                        alignContent: 'center',
+                                                    }}></i>
+                                            }
+                                            <img src={item?.service?.images ? item?.service?.images[0] : ''} alt="Things to Do" className="item-image" />
+                                            <span className="item-name">
+                                                <h4>{item?.service?.name || ''}</h4>
+                                                <p> <FontAwesomeIcon icon={faLocationDot} /> {item?.service?.address}</p>
+                                                <p> <FontAwesomeIcon icon={faPhoneAlt} /> {item?.service?.phone}</p>
+                                            </span>
+                                            {
+                                                isOwner && <Button
+                                                    className="me-4"
+                                                    danger
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDeleteScheduleItem(item, schedule.day);
+                                                    }}>
+                                                    <FontAwesomeIcon icon={faTrash} />
+                                                </Button>
+                                            }
+                                        </div>
+                                    ))
+                                }
+                            </ReactSortable>
                             {
                                 isOwner &&
                                 <button className="btn-add" onClick={() => toggleAddTab(schedule.day)}>+ Add</button>
