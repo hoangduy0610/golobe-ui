@@ -411,6 +411,22 @@ function TripDetail() {
     const handleChangeSearchService = (e: React.ChangeEvent<HTMLInputElement>) => {
     }
 
+    const handleExportPDF = async () => {
+        // const id = trip?.id;
+        setIsLoading(true);
+        const res = await MainApiRequest.post(`/plan/pdf/${id}`, {}, {
+            responseType: 'blob',
+        });
+
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `trip-plan-${id}.pdf`);
+        document.body.appendChild(link);
+        await link.click();
+        setIsLoading(false);
+    }
+
     return (
         <LoadingOverlay
             active={isLoading}
@@ -460,9 +476,9 @@ function TripDetail() {
                             </Breadcrumb>
                             <div className="frame" style={{ backgroundImage: `url(${trip?.location?.featureImage})` }}>
                                 <div className="frame-header" hidden={!isOwner}>
-                                    {/* <button className="button button-invite">
-                                    <img src={invite} alt="Invite" className="button-icon" /> Invite
-                                </button> */}
+                                    <button className="button button-invite" onClick={handleExportPDF}>
+                                        <i className="fas fa-download"></i> &nbsp;Export plan as PDF
+                                    </button>
                                     <button className="button button-share" onClick={handleShare}>
                                         <img src={sharePlan} alt="Share" className="button-icon" />
                                     </button>
