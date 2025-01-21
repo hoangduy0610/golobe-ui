@@ -97,7 +97,7 @@ const Forum: React.FC = () => {
             title: 'Action',
             key: 'action',
             render: (text: string, record: Topic) =>
-                record.user.id === currentUserId && (
+                record?.user?.id === currentUserId && (
                     <Button
                         danger
                         type="primary"

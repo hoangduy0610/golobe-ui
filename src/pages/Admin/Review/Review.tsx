@@ -47,13 +47,13 @@ const ReviewPage: React.FC = () => {
       title: 'Username',
       dataIndex: 'user',
       key: 'user',
-      render: (user: any) => user.name,
+      render: (user: any) => user?.name,
     },
     {
       title: 'Service Name',
       dataIndex: 'service',
       key: 'service',
-      render: (service: any) => service.name,
+      render: (service: any) => service?.name,
     },
     {
       title: 'Rating',
